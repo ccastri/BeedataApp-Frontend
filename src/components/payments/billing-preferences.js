@@ -8,13 +8,18 @@ export const BillingPreferences = ({ title }) => {
   const [email, setEmail] = useState('info@company.com');
 
   useEffect(() => {
+    const token = localStorage.getItem('jwt');
+
     const fetchBillingInfo = async () => {
       try {
-        const response = await axios.get('/api/user/billing-info');
-        const { billingAddress, location, neighborhood, email } = response.data;
+        const response = await axios.get('/api/billing-info', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        const { billingAddress, location, email } = response.data;
         setBillingAddress(billingAddress);
         setLocation(location);
-        setNeighborhood(neighborhood);
         setEmail(email);
       } catch (error) {
         console.log(error);
