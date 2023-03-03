@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Box, Container, CssBaseline, Button } from '@mui/material';
-import HomeNavbar from '../components/home-navbar';
+import HomeNavbar from '../home/home-navbar';
 
 const MainLayoutRoot = styled('div')(({ theme }) => ({
   // backgroundImage: `url('/static/background1.png')`,
@@ -16,10 +16,7 @@ const MainLayoutRoot = styled('div')(({ theme }) => ({
 
 
 const MainLayout = ({ children }) => {
-  const handleClick = () => {
-    // Go to this link
-    window.location.href = 'https://calendly.com/melissapenagos/45min?month=2023-01';
-  };
+
   return (
     <MainLayoutRoot>
       <CssBaseline />

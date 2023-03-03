@@ -10,7 +10,7 @@ import {
     TableContainer,
     TableHead,
     TableRow } from '@mui/material';
-import axios from 'axios';
+import { axiosBase } from '../../lib/axios';
 
 export const BillingHistory = ({ title }) => {
   const [data, setData] = useState([]);
@@ -18,7 +18,7 @@ export const BillingHistory = ({ title }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/user/billing-history');
+        const response = await axiosBase.get('/api/billing-history');
         setData(response.data);
       } catch (error) {
         console.log(error);

@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { axiosBase } from '../../lib/axios';
 
 export const BillingPreferences = ({ title }) => {
   const [billingAddress, setBillingAddress] = useState('Calle 40 sur # 25 - 42');
@@ -12,7 +12,7 @@ export const BillingPreferences = ({ title }) => {
 
     const fetchBillingInfo = async () => {
       try {
-        const response = await axios.get('/api/billing-info', {
+        const response = await axiosBase.get('/api/billing-info', {
           headers: {
             Authorization: `Bearer ${token}`,
           }

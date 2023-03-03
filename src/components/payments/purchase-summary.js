@@ -10,7 +10,7 @@ import {
     TableContainer,
     TableHead,
     TableRow } from '@mui/material';
-import axios from 'axios';
+import { axiosBase } from '../../lib/axios';
 
 export const PurchaseSummary = ({ title }) => {
   const [data, setData] = useState([]);
@@ -18,7 +18,7 @@ export const PurchaseSummary = ({ title }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/user/purchases');
+        const response = await axiosBase.get('/api/user/purchases');
         setData(response.data);
       } catch (error) {
         console.log(error);

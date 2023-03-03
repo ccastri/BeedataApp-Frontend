@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { axiosBase } from '../../lib/axios';
 import { IOSSwitch } from './switch'
 
-
 export const BalanceSection = ({title}) => {
     const [balance, setBalance] = useState(0);
     const [isAlertEnabled, setIsAlertEnabled] = useState(false);

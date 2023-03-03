@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import MainLayout from '../components/home-layout';
+import MainLayout from '../components/home/home-layout';
 
 
 const MainPage = () => (
