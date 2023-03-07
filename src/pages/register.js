@@ -51,7 +51,7 @@ const Register = () => {
 
       if (data.success) {
         Router
-          .push('/dashboard').catch(console.error);
+          .push('/login').catch(console.error);
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {

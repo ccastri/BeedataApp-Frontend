@@ -15,18 +15,18 @@ import { axiosBase } from '../../lib/axios';
 export const PurchaseSummary = ({ title }) => {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosBase.get('/api/user/purchases');
-        setData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axiosBase.get('/api/user/purchases');
+  //       setData(response.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return (
     <Box sx={{ mt: 3 }}>

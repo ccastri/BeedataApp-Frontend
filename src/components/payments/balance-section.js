@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Button, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { socket } from '../settings/websocket';
+import { socket } from '../websocket';
 import { IOSSwitch } from './switch'
 
 
@@ -9,19 +9,27 @@ export const BalanceSection = ({title}) => {
     const [isAlertEnabled, setIsAlertEnabled] = useState(false);
     const [isRechargeEnabled, setIsRechargeEnabled] = useState(false);
 
-    
     useEffect(() => {
-      socket.addEventListener('message', (event) => {
-        const data = JSON.parse(event.data);
-        const token = localStorage.getItem('jwt');
-        // Parse token to extract userId
-        const userData = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+      if (socket !== undefined) {
+        socket.addEventListener('message', (event) => {
+          const data = JSON.parse(event.data);
+          console.log('Received message:', data);
+        });
+      }
+    }, [socket]);
+    
+    // useEffect(() => {
+    //   socket.addEventListener('message', (event) => {
+    //     const data = JSON.parse(event.data);
+    //     const token = localStorage.getItem('jwt');
+    //     // Parse token to extract userId
+    //     const userData = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 
-        if (data.userId === userData.userId) {
-          setBalance(data.balance);
-        }
-      }); 
-    }, []);
+    //     if (data.userId === userData.userId) {
+    //       setBalance(data.balance);
+    //     }
+    //   }); 
+    // }, []);
 
     const handleAddMoney = () => {
         // Redirect to page for adding money to balance

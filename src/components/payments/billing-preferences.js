@@ -7,27 +7,27 @@ export const BillingPreferences = ({ title }) => {
   const [location, setLocation] = useState('Envigado, Antioquia, Colombia');
   const [email, setEmail] = useState('info@company.com');
 
-  useEffect(() => {
-    const token = localStorage.getItem('jwt');
+  // useEffect(() => {
+  //   const token = localStorage.getItem('jwt');
 
-    const fetchBillingInfo = async () => {
-      try {
-        const response = await axiosBase.get('/api/billing-info', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-        const { billingAddress, location, email } = response.data;
-        setBillingAddress(billingAddress);
-        setLocation(location);
-        setEmail(email);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  //   const fetchBillingInfo = async () => {
+  //     try {
+  //       const response = await axiosBase.get('/api/billing-info', {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         }
+  //       });
+  //       const { billingAddress, location, email } = response.data;
+  //       setBillingAddress(billingAddress);
+  //       setLocation(location);
+  //       setEmail(email);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
   
-    fetchBillingInfo();
-  }, []);
+  //   fetchBillingInfo();
+  // }, []);
   
 
   return (
