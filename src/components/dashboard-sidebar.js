@@ -10,9 +10,9 @@ import { Payment as PaymentIcon } from '../icons/payment';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Selector as SelectorIcon } from '../icons/selector';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
+import { Chat as ChatIcon } from '../icons/chat';
 import { User as UserIcon } from '../icons/user';
 import { Users as UsersIcon } from '../icons/users';
-import { Logo } from './logo';
 import { NavItem } from './nav-item';
 
 const items = [
@@ -30,6 +30,11 @@ const items = [
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
     title: 'Products'
+  },
+  {
+    href: '/beesocial',
+    icon: (<ChatIcon fontSize="small" />),
+    title: 'Beesocial'
   },
   {
     href: '/payments',

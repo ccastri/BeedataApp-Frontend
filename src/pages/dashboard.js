@@ -68,7 +68,7 @@ const Page = () => (
           >
             <TotalProfit sx={{ height: '100%' }} />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             lg={8}
             md={12}
@@ -103,7 +103,7 @@ const Page = () => (
             xs={12}
           >
             <InstancesMap/>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>

@@ -1,7 +1,8 @@
 import { Box, Card, CardContent, Button, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { axiosBase } from '../../lib/axios';
+import { socket } from '../settings/websocket';
 import { IOSSwitch } from './switch'
+
 
 export const BalanceSection = ({title}) => {
     const [balance, setBalance] = useState(0);
@@ -10,19 +11,16 @@ export const BalanceSection = ({title}) => {
 
     
     useEffect(() => {
+      socket.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
         const token = localStorage.getItem('jwt');
+        // Parse token to extract userId
+        const userData = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 
-        const fetchBalance = async () => {
-        const response = await axiosBase('/api/balance', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-        const { balance } = await response.json();
-        setBalance(balance);
-        };
-    
-        fetchBalance();
+        if (data.userId === userData.userId) {
+          setBalance(data.balance);
+        }
+      }); 
     }, []);
 
     const handleAddMoney = () => {
