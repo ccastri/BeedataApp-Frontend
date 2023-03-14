@@ -1,14 +1,15 @@
 import Head from 'next/head';
 import { RocketchatLayout } from '../components/rochetchat/rocket-layout';
 
-const Page = () => {
+
+const Page = ({ rocketChatUrl }) => {
   const handleGoToGeneral = () => {
     document.querySelector("iframe").contentWindow.postMessage(
       {
         externalCommand: "go",
         path: "/channel/general"
       },
-      "https://social2.beedata.co"
+      rocketChatUrl
     );
   };
 
@@ -34,11 +35,19 @@ const Page = () => {
         </style>
       </Head>
       <RocketchatLayout>
-        <iframe src="https://social2.beedata.co/channel/general" title="Beesocial"></iframe>
+        <iframe src={`${rocketChatUrl}/channel/general`} title="Beesocial"></iframe>
       </RocketchatLayout>
     </>
   );
 };
+
+export const getServerSideProps = async () => {
+  const rocketChatUrl = process.env.BEESOCIAL_SERVER;
+  return {
+    props: { rocketChatUrl }
+  }
+};
+
 
 
 export default Page;
