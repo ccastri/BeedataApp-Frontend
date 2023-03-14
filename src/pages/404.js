@@ -55,7 +55,7 @@ const Page = () => (
             />
           </Box>
           <NextLink
-            href="/login"
+            href="/"
             passHref
           >
             <Button
@@ -64,7 +64,7 @@ const Page = () => (
               sx={{ mt: 3 }}
               variant="contained"
             >
-              Go back Home Page
+              Go back Login Page
             </Button>
           </NextLink>
         </Box>

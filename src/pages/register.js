@@ -51,7 +51,7 @@ const Register = () => {
 
       if (data.success) {
         Router
-          .push('/login').catch(console.error);
+          .push('/').catch(console.error);
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
@@ -242,7 +242,7 @@ const Register = () => {
               Have an account?
               {' '}
               <NextLink
-                href="/login"
+                href="/"
                 passHref
               >
                 <Link

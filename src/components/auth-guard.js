@@ -41,7 +41,7 @@ export const AuthGuard = (props) => {
   useEffect(() => {
     if (router.isReady && (status === 'unauthenticated' || !status) && isAuthorized === false) {
       router.replace({
-        pathname: '/login',
+        pathname: '/',
         query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined,
       }).catch(console.error);
     }

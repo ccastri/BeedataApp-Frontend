@@ -19,7 +19,7 @@ const items = [
   {
     href: '/dashboard',
     icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
+    title: 'Consumption'
   },
   {
     href: '/customers',
@@ -39,7 +39,7 @@ const items = [
   {
     href: '/payments',
     icon: (<PaymentIcon fontSize="small" />),
-    title: 'Payments & Consumption'
+    title: 'Payments'
   },
   {
     href: '/account',
@@ -177,7 +177,7 @@ export const DashboardSidebar = (props) => {
           >
           </Box>
           <NextLink
-            href="https://pruebas.beedata.co/workflow/46"
+            href="https://pruebas.beedata.co"
             passHref
           >
             <Button
@@ -186,13 +186,15 @@ export const DashboardSidebar = (props) => {
               endIcon={(<OpenInNewIcon />)}
               fullWidth
               sx={{ mt: 2 }}
+              target="_blank"
+              rel="noopener noreferrer"
               variant="contained"
             >
               Automate
             </Button>
           </NextLink>
           <NextLink
-            href="https://datalake.beedata.co/dashboard/#/nc/p_zy9wfvouc302gc"
+            href="https://lake.beedata.co/dashboard/"
             passHref
           >
             <Button
@@ -201,6 +203,8 @@ export const DashboardSidebar = (props) => {
               endIcon={(<StorageIcon />)}
               fullWidth
               sx={{ mt: 2 }}
+              target="_blank"
+              rel="noopener noreferrer"
               variant="contained"
             >
               Data Lake
