@@ -17,21 +17,21 @@ export const Sales = (props) => {
   const data = {
     datasets: [
       {
-        backgroundColor: '#3F51B5',
-        borderColor: '#3F51B5',
-        borderWidth: 2,
+        backgroundColor: '#FFCB42',
+        borderColor: '#FFCB42',
+        borderWidth: 3,
         data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'This year',
+        label: 'Incoming SMS',
       },
       {
-        backgroundColor: '#3f9482',
-        borderColor: '#3f9482',
-        borderWidth: 2,
+        backgroundColor: '#85CDFD',
+        borderColor: '#85CDFD',
+        borderWidth: 3,
         data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Last year',
+        label: 'Outgoing SMS',
       }
     ],
-    labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug', '7 aug']
+    labels: ['1 Mar', '2 Mar', '3 Mar', '4 Mar', '5 Mar', '6 Mar', '7 Mar']
   };
 
   const options = {
@@ -110,7 +110,7 @@ export const Sales = (props) => {
           </Box>
           </>
         )}
-        title="Sales"
+        title="WHATSAPP METRICS"
       />
       <Divider />
       <CardContent>

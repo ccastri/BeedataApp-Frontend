@@ -1,43 +1,28 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import MoneyIcon from '@mui/icons-material/Money';
 
-export const Budget = (props) => (
-  <Card
-    sx={{ height: '100%' }}
-    {...props}
-  >
+export const WhatsappSms = (props) => (
+  <Card sx={{ maxWidth: '100%', height: '90%' }} {...props}>
     <CardContent>
-      <Grid
-        container
-        spacing={3}
-        sx={{ justifyContent: 'space-between' }}
-      >
-        <Grid item>
+      <Grid container spacing={3} alignItems="flex-start">
+        <Grid item xs={6}>
           <Typography
             color="textSecondary"
             gutterBottom
             variant="overline"
           >
-            ANNUAL TOTAL SALES
+            Whatsapp SMS
           </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h4"
-          >
-            $24M
+          <Typography color="textPrimary" variant="h4">
+            1,600
           </Typography>
         </Grid>
-        <Grid item>
-          <Avatar
-            sx={{
-              backgroundColor: 'error.main',
-              height: 56,
-              width: 56
-            }}
-          >
-            <MoneyIcon />
-          </Avatar>
+        <Grid item xs={6} sx={{ textAlign: 'right' }}>
+          <img
+            src="/static/images/products/whatsappbee.svg"
+            alt="Whatsapp"
+            style={{ width: '80%' }}
+          />
         </Grid>
       </Grid>
       <Box
@@ -57,13 +42,10 @@ export const Budget = (props) => (
         >
           12%
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
+        <Typography color="textSecondary" variant="caption">
           Since last month
         </Typography>
       </Box>
     </CardContent>
-  </Card>
+</Card>
 );

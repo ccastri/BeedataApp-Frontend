@@ -1,9 +1,8 @@
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import PeopleIcon from '@mui/icons-material/PeopleOutlined';
 
-export const TotalCustomers = (props) => (
-  <Card {...props}>
+export const LakeRows = (props) => (
+  <Card sx={{ maxWidth: '100%', height: '90%' }} {...props}>
     <CardContent>
       <Grid
         container
@@ -16,7 +15,7 @@ export const TotalCustomers = (props) => (
             gutterBottom
             variant="overline"
           >
-            ANNUAL TOTAL CUSTOMERS
+            LAKE ROWS
           </Typography>
           <Typography
             color="textPrimary"
@@ -25,16 +24,12 @@ export const TotalCustomers = (props) => (
             1,6K
           </Typography>
         </Grid>
-        <Grid item>
-          <Avatar
-            sx={{
-              backgroundColor: 'success.main',
-              height: 56,
-              width: 56
-            }}
-          >
-            <PeopleIcon />
-          </Avatar>
+        <Grid item xs={6} sx={{ textAlign: 'right' }}>
+          <img
+            src="/static/images/products/lake.svg"
+            alt="Whatsapp"
+            style={{ width: '80%' }}
+          />
         </Grid>
       </Grid>
       <Box

@@ -1,11 +1,8 @@
-import { Avatar, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/material';
 
-export const TasksProgress = (props) => (
-  <Card
-    sx={{ height: '100%' }}
-    {...props}
-  >
+
+export const SocialAgents = (props) => (
+  <Card sx={{ maxWidth: '100%', height: '90%' }} {...props}>
     <CardContent>
       <Grid
         container
@@ -18,30 +15,26 @@ export const TasksProgress = (props) => (
             gutterBottom
             variant="overline"
           >
-            META CONVERSION RATE
+            SOCIAL AGENTS
           </Typography>
           <Typography
             color="textPrimary"
             variant="h4"
           >
-            8.5%
+            90%
           </Typography>
         </Grid>
-        <Grid item>
-          <Avatar
-            sx={{
-              backgroundColor: '#1877f2',
-              height: 56,
-              width: 56
-            }}
-          >
-            <FacebookIcon />
-          </Avatar>
+        <Grid item xs={6} sx={{ textAlign: 'right' }}>
+          <img
+            src="/static/images/products/social.svg"
+            alt="social"
+            style={{ width: '80%' }}
+          />
         </Grid>
       </Grid>
       <Box sx={{ pt: 3 }}>
         <LinearProgress
-          value={8.5}
+          value={90}
           variant="determinate"
         />
       </Box>

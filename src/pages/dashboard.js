@@ -1,12 +1,11 @@
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
-import { Budget } from '../components/dashboard/budget';
+import { WhatsappSms } from '../components/dashboard/whatsapp-sms';
 import { Sales } from '../components/dashboard/sales';
-import { TasksProgress } from '../components/dashboard/tasks-progress';
-import { TotalCustomers } from '../components/dashboard/total-customers';
+import { SocialAgents } from '../components/dashboard/social-agents';
+import { LakeRows } from '../components/dashboard/lake-rows';
 import { TotalProfit } from '../components/dashboard/total-profit';
 import { DashboardLayout } from '../components/dashboard-layout';
-
 
 const Page = () => (
   <>
@@ -20,21 +19,18 @@ const Page = () => (
         py: 15
       }}
     >
-      <Container sx={{ paddingLeft: 40, paddingRight: 40 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Budget />
+      <Container sx={{ paddingLeft: 36, paddingRight: 36 }}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
+            <WhatsappSms />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <TotalCustomers />
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
+            <LakeRows />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <TasksProgress />
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
+            <SocialAgents />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <TotalProfit sx={{ height: '100%' }} />
-          </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={12} xl={9}>
             <Sales />
           </Grid>
         </Grid>

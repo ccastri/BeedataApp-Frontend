@@ -5,27 +5,27 @@ export const products = [
     id: uuid(),
     createdAt: '27/03/2022',
     description: 'Automation tool for your team. Start managing your processes in minutes.',  
-    media: '/static/images/products/beeflow.svg',
+    media: '/static/images/products/flow.svg',
     title: 'BeeFlow',
-    sx: { height: '50%', width: '50%' },
+    sx: { height: '20%', width: '20%' },
     totalDownloads: '594'
   },
   {
     id: uuid(),
     createdAt: '31/03/2022',
     description: 'Visualize and manage your data before you import it into your dashboard.',  
-    media: '/static/images/products/beesual.svg',
+    media: '/static/images/products/lake.svg',
     title: 'BeeSual',
-    sx: { height: '50%', width: '50%' },
+    sx: { height: '20%', width: '20%' },
     totalDownloads: '625'
   },
   {
     id: uuid(),
     createdAt: '03/04/2019',
     description: 'Communication tool. Connect with your team and clients in a single place.',
-    media: '/static/images/products/beesocial.svg',
+    media: '/static/images/products/social.svg',
     title: 'BeeSocial',
-    sx: { height: '50%', width: '50%' },
+    sx: { height: '20%', width: '20%' },
     totalDownloads: '857'
   },
   {

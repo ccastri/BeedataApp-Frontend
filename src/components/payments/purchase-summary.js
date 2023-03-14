@@ -13,20 +13,30 @@ import {
 import { axiosBase } from '../../lib/axios';
 
 export const PurchaseSummary = ({ title }) => {
-  const [data, setData] = useState([]);
+//   const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axiosBase.get('/api/user/purchases');
-  //       setData(response.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
+  const data = [
+    {
+        id: 1,
+        product: 'Beeflow',
+        cost: '$480.00'
+    },
+    {
+        id: 3,
+        product: 'Lake',
+        cost: '$300.00'
+    },
+    {
+        id: 2,
+        product: 'Beesocial',
+        cost: '$20.00'
+    },
+    {
+        id: 4,
+        product: 'Lake',
+        cost: '$300.00'
+    }
+  ];
 
   return (
     <Box sx={{ mt: 3 }}>
@@ -45,7 +55,7 @@ export const PurchaseSummary = ({ title }) => {
                 </TableHead>
                 <TableBody>
                     {data.map((item) => (
-                    <TableRow key={item.id}>
+                    <TableRow key={item.product}>
                         <TableCell component="th" scope="row">
                         {item.product}
                         </TableCell>

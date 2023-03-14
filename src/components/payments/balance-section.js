@@ -5,7 +5,7 @@ import { IOSSwitch } from './switch'
 
 
 export const BalanceSection = ({title}) => {
-    const [balance, setBalance] = useState(0);
+    const [balance, setBalance] = useState(300);
     const [isAlertEnabled, setIsAlertEnabled] = useState(false);
     const [isRechargeEnabled, setIsRechargeEnabled] = useState(false);
 
