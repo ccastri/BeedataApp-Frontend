@@ -29,6 +29,7 @@
     "date-fns": "2.29.3",
     "dotenv": "^16.0.3",
     "formik": "2.2.9",
+    "http-proxy": "^1.18.1",
     "leaflet": "^1.9.3",
     "leaflet-defaulticon-compatibility": "^0.1.1",
     "next": "12.3.0",

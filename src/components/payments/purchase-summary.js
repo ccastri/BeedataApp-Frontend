@@ -10,33 +10,29 @@ import {
     TableContainer,
     TableHead,
     TableRow } from '@mui/material';
-import { axiosBase } from '../../lib/axios';
+import axios from 'axios';
 
 export const PurchaseSummary = ({ title }) => {
-//   const [data, setData] = useState([]);
+    
+    const [data, setData] = useState([]);
 
-  const data = [
-    {
-        id: 1,
-        product: 'Beeflow',
-        cost: '$480.00'
-    },
-    {
-        id: 3,
-        product: 'Lake',
-        cost: '$300.00'
-    },
-    {
-        id: 2,
-        product: 'Beesocial',
-        cost: '$20.00'
-    },
-    {
-        id: 4,
-        product: 'Lake',
-        cost: '$300.00'
-    }
-  ];
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const token = localStorage.getItem('jwt');
+          const response = await axios.get('/api/purchase-history', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setData(response.data.purchaseHistory);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   return (
     <Box sx={{ mt: 3 }}>
@@ -45,26 +41,32 @@ export const PurchaseSummary = ({ title }) => {
         </Typography>
         <Card sx={{ marginTop: 2 }}>
             <CardContent>
-            <TableContainer>
-                <Table>
-                <TableHead>
-                    <TableRow>
-                    <TableCell>Product</TableCell>
-                    <TableCell align="right">Cost</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data.map((item) => (
-                    <TableRow key={item.product}>
-                        <TableCell component="th" scope="row">
-                        {item.product}
-                        </TableCell>
-                        <TableCell align="right">{item.cost}</TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
-            </TableContainer>
+              {data.length === 0 ? (
+                <Typography>No purchase history found</Typography>
+              ) : (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Timestamp</TableCell>
+                        <TableCell>Product</TableCell>
+                        <TableCell>Quantity</TableCell>
+                        <TableCell>Total Price</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data.map((item) => (
+                        <TableRow key={item.order_id}>
+                          <TableCell>{item.create_date}</TableCell>
+                          <TableCell>{item.name}</TableCell>
+                          <TableCell>{item.product_qty}</TableCell>
+                          <TableCell>{item.price_total}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
             </CardContent>
         </Card>
     </Box>

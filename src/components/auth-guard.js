@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { axiosBase } from '../lib/axios'
+import axios from 'axios';
 
 export const AuthGuard = (props) => {
   const { children } = props;
@@ -17,7 +17,7 @@ export const AuthGuard = (props) => {
     } else {
       const verifyToken = async () => {
         try {
-          const { data } = await axiosBase.post('/api/login/verify-token', {
+          const { data } = await axios.post('/api/verify-token', {
             headers: {
               Authorization: `Bearer ${token}`,
             },

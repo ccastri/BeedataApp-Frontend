@@ -9,14 +9,14 @@ export const BalanceSection = ({title}) => {
     const [isAlertEnabled, setIsAlertEnabled] = useState(false);
     const [isRechargeEnabled, setIsRechargeEnabled] = useState(false);
 
-    useEffect(() => {
-      if (socket !== undefined) {
-        socket.addEventListener('message', (event) => {
-          const data = JSON.parse(event.data);
-          console.log('Received message:', data);
-        });
-      }
-    }, [socket]);
+    // useEffect(() => {
+    //   if (socket !== undefined) {
+    //     socket.addEventListener('message', (event) => {
+    //       const data = JSON.parse(event.data);
+    //       console.log('Received message:', data);
+    //     });
+    //   }
+    // }, [socket]);
     
     // useEffect(() => {
     //   socket.addEventListener('message', (event) => {
