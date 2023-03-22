@@ -1,33 +1,34 @@
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
 export const BillingPreferences = ({ title }) => {
-  const [billingAddress, setBillingAddress] = useState('Calle 40 sur # 25 - 42');
-  const [location, setLocation] = useState('Envigado, Antioquia, Colombia');
-  const [email, setEmail] = useState('info@company.com');
+  const [billingAddress, setBillingAddress] = useState('');
+  const [location, setLocation] = useState('');
+  const [email, setEmail] = useState('');
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('jwt');
+  useEffect(() => {
+    const token = localStorage.getItem('jwt');
 
-  //   const fetchBillingInfo = async () => {
-  //     try {
-  //       const response = await axios.get('/api/billing-info', {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         }
-  //       });
-  //       const { billingAddress, location, email } = response.data;
-  //       setBillingAddress(billingAddress);
-  //       setLocation(location);
-  //       setEmail(email);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+    const fetchBillingInfo = async () => {
+      try {
+        const response = await axios.get('/api/billing-info', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        const { billingAddress, location, email } = response.data;
+        setBillingAddress(billingAddress);
+        setLocation(location);
+        setEmail(email);
+      } catch (error) {
+        console.log(error);
+      }
+    };
   
-  //   fetchBillingInfo();
-  // }, []);
+    fetchBillingInfo();
+  }, []);
   
 
   return (

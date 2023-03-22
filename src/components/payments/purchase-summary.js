@@ -34,6 +34,8 @@ export const PurchaseSummary = ({ title }) => {
       fetchData();
     }, []);
 
+
+
   return (
     <Box sx={{ mt: 3 }}>
         <Typography variant="h4" component="h2" gutterBottom>

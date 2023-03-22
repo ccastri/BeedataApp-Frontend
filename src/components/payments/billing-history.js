@@ -10,32 +10,30 @@ import {
     TableContainer,
     TableHead,
     TableRow } from '@mui/material';
+import axios from 'axios';
 
 
 export const BillingHistory = ({ title }) => {
     
-    // const [data, setData] = useState([]);
+    const [data, setData] = useState([]);
 
-    const data = [];
-
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     try {
-    //       const token = localStorage.getItem('token');
-    //       const response = await axios.get('/api/purchase-history', {
-    //         headers: {
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       });
-    //       console.log("This is purchase history: ", response)
-    //       setData(response.data);
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   };
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const token = localStorage.getItem('jwt');
+          const response = await axios.get('/api/billing-history', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setData(response.data.billingHistory);
+        } catch (error) {
+          console.error(error);
+        }
+      };
   
-    //   fetchData();
-    // }, []);
+      fetchData();
+    }, []);
   
 
   return (
@@ -45,30 +43,32 @@ export const BillingHistory = ({ title }) => {
         </Typography>
         <Card sx={{ marginTop: 2 }}>
             <CardContent>
-            <TableContainer>
-                <Table>
-                <TableHead sx={{ '& .MuiTableCell-root': { width: '25%' } }}>
+              {data.length === 0 ? (
+                <Typography>No billing history found</Typography>
+              ) : (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
                     <TableRow>
-                    <TableCell>Timestamp</TableCell>
-                    <TableCell align="right">Payment Method</TableCell>
-                    <TableCell align="right">Status</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data.map((item) => (
-                    <TableRow key={item.id}>
-                        <TableCell component="th" scope="row">
-                        {item.timestamp}
-                        </TableCell>
-                        <TableCell align="right">{item.paymentMethod}</TableCell>
-                        <TableCell align="right">{item.status}</TableCell>
-                        <TableCell align="right">{item.amount}</TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
-            </TableContainer>
+                        <TableCell>Timestamp</TableCell>
+                        <TableCell>Payment Method</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Total</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>{item.created_at}</TableCell>
+                          <TableCell>{item.payment_method}</TableCell>
+                          <TableCell>{item.sandbox_status}</TableCell>
+                          <TableCell>{item.usd}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
             </CardContent>
         </Card>
     </Box>
