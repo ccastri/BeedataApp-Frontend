@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { RocketNavbar } from './rocket-navbar';
-import { CoverRectangle } from './cover-rectangle';
 import { AuthGuard } from '../auth-guard';
 
 const RocketchatLayoutRoot = styled('div')(({ theme }) => ({
@@ -11,7 +10,7 @@ const RocketchatLayoutRoot = styled('div')(({ theme }) => ({
   maxWidth: '100%',
   paddingTop: 64,
   [theme.breakpoints.up('lg')]: {
-    paddingLeft: 280
+    paddingLeft: 0
   }
 }));
 
@@ -20,20 +19,29 @@ export const RocketchatLayout = (props) => {
 
   return (
     <AuthGuard>
+      <RocketNavbar />
       <RocketchatLayoutRoot>
         <Box
           sx={{
+            position: 'relative',
+            height: '100vh',
             display: 'flex',
-            flex: '1 1 auto',
             flexDirection: 'column',
-            width: '100%'
+            width: '100%',
+            marginTop: '2%', // set the top margin to the navbar height
           }}
         >
+          <Box
+            sx={{
+              flexGrow: 1,
+              width: '100%',
+              overflow: 'hidden', // hide the overflow of the iframe
+            }}
+          >
           {children}
+          </Box>
         </Box>
       </RocketchatLayoutRoot>
-      <RocketNavbar />
-      <CoverRectangle />
     </AuthGuard>
   );
 };

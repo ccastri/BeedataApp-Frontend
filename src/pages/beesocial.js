@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { RocketchatLayout } from '../components/rochetchat/rocket-layout';
+import { RocketchatLayout } from '../components/rocketchat/rocket-layout';
 
 
 const Page = ({ rocketChatUrl }) => {
@@ -7,7 +7,7 @@ const Page = ({ rocketChatUrl }) => {
     document.querySelector("iframe").contentWindow.postMessage(
       {
         externalCommand: "go",
-        path: "/channel/general"
+        path: "/home"
       },
       rocketChatUrl
     );
@@ -21,21 +21,20 @@ const Page = ({ rocketChatUrl }) => {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Beesocial | Beedata</title>
-        <style>
-          {`
-            iframe {
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-              border: none;
-            }
-          `}
-        </style>
       </Head>
       <RocketchatLayout>
-        <iframe src={`${rocketChatUrl}/channel/general`} title="Beesocial"></iframe>
+          <iframe
+            src={`${rocketChatUrl}/home`}
+            title="Beesocial"
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              marginLeft: 0,
+              marginTop: 0,
+              border: 'none'
+            }}
+          />
       </RocketchatLayout>
     </>
   );

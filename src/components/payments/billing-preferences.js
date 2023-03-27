@@ -18,11 +18,13 @@ export const BillingPreferences = ({ title }) => {
             Authorization: `Bearer ${token}`,
           }
         });
-        const { billingAddress, location, email } = response.data;
-        setBillingAddress(billingAddress);
-        setLocation(location);
-        setEmail(email);
-      } catch (error) {
+
+        const { billing_address, city, country, billing_email } = response.data.billingInfo;
+        setBillingAddress(billing_address);
+        setLocation(`${city}, ${country}`);
+        setEmail(billing_email);
+
+    } catch (error) {
         console.log(error);
       }
     };
