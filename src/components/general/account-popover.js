@@ -1,4 +1,4 @@
-import { useSession, signOut } from 'next-auth/react'
+import React from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material'
@@ -6,40 +6,30 @@ import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material'
 export const AccountPopover = (props) => {
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
-  const { data: session, loading } = useSession();
   const token = localStorage.getItem('jwt');
 
   // Check for next-auth Google login session 
   // or loclastorage JWT token for email login.
 
   const handleSignOut = async () => {
-    onClose?.()
-    
-    if (session && session.user) {
-      await signOut()
-    } else {
-      if (token) {
-        localStorage.removeItem('jwt');
-      }
-    }
-  
-    router.push('/')
-  }
+    onClose?.();
 
-    // Retrieve user name from session or JWT token
-    const getUserName = () => {
-      if (session && session.user) {
-        return session.user.name?.split(' ')[0];
-      } else {
-        const token = localStorage.getItem('jwt');
-        if (token) {
-          const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-          return payload.userName;
-        }
-      }
-      return '';
+    if (token) {
+      localStorage.removeItem('jwt');
     }
   
+    router.push('/');
+    };
+
+  // Retrieve user name from JWT token
+  const getUserName = () => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+      return payload.userName;
+    }
+    return '';
+  }
 
   return (
     <Popover
@@ -71,7 +61,7 @@ export const AccountPopover = (props) => {
           {getUserName()}
         </Typography>
       </Box>
-      {!loading && ( session || token ) ? (
+      { token && (
         <MenuList
           disablePadding
           sx={{
@@ -89,7 +79,7 @@ export const AccountPopover = (props) => {
           Sign out
         </MenuItem>
       </MenuList>
-      ) : null}
+      )}
     </Popover>
   );
 };

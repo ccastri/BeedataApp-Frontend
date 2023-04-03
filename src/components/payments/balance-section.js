@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box, Card, CardContent, Button, Typography, useControlled } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { IOSSwitch } from './switch'
@@ -107,6 +108,7 @@ export const BalanceSection = ({title}) => {
                 </Typography>
                 <IOSSwitch
                   checked={isAlertEnabled}
+                  data-testid='alert-switch'
                   onChange={handleSwitchToggle}
                   sx={{ marginLeft: 1 }}
                 />

@@ -5,7 +5,7 @@ import { Sales } from '../components/dashboard/sales';
 import { SocialAgents } from '../components/dashboard/social-agents';
 import { LakeRows } from '../components/dashboard/lake-rows';
 import { TotalProfit } from '../components/dashboard/total-profit';
-import { DashboardLayout } from '../components/dashboard-layout';
+import { DashboardLayout } from '../components/general/dashboard-layout';
 
 const Page = () => (
   <>

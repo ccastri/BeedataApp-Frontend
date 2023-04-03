@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -5,14 +6,14 @@ import PropTypes from 'prop-types';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import StorageIcon from '@mui/icons-material/Storage';
-import { Cog as CogIcon } from '../icons/cog';
-import { Payment as PaymentIcon } from '../icons/payment';
-import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
-import { Selector as SelectorIcon } from '../icons/selector';
-import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
-import { Chat as ChatIcon } from '../icons/chat';
-import { User as UserIcon } from '../icons/user';
-import { Users as UsersIcon } from '../icons/users';
+import { Cog as CogIcon } from '../../icons/cog';
+import { Payment as PaymentIcon } from '../../icons/payment';
+import { ChartBar as ChartBarIcon } from '../../icons/chart-bar';
+import { Selector as SelectorIcon } from '../../icons/selector';
+import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
+import { Chat as ChatIcon } from '../../icons/chat';
+import { User as UserIcon } from '../../icons/user';
+import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
 
 const items = [
@@ -220,6 +221,7 @@ export const DashboardSidebar = (props) => {
       <Drawer
         anchor="left"
         open
+        data-testid="dashboard-sidebar"
         PaperProps={{
           sx: {
             backgroundColor: 'neutral.900',
@@ -239,6 +241,7 @@ export const DashboardSidebar = (props) => {
       anchor="left"
       onClose={onClose}
       open={open}
+      data-testid="hidden-dashboard-sidebar"
       PaperProps={{
         sx: {
           backgroundColor: 'neutral.900',
