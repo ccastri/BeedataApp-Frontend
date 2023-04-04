@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { 
     Box,
@@ -25,7 +26,9 @@ export const PurchaseSummary = ({ title }) => {
               Authorization: `Bearer ${token}`,
             },
           });
-          setData(response.data.purchaseHistory);
+          if (response.data.purchaseHistory) {
+            setData(response.data.purchaseHistory);
+          }
         } catch (error) {
           console.error(error);
         }

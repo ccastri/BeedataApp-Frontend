@@ -22,21 +22,21 @@ const items = [
     icon: (<ChartBarIcon fontSize="small" />),
     title: 'Consumption'
   },
-  {
-    href: '/customers',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Customers'
-  },
+  // {
+  //   href: '/customers',
+  //   icon: (<UsersIcon fontSize="small" />),
+  //   title: 'Customers'
+  // },
   {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
     title: 'Products'
   },
-  {
-    href: '/beesocial',
-    icon: (<ChatIcon fontSize="small" />),
-    title: 'Beesocial'
-  },
+  // {
+  //   href: '/beesocial',
+  //   icon: (<ChatIcon fontSize="small" />),
+  //   title: 'Beesocial'
+  // },
   {
     href: '/payments',
     icon: (<PaymentIcon fontSize="small" />),
@@ -47,11 +47,11 @@ const items = [
     icon: (<UserIcon fontSize="small" />),
     title: 'Account'
   },
-  {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
-  }
+  // {
+  //   href: '/settings',
+  //   icon: (<CogIcon fontSize="small" />),
+  //   title: 'Settings'
+  // }
 ];
 
 export const DashboardSidebar = (props) => {

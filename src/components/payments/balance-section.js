@@ -46,7 +46,6 @@ export const BalanceSection = ({title}) => {
               Authorization: `Bearer ${token}`
             }
           });
-          console.log(response.data.alertState[0].alert_switch);
           setIsAlertEnabled(response.data.alertState[0].alert_switch);
         } catch (error) {
           console.log(error);

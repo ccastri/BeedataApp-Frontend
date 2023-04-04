@@ -4,7 +4,7 @@ import { BalanceSection } from '../components/payments/balance-section';
 import { BillingPreferences } from '../components/payments/billing-preferences';
 import { PurchaseSummary } from '../components/payments/purchase-summary';
 import { BillingHistory } from '../components/payments/billing-history';
-import { DashboardLayout } from '../components/dashboard-layout';
+import { DashboardLayout } from '../components/general/dashboard-layout';
 
 
 const Page = () => (

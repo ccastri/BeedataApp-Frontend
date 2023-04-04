@@ -27,7 +27,11 @@ export const BillingHistory = ({ title }) => {
               Authorization: `Bearer ${token}`,
             },
           });
-          setData(response.data.billingHistory);
+          if (response && response.data && response.data.billingHistory) {
+            setData(response.data.billingHistory);
+          } else {
+            console.error('Invalid response:', response);
+          }
         } catch (error) {
           console.error(error);
         }
@@ -48,7 +52,7 @@ export const BillingHistory = ({ title }) => {
                 <Typography>No billing history found</Typography>
               ) : (
                 <TableContainer>
-                  <Table>
+                  <Table data-testid="billing-history-table">
                     <TableHead>
                     <TableRow>
                         <TableCell>Timestamp</TableCell>

@@ -1,3 +1,4 @@
+import React from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
 import NextLink from 'next/link';
@@ -12,7 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-// import GoogleIcon from '@mui/icons-material/Google';
 import {
   Box,
   Button,
@@ -38,13 +38,6 @@ const Register = () => {
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  // Manage Google login
-
-  // const handleGoogleClick = () => {
-  //   formik.setValues({...formik.values, registeredWith: "google"});
-  //   // perform other actions, such as redirecting to the Google login page
-  // }
-  
   const onSubmit = async (values) => {
     try {
       const { data } = await axios.post('/api/register', values);
@@ -173,6 +166,7 @@ const Register = () => {
                 checked={formik.values.policy}
                 name="policy"
                 onChange={formik.handleChange}
+                data-testid="policy-checkbox"
               />
               <Typography
                 color="textSecondary"
@@ -215,26 +209,6 @@ const Register = () => {
               )
               }
             </Box>
-            {/* <Box my={3}>
-              <Typography color="textSecondary" align="center">Or</Typography>
-              <Box my={2}>
-                <Divider />
-              </Box>
-              <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Button
-                  color="error"
-                  fullWidth
-                  onClick={handleGoogleClick}
-                  size="large"
-                  startIcon={<GoogleIcon />}
-                  variant="contained"
-                >
-                  Register with Google
-                </Button>
-              </Grid>
-            </Grid>
-            </Box> */}
             <Typography
               color="textSecondary"
               variant="body2"

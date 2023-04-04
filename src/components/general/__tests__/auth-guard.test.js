@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { render,  screen, act, waitFor } from '@testing-library/react';
-import axiosMockAdapter from 'axios-mock-adapter';
+import { render,  screen, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/router';
 import { AuthGuard } from '../auth-guard';
 

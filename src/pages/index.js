@@ -1,3 +1,4 @@
+import React from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
 import axios from 'axios';
@@ -35,8 +36,9 @@ const Login = () => {
         // Set the JWT in local storage
         localStorage.setItem('jwt', token);
 
-        Router
-          .push("/dashboard").catch(console.error);
+        if (typeof Router !== 'undefined') {
+          Router.push("/dashboard").catch(console.error);
+        }
       }
     } catch (err) {
       if (err.response) {
@@ -101,7 +103,7 @@ const Login = () => {
             <TextFieldWrapper
               formik={formik}
               name="email"
-              label="Email Address"
+              label="Email"
               type="email"
               sx={{ width: '100%' }}
             />

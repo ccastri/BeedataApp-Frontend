@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -16,22 +17,20 @@ export const BillingPreferences = ({ title }) => {
         const response = await axios.get('/api/billing-info', {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         });
-
         const { billing_address, city, country, billing_email } = response.data.billingInfo;
         setBillingAddress(billing_address);
         setLocation(`${city}, ${country}`);
         setEmail(billing_email);
 
-    } catch (error) {
+      } catch (error) {
         console.log(error);
       }
     };
-  
+
     fetchBillingInfo();
   }, []);
-  
 
   return (
     <Box sx={{ mb: 3 }}>
