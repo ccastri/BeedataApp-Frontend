@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import axios from 'axios';
 import Router from 'next/router';
 import Register from '../register';
+import jest from 'jest'; 
 
 jest.mock('axios');
 
