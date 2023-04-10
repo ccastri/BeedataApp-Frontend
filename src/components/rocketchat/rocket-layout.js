@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { RocketNavbar } from './rocket-navbar';
-import { AuthGuard } from '../auth-guard';
+import { AuthGuard } from '../general/auth-guard';
 
 const RocketchatLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',

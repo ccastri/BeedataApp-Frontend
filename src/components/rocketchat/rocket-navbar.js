@@ -5,7 +5,7 @@ import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip } from '@mui/m
 import { Home as HomeIcon } from '../../icons/home';
 import { Bell as BellIcon } from '../../icons/bell';
 import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
-import { AccountPopover } from '../account-popover';
+import { AccountPopover } from '../general/account-popover';
 import NextLink from 'next/link';
 
 const RocketNavbarRoot = styled(AppBar)(({ theme }) => ({
