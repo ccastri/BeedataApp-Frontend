@@ -1,11 +1,12 @@
 module.exports = {
   reactStrictMode: true,
-  webpack: (config) => {
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Ignore README.md file for @babel/plugin-syntax-bigint
     config.module.rules.push({
-      test: /\.(md|LICENSE)$/, // Add a rule to handle .md and LICENSE files
-      use: 'raw-loader' // Use raw-loader to load these file types as raw text
+      test: /@babel\/plugin-syntax-bigint/,
+      use: 'null-loader',
     });
 
     return config;
-  }
+  },
 };
