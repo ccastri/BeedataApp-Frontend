@@ -1,12 +1,12 @@
 module.exports = {
   reactStrictMode: true,
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Exclude LICENSE files from being processed
+    // Exclude LICENSE and README.md files from being processed by webpack
     config.module.rules.push({
-      test: /\.LICENSE$/,
-      use: 'null-loader',
+      test: /\.(LICENSE|README.md)$/,
+      loader: 'ignore-loader'
     });
 
     return config;
-  },
+  }
 };
