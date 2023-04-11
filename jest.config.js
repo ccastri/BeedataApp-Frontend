@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = process.env.NODE_ENV === 'test' ? {
   testEnvironment: 'jest-environment-jsdom',
   transform: {
     '/\.js$|jsx/': ['babel-jest', {
@@ -11,4 +11,4 @@ module.exports = {
     '**/__tests__/**/*.js?(x)',
     '**/?(*.)+(spec|test).js?(x)',
   ]
-};
+} : {};
