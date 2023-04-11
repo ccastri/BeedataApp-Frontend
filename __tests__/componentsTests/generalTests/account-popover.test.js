@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
-import { AccountPopover } from '../account-popover';
+import { AccountPopover } from '../../../src/components/general/account-popover';
 
 import { useRouter } from 'next/router';
 

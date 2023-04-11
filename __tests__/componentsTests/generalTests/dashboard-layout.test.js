@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../../../theme';
-import { DashboardLayout } from '../dashboard-layout';
+import { theme } from '../../../src/theme';
+import { DashboardLayout } from '../../../src/components/general/dashboard-layout';
 
 
 
@@ -13,7 +13,7 @@ jest.mock('next/router', () => ({
     }),
   }));
 
-jest.mock('../auth-guard', () => ({
+jest.mock('../../../src/components/general/auth-guard', () => ({
     AuthGuard: ({ children }) => <div>{children}</div>
 }));
   

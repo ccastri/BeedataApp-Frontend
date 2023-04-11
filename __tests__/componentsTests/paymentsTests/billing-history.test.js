@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { render, screen, act } from '@testing-library/react';
-import { BillingHistory } from '../billing-history';
+import { BillingHistory } from '../../../src/components/payments/billing-history';
 
 jest.mock('axios');
 

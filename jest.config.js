@@ -1,14 +1,14 @@
-module.exports = process.env.NODE_ENV === 'test' ? {
+const nextJest = require('next/jest')
+
+const createJestConfig = nextJest({
+  dir: './',
+})
+
+// Add any custom config to be passed to Jest
+const customJestConfig = {
+  setupFilesAfterEnv: ['./jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
-  transform: {
-    '/\.js$|jsx/': ['babel-jest', {
-      presets: ['@babel/preset-env', '@babel/preset-react']
-    }],
-  },
-  setupFilesAfterEnv: ['./setupTests.js'],
-  moduleFileExtensions: ['js', 'jsx'],
-  testMatch: [
-    '**/__tests__/**/*.js?(x)',
-    '**/?(*.)+(spec|test).js?(x)',
-  ]
-} : {};
+}
+
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+module.exports = createJestConfig(customJestConfig)

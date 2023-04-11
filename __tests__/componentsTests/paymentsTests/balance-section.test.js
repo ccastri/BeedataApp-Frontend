@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BalanceSection } from '../balance-section';
+import { BalanceSection } from '../../../src/components/payments/balance-section';
 
 jest.mock('axios');
 

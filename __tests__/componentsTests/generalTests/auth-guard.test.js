@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { render,  screen, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/router';
-import { AuthGuard } from '../auth-guard';
+import { AuthGuard } from '../../../src/components/general/auth-guard';
 
 jest.mock('axios');
 

@@ -1,9 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { PurchaseSummary } from '../purchase-summary';
+import { PurchaseSummary } from '../../../src/components/payments/purchase-summary';
 import axios from 'axios';
 
-jest.mock('axios');
+jest.mock('axios', () => ({
+  get: jest.fn(),
+  post: jest.fn(),
+}));
+
 
 describe('PurchaseSummary', () => {
     test('renders no purchase history message', async () => {

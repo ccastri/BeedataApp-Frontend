@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent} from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../../../theme';
-import { DashboardNavbar } from '../dashboard-navbar';
+import { theme } from '../../../src/theme';
+import { DashboardNavbar } from '../../../src/components/general/dashboard-navbar';
 
 describe('DashboardNavbar component', () => {
     it('should render successfully', () => {

@@ -1,7 +1,7 @@
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { render } from '@testing-library/react';
-import { BeeCard } from '../side-card';
+import { BeeCard } from '../../../src/components/login/side-card';
 
 const viewports = [
   { width: 320, height: 480 }, // iPhone 5/SE

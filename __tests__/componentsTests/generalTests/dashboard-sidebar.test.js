@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, fireEvent, act, screen } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../../../theme';
-import { DashboardSidebar } from '../dashboard-sidebar';
+import { theme } from '../../../src/theme';
+import { DashboardSidebar } from '../../../src/components/general/dashboard-sidebar';
 
 // Mock the useRouter hook
 jest.mock('next/router', () => ({
