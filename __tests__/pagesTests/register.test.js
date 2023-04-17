@@ -42,6 +42,7 @@ describe('Register', () => {
         fireEvent.change(screen.getByLabelText("Email Address"), { target: { value: "john.doe@example.com" } });
         fireEvent.change(screen.getByLabelText("Password"), { target: { value: "password" } });
         fireEvent.change(screen.getByLabelText("Confirm Password"), { target: { value: "password" } });
+        fireEvent.click(screen.getByTestId('policy-checkbox'))
 
         
         fireEvent.submit(screen.getByText("Sign Up Now"));
@@ -53,7 +54,6 @@ describe('Register', () => {
           firstName: "John",
           lastName: "Doe",
           company: "Test Company",
-          role: "Admin",
           password: "password",
           confirmPassword: "password",
           policy: true
@@ -73,12 +73,11 @@ describe('Register', () => {
         fireEvent.change(getByLabelText("Last Name"), { target: { value: "Doe" } });
         fireEvent.change(getByLabelText("Company"), { target: { value: "Test Company" } });
         fireEvent.change(getByLabelText("Email Address"), { target: { value: "john.doe@example.com" } });
-        // Simulate a click event on the MenuItem element that corresponds to the desired option value
-
         fireEvent.change(getByLabelText("Password"), { target: { value: "password" } });
         fireEvent.change(getByLabelText("Confirm Password"), { target: { value: "password" } });
+        fireEvent.click(screen.getByTestId('policy-checkbox'))
 
-        fireEvent.submit(getByText("Sign Up Now"));
+        fireEvent.click(screen.getByRole('button', { name: 'Sign Up Now' }))
       });
 
       await waitFor(() => {
@@ -88,7 +87,6 @@ describe('Register', () => {
           lastName: "Doe",
           company: "Test Company",
           password: "password",
-          role: "Admin",
           confirmPassword: "password",
           policy: true
         });

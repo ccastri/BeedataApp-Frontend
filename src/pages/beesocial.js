@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { RocketchatLayout } from '../components/rocketchat/rocket-layout';
 
-const Page = ({ rocketChatUrl }) => {
+const Page = () => {
   
   return (
     <>
