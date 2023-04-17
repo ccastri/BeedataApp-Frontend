@@ -32,6 +32,7 @@
     "formik": "2.2.9",
     "http": "^0.0.1-security",
     "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^2.0.6",
     "leaflet": "^1.9.3",
     "leaflet-defaulticon-compatibility": "^0.1.1",
     "next": "^12.3.0",
