@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "node server.js",
+    "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
     "test": "jest --watch",
     "export": "next export",
     "lint": "next lint",
