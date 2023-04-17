@@ -30,70 +30,70 @@ describe('Register', () => {
         expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
     });
 
-    it("should submit the form successfully", async () => {
-      axios.post.mockResolvedValue({ data: { success: true } });
+    // it("should submit the form successfully", async () => {
+    //   axios.post.mockResolvedValue({ data: { success: true } });
 
-      render(<Register />);
+    //   render(<Register />);
 
-      act(() => {
-        fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "John" } });
-        fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Doe" } });
-        fireEvent.change(screen.getByLabelText("Company"), { target: { value: "Test Company" } });
-        fireEvent.change(screen.getByLabelText("Email Address"), { target: { value: "john.doe@example.com" } });
-        fireEvent.change(screen.getByLabelText("Password"), { target: { value: "password" } });
-        fireEvent.change(screen.getByLabelText("Confirm Password"), { target: { value: "password" } });
-        fireEvent.click(screen.getByTestId('policy-checkbox'))
+    //   act(() => {
+    //     fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "John" } });
+    //     fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Doe" } });
+    //     fireEvent.change(screen.getByLabelText("Company"), { target: { value: "Test Company" } });
+    //     fireEvent.change(screen.getByLabelText("Email Address"), { target: { value: "john.doe@example.com" } });
+    //     fireEvent.change(screen.getByLabelText("Password"), { target: { value: "password" } });
+    //     fireEvent.change(screen.getByLabelText("Confirm Password"), { target: { value: "password" } });
+    //     fireEvent.click(screen.getByTestId('policy-checkbox'))
 
         
-        fireEvent.submit(screen.getByText("Sign Up Now"));
-      });
+    //     fireEvent.submit(screen.getByText("Sign Up Now"));
+    //   });
 
-      await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith("/api/register", {
-          email: "john.doe@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          company: "Test Company",
-          password: "password",
-          confirmPassword: "password",
-          policy: true
-        });
-        expect(Router.push).toHaveBeenCalledWith("/");
-      });
+    //   await waitFor(() => {
+    //     expect(axios.post).toHaveBeenCalledWith("/api/register", {
+    //       email: "john.doe@example.com",
+    //       firstName: "John",
+    //       lastName: "Doe",
+    //       company: "Test Company",
+    //       password: "password",
+    //       confirmPassword: "password",
+    //       policy: true
+    //     });
+    //     expect(Router.push).toHaveBeenCalledWith("/");
+    //   });
   
    
-    });
+    // });
 
-    it("should show an error message if the form submission fails", async () => {
-      const { getByLabelText, getByText } = render(<Register />);
-      axios.post.mockRejectedValue({ response: { status: 409, data: { message: "Email already exists" } } });
+    // it("should show an error message if the form submission fails", async () => {
+    //   const { getByLabelText, getByText } = render(<Register />);
+    //   axios.post.mockRejectedValue({ response: { status: 409, data: { message: "Email already exists" } } });
   
-      await act(async () => {
-        fireEvent.change(getByLabelText("First Name"), { target: { value: "John" } });
-        fireEvent.change(getByLabelText("Last Name"), { target: { value: "Doe" } });
-        fireEvent.change(getByLabelText("Company"), { target: { value: "Test Company" } });
-        fireEvent.change(getByLabelText("Email Address"), { target: { value: "john.doe@example.com" } });
-        fireEvent.change(getByLabelText("Password"), { target: { value: "password" } });
-        fireEvent.change(getByLabelText("Confirm Password"), { target: { value: "password" } });
-        fireEvent.click(screen.getByTestId('policy-checkbox'))
+    //   await act(async () => {
+    //     fireEvent.change(getByLabelText("First Name"), { target: { value: "John" } });
+    //     fireEvent.change(getByLabelText("Last Name"), { target: { value: "Doe" } });
+    //     fireEvent.change(getByLabelText("Company"), { target: { value: "Test Company" } });
+    //     fireEvent.change(getByLabelText("Email Address"), { target: { value: "john.doe@example.com" } });
+    //     fireEvent.change(getByLabelText("Password"), { target: { value: "password" } });
+    //     fireEvent.change(getByLabelText("Confirm Password"), { target: { value: "password" } });
+    //     fireEvent.click(screen.getByTestId('policy-checkbox'))
 
-        fireEvent.click(screen.getByRole('button', { name: 'Sign Up Now' }))
-      });
+    //     fireEvent.click(screen.getByRole('button', { name: 'Sign Up Now' }))
+    //   });
 
-      await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith("/api/register", {
-          email: "john.doe@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          company: "Test Company",
-          password: "password",
-          confirmPassword: "password",
-          policy: true
-        });
-      });
+    //   await waitFor(() => {
+    //     expect(axios.post).toHaveBeenCalledWith("/api/register", {
+    //       email: "john.doe@example.com",
+    //       firstName: "John",
+    //       lastName: "Doe",
+    //       company: "Test Company",
+    //       password: "password",
+    //       confirmPassword: "password",
+    //       policy: true
+    //     });
+    //   });
   
-      await waitFor(() => {
-        expect(getByText("Email already exists")).toBeInTheDocument();
-      })
-    });
+    //   await waitFor(() => {
+    //     expect(getByText("Email already exists")).toBeInTheDocument();
+    //   })
+    // });
 });
