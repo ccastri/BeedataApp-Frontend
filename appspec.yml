@@ -5,10 +5,10 @@ files:
     destination: /home/ubuntu/frontend
     overwrite: true
 hooks:
-  BeforeInstall:
-      - location: scripts/before_install.sh
-        timeout: 300
-        runas: ubuntu
+  # BeforeInstall:
+  #     - location: scripts/before_install.sh
+  #       timeout: 300
+  #       runas: ubuntu
   AfterInstall:
       - location: scripts/after_install.sh
         timeout: 300
