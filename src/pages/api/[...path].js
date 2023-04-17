@@ -1,6 +1,6 @@
 import httpProxy from 'http-proxy'
 
-const BACKEND_SERVER = process.env.BACKEND_SERVER // The actual URL of your API
+// const BACKEND_SERVER = process.env.BACKEND_SERVER // The actual URL of your API
 
 const proxy = httpProxy.createProxyServer()
 
@@ -11,9 +11,9 @@ export const config = {
 	},
 }
 
-export default (req, res) => {
+export default function(req, res) {
 	return new Promise((resolve, reject) => {
-		proxy.web(req, res, { target: BACKEND_SERVER, changeOrigin: true }, (err) => {
+		proxy.web(req, res, { target: 'https://api.beet.digital', changeOrigin: true }, (err) => {
 			if (err) {
 				return reject(err)
 			}
