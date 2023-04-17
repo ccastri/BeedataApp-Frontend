@@ -1,6 +1,5 @@
 #!/bin/bash
-
-export PATH=$PATH:/usr/bin:/usr/local/bin:/usr/local/lib/node_modules/pm2/bin >> /home/ubuntu/deploy.log
+source /home/ubuntu/.bashrc
 
 echo 'run application_start.sh: ' >> /home/ubuntu/deploy.log
 cd /home/ubuntu/frontend
