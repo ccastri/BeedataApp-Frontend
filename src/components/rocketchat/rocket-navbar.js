@@ -33,7 +33,8 @@ export const RocketNavbar = (props) => {
           }}
         >
           <Tooltip title="Search">
-              <NextLink href="/dashboard" passHref>
+              <NextLink href="/dashboard"
+passHref>
                 <a>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img 

@@ -94,9 +94,11 @@ const Login = () => {
             pl: {xs: 0, sm: 4},
           }}
         >
-          <form onSubmit={formik.handleSubmit} sx={{ width: '100%' }}>
+          <form onSubmit={formik.handleSubmit}
+sx={{ width: '100%' }}>
             <Box sx={{ my: 3, width: '100%' }}>
-              <Typography color="textPrimary" variant="h4">
+              <Typography color="textPrimary"
+variant="h4">
                 Sign in
               </Typography>
             </Box>
@@ -128,7 +130,8 @@ const Login = () => {
               }}
               sx={{ width: '100%' }}
             />
-            <Box my={3} sx={{ width: '100%' }}>
+            <Box my={3}
+sx={{ width: '100%' }}>
               <NextLink href="/forgot-password">
                 <Link
                   color="textSecondary"

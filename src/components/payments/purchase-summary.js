@@ -41,7 +41,9 @@ export const PurchaseSummary = ({ title }) => {
 
   return (
     <Box sx={{ mt: 3 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h4"
+component="h2"
+gutterBottom>
             {title}
         </Typography>
         <Card sx={{ marginTop: 2 }}>

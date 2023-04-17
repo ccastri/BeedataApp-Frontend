@@ -108,13 +108,18 @@ export const AccountProfileDetails = (props) => {
         />
         <Divider />
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
+          <Grid container
+spacing={3}>
+            <Grid item
+xs={12}>
+              <Typography variant="h6"
+gutterBottom>
                 User Information
               </Typography>
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 helperText="Please specify the first name"
@@ -126,7 +131,9 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Last name"
@@ -137,7 +144,9 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Email Address"
@@ -148,7 +157,9 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Phone Number"
@@ -159,7 +170,9 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Country"
@@ -170,7 +183,9 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Select City"
@@ -183,21 +198,27 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               >
                 {cities.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option key={option.value}
+value={option.value}>
                     {option.label}
                   </option>
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item
+xs={12}>
               <Divider />
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
+            <Grid item
+xs={12}>
+              <Typography variant="h6"
+gutterBottom>
                 Billing Information
               </Typography>
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Billing Email"
@@ -208,7 +229,9 @@ export const AccountProfileDetails = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item
+md={6}
+xs={12}>
               <TextField
                 fullWidth
                 label="Billing Address"

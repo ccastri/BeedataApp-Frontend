@@ -2,7 +2,8 @@ import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 export const LakeRows = (props) => (
-  <Card sx={{ maxWidth: '100%', height: '90%' }} {...props}>
+  <Card sx={{ maxWidth: '100%', height: '90%' }}
+{...props}>
     <CardContent>
       <Grid
         container
@@ -24,7 +25,9 @@ export const LakeRows = (props) => (
             1,6K
           </Typography>
         </Grid>
-        <Grid item xs={6} sx={{ textAlign: 'right' }}>
+        <Grid item
+xs={6}
+sx={{ textAlign: 'right' }}>
           <img
             src="/static/images/products/lake.svg"
             alt="Whatsapp"

@@ -34,33 +34,51 @@ export const BillingPreferences = ({ title }) => {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography variant="h4" component="h2" gutterBottom>
+      <Typography variant="h4"
+component="h2"
+gutterBottom>
         {title}
       </Typography>
       <Card sx={{ marginTop: 2 }}>
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1" component="h4" gutterBottom>
+          <Grid container
+spacing={2}>
+            <Grid item
+xs={12}
+sm={6}>
+              <Typography variant="subtitle1"
+component="h4"
+gutterBottom>
                 Billing Address
               </Typography>
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body1"
+gutterBottom>
                 {billingAddress}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1" component="h4" gutterBottom>
+            <Grid item
+xs={12}
+sm={6}>
+              <Typography variant="subtitle1"
+component="h4"
+gutterBottom>
                 Location
               </Typography>
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body1"
+gutterBottom>
                 {location}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1" component="h4" gutterBottom>
+            <Grid item
+xs={12}
+sm={6}>
+              <Typography variant="subtitle1"
+component="h4"
+gutterBottom>
                 Billing Email
               </Typography>
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body1"
+gutterBottom>
                 {email}
               </Typography>
             </Grid>

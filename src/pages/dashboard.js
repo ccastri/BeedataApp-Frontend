@@ -20,17 +20,37 @@ const Page = () => (
       }}
     >
       <Container sx={{ paddingLeft: 36, paddingRight: 36 }}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+        <Grid container
+spacing={3}
+justifyContent="center">
+          <Grid item
+xs={12}
+sm={6}
+md={4}
+lg={4}
+xl={4}>
             <WhatsappSms />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+          <Grid item
+xs={12}
+sm={6}
+md={4}
+lg={4}
+xl={4}>
             <LakeRows />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+          <Grid item
+xs={12}
+sm={6}
+md={4}
+lg={4}
+xl={4}>
             <SocialAgents />
           </Grid>
-          <Grid item xs={12} lg={12} xl={12}>
+          <Grid item
+xs={12}
+lg={12}
+xl={12}>
             <Sales />
           </Grid>
         </Grid>

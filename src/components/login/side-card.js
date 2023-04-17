@@ -72,10 +72,13 @@ export const BeeCard = React.memo(function BeeCard() {
         image="/static/logo-beedata.png"
       />
       <Content>
-        <Typography variant="h5" gutterBottom sx={{ mt: 2, color: '#ffffff' }}>
+        <Typography variant="h5"
+gutterBottom
+sx={{ mt: 2, color: '#ffffff' }}>
           <strong>{'CONNECT TO THE WORLD OF AUTOMATED SERVICES'}</strong>
         </Typography>
-        <Typography variant="body1" sx={{ color: '#FFFFFF' }}>
+        <Typography variant="body1"
+sx={{ color: '#FFFFFF' }}>
           {'Our cloud-based platform allows you to access and share relevant data anytime, anywhere.'}
         </Typography>
       </Content>

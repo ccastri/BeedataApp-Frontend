@@ -2,7 +2,8 @@ import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/m
 
 
 export const SocialAgents = (props) => (
-  <Card sx={{ maxWidth: '100%', height: '90%' }} {...props}>
+  <Card sx={{ maxWidth: '100%', height: '90%' }}
+{...props}>
     <CardContent>
       <Grid
         container
@@ -24,7 +25,9 @@ export const SocialAgents = (props) => (
             90%
           </Typography>
         </Grid>
-        <Grid item xs={6} sx={{ textAlign: 'right' }}>
+        <Grid item
+xs={6}
+sx={{ textAlign: 'right' }}>
           <img
             src="/static/images/products/social.svg"
             alt="social"

@@ -23,7 +23,8 @@ const ErrorSnackbar = ({errorMessage}) => {
       autoHideDuration={10000}
       onClose={handleClose}
     >
-      <Alert severity='error' sx={{ width: '100%', backgroundColor: 'rgba(76, 175, 80, 0.3)' }}>
+      <Alert severity='error'
+sx={{ width: '100%', backgroundColor: 'rgba(76, 175, 80, 0.3)' }}>
         {errorMessage}
       </Alert>
     </Snackbar>

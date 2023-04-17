@@ -94,17 +94,20 @@ export const Sales = (props) => {
                 label="From"
                 value={valueFrom}
                 onChange={(newValue) => {setValueFrom(newValue)}}
-                renderInput={(params) => <TextField {...params} size='small' />}
+                renderInput={(params) => <TextField {...params}
+size='small' />}
               />
             </LocalizationProvider>
           </Box>
-          <Box display='inline-block' ml={1}>
+          <Box display='inline-block'
+ml={1}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="To"
                 value={valueTo}
                 onChange={(newValue) => {setValueTo(newValue)}}
-                renderInput={(params) => <TextField {...params} size='small' />}
+                renderInput={(params) => <TextField {...params}
+size='small' />}
               />
             </LocalizationProvider>
           </Box>

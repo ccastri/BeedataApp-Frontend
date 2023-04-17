@@ -16,17 +16,24 @@ const Page = () => (
     </Head>
     <Box sx={{ flexGrow: 1, pt: 10 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <Grid container
+spacing={3}>
+          <Grid item
+xs={12}
+md={6}>
             <BalanceSection title="Balance Information" />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item
+xs={12}
+md={6}>
             <BillingPreferences title="Billing Preferences" />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item
+xs={12}>
             <PurchaseSummary title="Purchase Summary" />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item
+xs={12}>
             <BillingHistory title="Billing History" />
           </Grid>
         </Grid>

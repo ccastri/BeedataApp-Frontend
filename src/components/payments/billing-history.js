@@ -43,7 +43,10 @@ export const BillingHistory = ({ title }) => {
 
   return (
     <Box sx={{ mt: 3 }}>
-        <Typography variant="h4" component="h2" gutterBottom data-testid="billing-history-title">
+        <Typography variant="h4"
+component="h2"
+gutterBottom
+data-testid="billing-history-title">
             {title}
         </Typography>
         <Card sx={{ marginTop: 2 }}>

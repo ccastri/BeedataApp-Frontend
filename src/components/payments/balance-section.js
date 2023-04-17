@@ -85,24 +85,33 @@ export const BalanceSection = ({title}) => {
 
     return (
         <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h4"
+component="h2"
+gutterBottom>
           {title}
         </Typography>
         <Card>
           <CardContent>
-            <Typography variant="h5" component="h2" gutterBottom>
+            <Typography variant="h5"
+component="h2"
+gutterBottom>
               Current Balance
             </Typography>
-            <Typography variant="h4" component="div" sx={{ mb: 2 }}>
+            <Typography variant="h4"
+component="div"
+sx={{ mb: 2 }}>
               USD$ {balance}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Button variant="contained" onClick={handleAddMoney}>
+            <Button variant="contained"
+onClick={handleAddMoney}>
               Add Credit
             </Button>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                <Typography variant="body1" gutterBottom sx={{ marginRight: 2 }}>
+                <Typography variant="body1"
+gutterBottom
+sx={{ marginRight: 2 }}>
                   Balance under 10 USD alert:
                 </Typography>
                 <IOSSwitch
@@ -113,7 +122,9 @@ export const BalanceSection = ({title}) => {
                 />
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                <Typography variant="body1" gutterBottom sx={{ marginRight: 2 }}>
+                <Typography variant="body1"
+gutterBottom
+sx={{ marginRight: 2 }}>
                   Automatic Reload:
                 </Typography>
                 <IOSSwitch

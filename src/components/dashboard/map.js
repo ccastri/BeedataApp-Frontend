@@ -87,8 +87,13 @@ const Map = () => {
         }
       />
       <Box sx={{height: "50vh", width: "100%"}}>
-        <MapContainer center={position} zoom={12} scrollWheelZoom={false} style={{ height: "400px", width: "100%" }} whenCreated={setMap}>
-          <TileLayer attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <MapContainer center={position}
+zoom={12}
+scrollWheelZoom={false}
+style={{ height: "400px", width: "100%" }}
+whenCreated={setMap}>
+          <TileLayer attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {storesGeoJSON.features.map((store, index) => (
               <Marker
                 key={index}

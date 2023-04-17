@@ -107,10 +107,17 @@ const Register = () => {
                 Create a new account
               </Typography>
             </Box>
-            <TextFieldWrapper formik={formik} name="firstName" label="First Name" />
-            <TextFieldWrapper formik={formik} name="lastName" label="Last Name" />
-            <TextFieldWrapper formik={formik} name="company" label="Company" />
-            <FormControl fullWidth sx={{ my: 2 }}>
+            <TextFieldWrapper formik={formik}
+name="firstName"
+label="First Name" />
+            <TextFieldWrapper formik={formik}
+name="lastName"
+label="Last Name" />
+            <TextFieldWrapper formik={formik}
+name="company"
+label="Company" />
+            <FormControl fullWidth
+sx={{ my: 2 }}>
               <InputLabel id="role-label">Role</InputLabel>
               <Select
                 labelId="role-label"
@@ -124,8 +131,15 @@ const Register = () => {
                 <MenuItem value="admin">Admin</MenuItem>
               </Select>
             </FormControl>
-            <TextFieldWrapper formik={formik} name="email" label="Email Address" type="email" />
-            <TextFieldWrapper formik={formik} name="password" label="Password" type={showPassword ? "text" : "password"} inputProps={{
+            <TextFieldWrapper formik={formik}
+name="email"
+label="Email Address"
+type="email" />
+            <TextFieldWrapper formik={formik}
+name="password"
+label="Password"
+type={showPassword ? "text" : "password"}
+inputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -140,7 +154,11 @@ const Register = () => {
               )
             }}
             />
-            <TextFieldWrapper formik={formik} name="confirmPassword" label="Confirm Password" type={showConfirmPassword ? "text" : "password"} inputProps={{
+            <TextFieldWrapper formik={formik}
+name="confirmPassword"
+label="Confirm Password"
+type={showConfirmPassword ? "text" : "password"}
+inputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
