@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "PORT=808 next start",
+    "start": "PORT=8080 next start",
     "test": "jest --watch",
     "export": "next export",
     "lint": "next lint",
