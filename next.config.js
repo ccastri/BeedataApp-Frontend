@@ -3,7 +3,7 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
+        source: "^/api/:path*",
         destination: `https://api.beet.digital/api/:path*`,
       },
     ];
