@@ -11,7 +11,7 @@ import {
     TableContainer,
     TableHead,
     TableRow } from '@mui/material';
-import api from '../lib/axios';
+import api from '../../lib/axios';
 
 export const PurchaseSummary = ({ title }) => {
     
