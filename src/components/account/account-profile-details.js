@@ -13,25 +13,6 @@ import {
 import SuccessSnackbar from '../settings/settings-success-msg';
 import api from '../../lib/axios';
 
-const cities = [
-  {
-    value: 'Medellín',
-    label: 'Medellín'
-  },
-  {
-    value: 'Bogotá',
-    label: 'Bogotá'
-  },
-  {
-    value: 'Cali',
-    label: 'Cali'
-  },
-  {
-    value: 'Barranquilla',
-    label: 'Barranquilla'
-  }
-];
-
 export const AccountProfileDetails = (props) => {
   const [responseMessage, setResponseMessage] = useState('');
   const [formValues, setFormValues] = useState({
