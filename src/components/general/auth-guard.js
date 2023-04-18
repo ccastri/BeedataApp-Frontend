@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import api from '../../lib/axios';
 
 export const AuthGuard = (props) => {
   const { children } = props;
@@ -20,7 +20,7 @@ export const AuthGuard = (props) => {
     } else {
       const verifyToken = async () => {
         try {
-          const { data } = await axios.post('/api/verify-token', {}, {
+          const { data } = await api.post('/api/verify-token', {}, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

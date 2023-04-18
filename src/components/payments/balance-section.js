@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Button, Typography, useControlled } from '@mui/
 import { useState, useEffect } from 'react';
 import { IOSSwitch } from './switch'
 import WarningSnackbar from '../settings/settings-warning-msg';
-import axios from 'axios';
+import api from '../../lib/axios';
 
 
 export const BalanceSection = ({title}) => {
@@ -20,7 +20,7 @@ export const BalanceSection = ({title}) => {
     const handleAlertChange = async (event) => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await axios.post('/api/set-alert', {
+        const response = await api.post('/api/set-alert', {
           alert_switch: event.target.checked
         }, {
           headers: {
@@ -41,7 +41,7 @@ export const BalanceSection = ({title}) => {
       const getInitState = async () => {
         try {
           const token = localStorage.getItem('jwt');
-          const response = await axios.get('/api/alert-state', {
+          const response = await api.get('/api/alert-state', {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -62,7 +62,7 @@ export const BalanceSection = ({title}) => {
 
       const fetchBalance = async () => {
       try {
-        const response = await axios.get('/api/current-balance', {
+        const response = await api.get('/api/current-balance', {
         headers: {
           Authorization: `Bearer ${token}`,
         }

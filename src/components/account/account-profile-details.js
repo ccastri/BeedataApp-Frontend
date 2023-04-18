@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import SuccessSnackbar from '../settings/settings-success-msg';
-import axios from 'axios';
+import api from '../../lib/axios';
 
 const cities = [
   {
@@ -48,7 +48,7 @@ export const AccountProfileDetails = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('jwt');
-      const response = await axios.get('/api/user', {
+      const response = await api.get('/api/user', {
         headers: {
           Authorization: `Bearer ${token}`
         }

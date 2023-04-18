@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../lib/axios';
 
 
 export const BillingPreferences = ({ title }) => {
@@ -14,7 +14,7 @@ export const BillingPreferences = ({ title }) => {
 
     const fetchBillingInfo = async () => {
       try {
-        const response = await axios.get('/api/billing-info', {
+        const response = await api.get('/api/billing-info', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

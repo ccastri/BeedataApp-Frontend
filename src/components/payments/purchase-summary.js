@@ -11,7 +11,7 @@ import {
     TableContainer,
     TableHead,
     TableRow } from '@mui/material';
-import axios from 'axios';
+import api from '../lib/axios';
 
 export const PurchaseSummary = ({ title }) => {
     
@@ -21,7 +21,7 @@ export const PurchaseSummary = ({ title }) => {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('jwt');
-          const response = await axios.get('/api/purchase-history', {
+          const response = await api.get('/api/purchase-history', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
