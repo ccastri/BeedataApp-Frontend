@@ -41,11 +41,25 @@ const Media = styled(CardMedia)(({ theme }) => ({
   backgroundColor: '#fff',
   position: 'relative',
   boxShadow: '0px 14px 80px rgba(34, 35, 58, 0.2)',
+  transform: 'translateX(0)', // added to reset transform
   [theme.breakpoints.up('md')]: {
     width: '100%',
-    marginLeft: -theme.spacing(3),
+    marginLeft: 0, // changed from -theme.spacing(3)
     marginTop: 0,
-    transform: 'translateX(-8px)',
+    transform: 'translateX(0)', // changed from 'translateX(-8px)'
+  },
+  [theme.breakpoints.between('sm', 'md')]: {
+    width: '80%',
+    paddingBottom: '60%',
+    paddingLeft: '8%',
+    paddingRight: '8%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    paddingBottom: '60%',
+    paddingLeft: '8%',
+    paddingRight: '8%',
+    marginTop: theme.spacing(3),
   },
   '&:after': {
     content: '" "',
@@ -53,8 +67,7 @@ const Media = styled(CardMedia)(({ theme }) => ({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100%',
-    backgroundImage: '#ffffff',
+    height: '100%',   backgroundImage: '#ffffff',
     borderRadius: theme.spacing(2), // 16
     opacity: 0.2,
   },

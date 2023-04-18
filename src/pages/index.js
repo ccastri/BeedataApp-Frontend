@@ -193,7 +193,6 @@ sx={{ width: '100%' }}>
             height: '100vh',
             width: '50%',
             background: 'linear-gradient(to bottom, #2D3748, #1E272C)',
-            borderRadius: '10px',
             border: '1px solid #1E272C'
           }}
           >
