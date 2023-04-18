@@ -188,22 +188,13 @@ md={6}
 xs={12}>
               <TextField
                 fullWidth
-                label="Select City"
+                label="City"
                 name="city"
                 onChange={handleChange}
                 required
-                select
-                SelectProps={{ native: true }}
                 value={formValues.city}
                 variant="outlined"
-              >
-                {cities.map((option) => (
-                  <option key={option.value}
-value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
             <Grid item
 xs={12}>
