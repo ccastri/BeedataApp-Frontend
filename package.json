@@ -3,6 +3,7 @@
   "author": "Devias IO",
   "licence": "MIT",
   "version": "2.1.1",
+  "proxy": "https://api.beet.digital",
   "private": false,
   "scripts": {
     "dev": "next",
