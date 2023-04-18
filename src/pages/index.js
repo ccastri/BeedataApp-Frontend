@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
-import api from '../lib/axios';
+import { api } from '../lib/axios';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import { useFormik } from 'formik';
