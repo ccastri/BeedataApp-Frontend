@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 import RegisterSchema from '../utils/register-validation-schema';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
 import TextFieldWrapper from '../components/settings/settings-textfield-wrapper';
-import axios from 'axios';
+import api from '../lib/axios';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -40,7 +40,7 @@ const Register = () => {
 
   const onSubmit = async (values) => {
     try {
-      const { data } = await axios.post('/api/register', values);
+      const { data } = await api.post('/api/register', values);
 
       if (data.success) {
         Router

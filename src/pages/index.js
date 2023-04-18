@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../lib/axios';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import { useFormik } from 'formik';
@@ -28,7 +28,7 @@ const Login = () => {
   const onSubmit = async (values) => {
     try {
 
-      const { data } = await axios.post("/api/login", values);
+      const { data } = await api.post("/api/login", values);
       
       if (data.success) {
         const token = data.token;
