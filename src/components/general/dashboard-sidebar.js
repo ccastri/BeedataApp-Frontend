@@ -35,7 +35,7 @@ const items = [
     title: 'Beet Lake'
   },
   {
-    href: 'https://flow.beedata.co/',
+    href: 'https://pruebas.beedata.co/signin',
     icon: (<SmartToyIcon fontSize="small" />),
     target: '_blank',
     title: 'Beet Bot'
