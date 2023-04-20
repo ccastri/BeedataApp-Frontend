@@ -64,7 +64,7 @@ export const AccountProfileDetails = (props) => {
   const handleSaveDetails = async () => {
     try {
       const token = localStorage.getItem('jwt');
-      const response = await axios.post('/api/update-user', formValues, {
+      const response = await api.post('/api/update-user', formValues, {
         headers: {
           Authorization: `Bearer ${token}`
         }
