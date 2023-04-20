@@ -1,61 +1,38 @@
 import React from 'react';
-import { Box, Card, CardContent, Button, Typography, useControlled } from '@mui/material';
+import { 
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Divider,
+  Popover,
+  Typography
+} from '@mui/material';
 import { useState, useEffect } from 'react';
-import { IOSSwitch } from './switch'
-import WarningSnackbar from '../settings/settings-warning-msg';
 import api from '../../lib/axios';
 
 
 export const BalanceSection = ({title}) => {
 
     const [balance, setBalance] = useState(0);
-    const [isAlertEnabled, setIsAlertEnabled] = useState(null);
-    const [isRechargeEnabled, setIsRechargeEnabled] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
+    const [anchorEl, setAnchorEl] = useState(null);
 
-    const handleAddMoney = () => {
-        // Redirect to page for adding money to balance
-      };
+    // const handleAddMoney = () => {
+    //     // Redirect to page for adding money to balance
+    // };
 
-    const handleAlertChange = async (event) => {
-      try {
-        const token = localStorage.getItem('jwt');
-        const response = await api.post('/api/set-alert', {
-          alert_switch: event.target.checked
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    // Temporary code until handle money is ready
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
     };
 
-    const handleSwitchToggle = (event) => {
-      setIsAlertEnabled(event.target.checked);
-      handleAlertChange(event);
-    }
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
-    useEffect(() => {
-      const getInitState = async () => {
-        try {
-          const token = localStorage.getItem('jwt');
-          const response = await api.get('/api/alert-state', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          setIsAlertEnabled(response.data.alertState[0].alert_switch);
-        } catch (error) {
-          console.log(error);
-          setIsAlertEnabled(false); // return a default value in case of an error
-        }
-      };
-      getInitState();
-    }, []);
-    
-    
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
 
     useEffect(() => {
       const token = localStorage.getItem('jwt');
@@ -69,10 +46,6 @@ export const BalanceSection = ({title}) => {
       });
 
       const currentBalance = response.data.currentBalance;
-      if (response.data.refillAlert) {
-        setAlertMessage(response.data.alertMessage);
-      }
-
       setBalance(currentBalance);
 
     } catch (error) {
@@ -102,43 +75,45 @@ component="div"
 sx={{ mb: 2 }}>
               USD$ {balance}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Button variant="contained"
-onClick={handleAddMoney}>
-              Add Credit
-            </Button>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                <Typography variant="body1"
-gutterBottom
-sx={{ marginRight: 2 }}>
-                  Balance under 10 USD alert:
-                </Typography>
-                <IOSSwitch
-                  checked={isAlertEnabled}
-                  data-testid='alert-switch'
-                  onChange={handleSwitchToggle}
-                  sx={{ marginLeft: 1 }}
-                />
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                <Typography variant="body1"
-gutterBottom
-sx={{ marginRight: 2 }}>
-                  Automatic Reload:
-                </Typography>
-                <IOSSwitch
-                  checked={isRechargeEnabled}
-                  onChange={(event) => setIsRechargeEnabled(event.target.checked)}
-                />
-              </Box>
-            </Box>
-          </Box>
           </CardContent>
+          <Divider />
+          <CardActions>
+            <Box sx={{ flexGrow: 1 }} />
+              <Button
+                color="primary"
+                fullWidth
+                variant="text"
+                onClick={handleClick}
+                style={{ fontSize: '1rem' }}
+              >
+                Add Credit
+              </Button>
+              <Box sx={{ position: 'relative' }}>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  PaperProps={{
+                    sx: {
+                      p: 2,
+                      bgcolor: 'rgba(234, 84, 85, 0.8)',
+                    }
+                  }}
+                >
+                  <Typography> This function is currently unavailable </Typography>
+                </Popover>
+              </Box>
+          </CardActions>
         </Card>
-        {isAlertEnabled && alertMessage && (
-          <WarningSnackbar message={alertMessage} />
-        )}
       </Box>
     );
 }

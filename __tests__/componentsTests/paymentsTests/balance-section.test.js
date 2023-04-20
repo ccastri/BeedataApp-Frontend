@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../../src/lib/axios';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BalanceSection } from '../../../src/components/payments/balance-section';
 
-jest.mock('axios');
+jest.mock('../../../src/lib/axios');
 
 describe('BalanceSection', () => {
     beforeEach (() => {
@@ -20,7 +20,7 @@ describe('BalanceSection', () => {
             currentBalance: 100,
           },
         };
-        axios.get.mockResolvedValue(mockBalanceResponse);
+        api.get.mockResolvedValue(mockBalanceResponse);
     
         render(<BalanceSection title="Test Title" />);
     

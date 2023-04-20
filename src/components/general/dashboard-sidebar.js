@@ -3,12 +3,11 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
-import { Cog as CogIcon } from '../../icons/cog';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { Payment as PaymentIcon } from '../../icons/payment';
-import { ChartBar as ChartBarIcon } from '../../icons/chart-bar';
 import { Selector as SelectorIcon } from '../../icons/selector';
 import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 import { Chat as ChatIcon } from '../../icons/chat';
@@ -19,32 +18,44 @@ import { NavItem } from './nav-item';
 const items = [
   {
     href: '/dashboard',
-    icon: (<ChartBarIcon fontSize="small" />),
+    icon: (<TrendingDownIcon fontSize="small" />),
+    target: '_self',
     title: 'Consumption'
   },
-  // {
-  //   href: '/customers',
-  //   icon: (<UsersIcon fontSize="small" />),
-  //   title: 'Customers'
-  // },
+  {
+    href: 'https://social.beet.digital/home',
+    icon: (<UsersIcon fontSize="small" />),
+    target: '_blank',
+    title: 'Beet Social'
+  },
+  {
+    href: 'https://lake.beedata.co/dashboard/#/signin',
+    icon: (<StorageIcon fontSize="small" />),
+    target: '_blank',
+    title: 'Beet Lake'
+  },
+  {
+    href: 'https://flow.beedata.co/',
+    icon: (<SmartToyIcon fontSize="small" />),
+    target: '_blank',
+    title: 'Beet Bot'
+  },
   {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
+    target: '_self',
     title: 'Products'
   },
-  // {
-  //   href: '/beesocial',
-  //   icon: (<ChatIcon fontSize="small" />),
-  //   title: 'Beesocial'
-  // },
   {
     href: '/payments',
     icon: (<PaymentIcon fontSize="small" />),
+    target: '_self',
     title: 'Payments'
   },
   {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
+    target: '_self',
     title: 'Account'
   },
   // {
@@ -88,7 +99,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink
-              href="/"
+              href="/dashboard"
               passHref
             >
               <a>
@@ -155,62 +166,9 @@ export const DashboardSidebar = (props) => {
               icon={item.icon}
               href={item.href}
               title={item.title}
+              target={item.target}
             />
           ))}
-        </Box>
-        <Divider sx={{ borderColor: '#2D3748' }} />
-        <Box
-          sx={{
-            px: 2,
-            py: 9
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              mt: 2,
-              mx: 'auto',
-              width: '160px',
-              '& img': {
-                width: '100%'
-              }
-            }}
-          >
-          </Box>
-          <NextLink
-            href="https://pruebas.beedata.co"
-            passHref
-          >
-            <Button
-              color="secondary"
-              component="a"
-              endIcon={(<OpenInNewIcon />)}
-              fullWidth
-              sx={{ mt: 2 }}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="contained"
-            >
-              Automate
-            </Button>
-          </NextLink>
-          <NextLink
-            href="https://lake.beedata.co/dashboard/"
-            passHref
-          >
-            <Button
-              color="secondary"
-              component="a"
-              endIcon={(<StorageIcon />)}
-              fullWidth
-              sx={{ mt: 2 }}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="contained"
-            >
-              Data Lake
-            </Button>
-          </NextLink>
         </Box>
       </Box>
     </>

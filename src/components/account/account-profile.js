@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Avatar,
   Box,
@@ -8,6 +9,9 @@ import {
   Divider,
   Typography
 } from '@mui/material';
+import { useState, useEffect } from 'react';
+import api from '../../lib/axios';
+
 
 const user = {
   avatar: '/static/images/avatars/beedata.svg',
@@ -18,7 +22,27 @@ const user = {
   timezone: 'GTM-7'
 };
 
-export const AccountProfile = (props) => (
+export const AccountProfile = (props) => {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await api.get('/api/user', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+  }, []);
+
+  return (
   <Card {...props}>
     <CardContent>
       <Box
@@ -29,7 +53,7 @@ export const AccountProfile = (props) => (
         }}
       >
         <Avatar
-          src={user.avatar}
+          src={user.avatar ? user.avatar : '/static/images/avatars/beedata.svg'}
           sx={{
             height: 64,
             mb: 2,
@@ -41,19 +65,19 @@ export const AccountProfile = (props) => (
           gutterBottom
           variant="h5"
         >
-          {user.name}
+          {user.name ? user.name.charAt(0).toUpperCase() + user.name.slice(1) : 'Name'}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {`${user.jobTitle}`}
+          {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Role'}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {user.timezone}
+          {user.company ? user.company.charAt(0).toUpperCase() + user.company.slice(1) : 'Company'}
         </Typography>
       </Box>
     </CardContent>
@@ -69,3 +93,4 @@ export const AccountProfile = (props) => (
     </CardActions>
   </Card>
 );
+}

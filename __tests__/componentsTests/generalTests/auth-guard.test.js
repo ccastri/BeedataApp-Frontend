@@ -1,10 +1,10 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../../src/lib/axios';
 import { render,  screen, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/router';
 import { AuthGuard } from '../../../src/components/general/auth-guard';
 
-jest.mock('axios');
+jest.mock('../../../src/lib/axios');
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -27,13 +27,13 @@ describe('AuthGuard', () => {
     const router = { isReady: true, replace: jest.fn() };
     useRouter.mockReturnValue(router);
 
-    axios.post.mockResolvedValueOnce({ data: { success: true } });
+    api.post.mockResolvedValueOnce({ data: { success: true } });
 
     const { getByTestId } = render(<AuthGuard>{mockChildren}</AuthGuard>);
 
     await waitFor(() => expect(getByTestId('child')).toBeInTheDocument());
 
-    expect(axios.post).toHaveBeenCalledWith('/api/verify-token', {}, {
+    expect(api.post).toHaveBeenCalledWith('/api/verify-token', {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   });
@@ -42,13 +42,13 @@ describe('AuthGuard', () => {
     const router = { isReady: true, replace: jest.fn() };
     useRouter.mockReturnValue(router);
 
-    axios.post.mockResolvedValueOnce({ data: { success: false } });
+    api.post.mockResolvedValueOnce({ data: { success: false } });
 
     const { queryByTestId } = render(<AuthGuard>{mockChildren}</AuthGuard>);
 
     await waitFor(() => expect(queryByTestId('loading-indicator')).not.toBeInTheDocument());
 
-    expect(axios.post).toHaveBeenCalledWith('/api/verify-token', {}, {
+    expect(api.post).toHaveBeenCalledWith('/api/verify-token', {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -62,13 +62,13 @@ describe('AuthGuard', () => {
     const router = { isReady: true, replace: jest.fn() };
     useRouter.mockReturnValue(router);
 
-    axios.post.mockRejectedValueOnce(new Error('Verification failed'));
+    api.post.mockRejectedValueOnce(new Error('Verification failed'));
 
     const { queryByTestId } = render(<AuthGuard>{mockChildren}</AuthGuard>);
 
     await waitFor(() => expect(queryByTestId('loading-indicator')).not.toBeInTheDocument());
 
-    expect(axios.post).toHaveBeenCalledWith('/api/verify-token', {}, {
+    expect(api.post).toHaveBeenCalledWith('/api/verify-token', {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -89,7 +89,7 @@ describe('AuthGuard', () => {
 
     await waitFor(() => expect(queryByTestId('loading-indicator')).not.toBeInTheDocument());
 
-    expect(axios.post).not.toHaveBeenCalled();
+    expect(api.post).not.toHaveBeenCalled();
 
     expect(router.replace).toHaveBeenCalledWith({
       pathname: '/',
@@ -104,7 +104,7 @@ describe('AuthGuard', () => {
       replace: jest.fn(),
     });
     localStorage.setItem('jwt', 'fake-token');
-    axios.post.mockResolvedValue({
+    api.post.mockResolvedValue({
       data: {
         success: true,
       },
@@ -125,7 +125,7 @@ describe('AuthGuard', () => {
     useRouter.mockReturnValue(router);
   
     // Mock response for invalid token verification
-    axios.post.mockResolvedValueOnce({ data: { success: false } });
+    api.post.mockResolvedValueOnce({ data: { success: false } });
   
     localStorage.setItem('jwt', 'invalid-token');
   
@@ -133,7 +133,7 @@ describe('AuthGuard', () => {
   
     await waitFor(() => expect(queryByTestId('loading-indicator')).not.toBeInTheDocument());
   
-    expect(axios.post).toHaveBeenCalledWith('/api/verify-token', {}, {
+    expect(api.post).toHaveBeenCalledWith('/api/verify-token', {}, {
       headers: { Authorization: 'Bearer invalid-token' },
     });
   
