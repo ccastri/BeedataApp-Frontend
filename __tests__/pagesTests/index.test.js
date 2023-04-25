@@ -2,12 +2,9 @@ import React from 'react';
 import { render, fireEvent, act, screen, waitFor } from '@testing-library/react';
 import Login from '../../src/pages/index';
 import Router from 'next/router';
-import axios from 'axios';
+import api from '../../src/lib/axios';
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
+jest.mock('../../src/lib/axios');
 
 jest.mock('next/router', () => ({
     push: jest.fn(),
@@ -38,7 +35,7 @@ describe('Login component', () => {
 
       it('submits the form with correct values', async () => {
         const mockData = { success: true, token: 'mock_token' };
-        axios.post.mockResolvedValue({ data: mockData });
+        api.post.mockResolvedValue({ data: mockData });
     
         render(<Login />);
     
@@ -54,7 +51,7 @@ describe('Login component', () => {
         fireEvent.submit(screen.getByText('Sign In Now'));
     
         await waitFor(() => {
-          expect(axios.post).toHaveBeenCalledWith('/api/login', {
+          expect(api.post).toHaveBeenCalledWith('/api/login', {
             email: 'test@example.com',
             password: 'Password123',
           });

@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../../src/lib/axios';
 import { render, screen, act } from '@testing-library/react';
 import { BillingPreferences } from '../../../src/components/payments/billing-preferences';
 
-jest.mock('axios');
+jest.mock('../../../src/lib/axios');
 
 describe('BillingPreferences', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('BillingPreferences', () => {
       country: 'USA',
       billing_email: 'test@test.com'
     };
-    axios.get.mockResolvedValue({ data: { billingInfo } });
+    api.get.mockResolvedValue({ data: { billingInfo } });
 
     render(<BillingPreferences title="Billing Preferences" />);
 
@@ -36,7 +36,7 @@ describe('BillingPreferences', () => {
   });
 
   test('renders component with empty billing information', async () => {
-    axios.get.mockResolvedValueOnce({
+    api.get.mockResolvedValueOnce({
       data: { billingInfo: [] },
     });
   
@@ -48,10 +48,5 @@ describe('BillingPreferences', () => {
     expect(screen.getByText('Billing Address')).toBeInTheDocument();
     expect(screen.getByText('Location')).toBeInTheDocument();
     expect(screen.getByText('Billing Email')).toBeInTheDocument();
-
-    // expect(screen.getByText('No billing information found')).toBeInTheDocument();
-    // expect(screen.getByText('No location found')).toBeInTheDocument();
-    // expect(screen.getByText('No email found')).toBeInTheDocument();
-  
   });
 });

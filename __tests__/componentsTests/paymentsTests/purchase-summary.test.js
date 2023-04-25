@@ -1,17 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PurchaseSummary } from '../../../src/components/payments/purchase-summary';
-import axios from 'axios';
+import api from '../../../src/lib/axios';
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
-
+jest.mock('../../../src/lib/axios');
 
 describe('PurchaseSummary', () => {
     test('renders no purchase history message', async () => {
-      axios.get.mockResolvedValueOnce({ data: { purchaseHistory: [] } });
+      api.get.mockResolvedValueOnce({ data: { purchaseHistory: [] } });
       render(<PurchaseSummary title="Purchase History" />);
       const message = await screen.findByText(/no purchase history found/i);
       expect(message).toBeInTheDocument();
@@ -34,7 +30,7 @@ describe('PurchaseSummary', () => {
           price_total: 30,
         },
       ];
-      axios.get.mockResolvedValueOnce({ data: { purchaseHistory } });
+      api.get.mockResolvedValueOnce({ data: { purchaseHistory } });
       render(<PurchaseSummary title="Purchase History" />);
       const table = await screen.findByRole('table');
       expect(table).toBeInTheDocument();

@@ -1,13 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import axios from 'axios';
+import api from '../../src/lib/axios';
 import Router from 'next/router';
 import Register from '../../src/pages/register';
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
+jest.mock('../../src/lib/axios');
 
 jest.mock('next/router', () => ({
     push: jest.fn(),

@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../../src/lib/axios';
 import { render, screen, act } from '@testing-library/react';
 import { BillingHistory } from '../../../src/components/payments/billing-history';
 
-jest.mock('axios');
+jest.mock('../../../src/lib/axios');
 
 describe('BillingHistory', () => {
     const token = 'fake-token';
@@ -25,7 +25,7 @@ describe('BillingHistory', () => {
 
     test('renders no billing history message when data is empty', async () => {
 
-      axios.get.mockResolvedValueOnce({ data: { billingHistory: [] } });
+      api.get.mockResolvedValueOnce({ data: { billingHistory: [] } });
     
       await act(async () => {
         render(<BillingHistory title="Billing History" />);
@@ -40,7 +40,7 @@ describe('BillingHistory', () => {
         { id: 1, date: '2022-01-01', amount: 100 },
         { id: 2, date: '2022-02-01', amount: 200 },
       ];
-      axios.get.mockResolvedValueOnce({ data: { billingHistory: mockData } });
+      api.get.mockResolvedValueOnce({ data: { billingHistory: mockData } });
   
       await act(async () => {
         render(<BillingHistory title="Billing History" />);
