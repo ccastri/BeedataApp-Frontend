@@ -10,7 +10,7 @@ const password = () => Yup.string()
     );
 const policy = () => Yup.boolean().oneOf([true], 'This field must be checked');
 
-// Checkk if Regiter paswords match
+// Check if Register paswords match
 
 const validatePassword = (password) => {
     return Yup.string().required('Password is required').test(
@@ -26,13 +26,16 @@ const validatePassword = (password) => {
   // filled out in email registration method.
 
   const RegisterSchema = Yup.object().shape({
-    email: email(),
-    firstName: stringField('First name is required', 255).required("First name is required"),
-    lastName: stringField('Last name is required', 255).required("Last name is required"),
+    fullName: stringField('Full name is required', 255).required("Full name is required"),
     company: stringField('Company name is required', 255).required("Company name is required"),
+    identificationNumber: stringField('Identification number is required', 255)
+    .matches(/^\d+$/, 'Must contain only numbers')
+    .required("Identification number is required"),
+    identificationType: stringField('Identification type is required', 255).required("Identification type is required"),
+    phoneNumber: stringField('Phone number is required', 255)
+    .required("Phone number is required"),
+    email: email(),
     role: stringField('Role is required', 255).required("Role is required"),
-    password: password(),
-    confirmPassword: validatePassword(),
     policy: policy().required("Accept terms and conditions is required"),
 });
 

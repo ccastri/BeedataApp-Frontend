@@ -6,70 +6,66 @@ import Router from 'next/router';
 import { useFormik } from 'formik';
 import RegisterSchema from '../utils/register-validation-schema';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
-import TextFieldWrapper from '../components/settings/settings-textfield-wrapper';
+import TextFieldWrapper from '../components/general/textfield-wrapper';
+import PhoneField from '../components/general/phone-field';
 import api from '../lib/axios';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
   Checkbox,
   Container,
   FormHelperText,
-  FormControl,
-  InputLabel,
   Link,
-  MenuItem,
-  Typography,
-  Select
+  Typography
 } from '@mui/material';
 
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Manage password visibility
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
-  const handleMouseDownPassword = (event) => event.preventDefault();
+  const idTypes = [
+    { value: 'CC', label: 'Cédula de ciudadanía' },
+    { value: 'CE', label: 'Cédula de extranjería' },
+    { value: 'TI', label: 'Tarjeta de identidad' },
+    { value: 'PP', label: 'Pasaporte' },
+    { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
+  ];
 
   const onSubmit = async (values) => {
-    try {
-      const { data } = await api.post('/api/register', values);
+    console.log(values);
+    // try {
+    //   const { data } = await api.post('/api/register', values);
 
-      if (data.success) {
-        Router
-          .push('/').catch(console.error);
-      }
-    } catch (err) {
-      if (err.response && err.response.status === 409) {
-        setErrorMessage(err.response.data.message);
-      } else {
-        console.error(err);
-      }
-    }
+    //   if (data.success) {
+    //     Router
+    //       .push('/').catch(console.error);
+    //   }
+    // } catch (err) {
+    //   if (err.response && err.response.status === 409) {
+    //     setErrorMessage(err.response.data.message);
+    //   } else {
+    //     console.error(err);
+    //   }
+    // }
   }
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      firstName: '',
-      lastName: '',
+      fullName: '',
       company: '',
+      identificationType: '',
+      identificationNumber: '',
+      phoneNumber: '',
+      email: '',
       role: '',
-      password: '',
-      confirmPassword: '',
       policy: false
     },
     validationSchema: RegisterSchema,
     onSubmit
   });
 
+  console.log(formik.errors);
   return (
     <>
       <Head>
@@ -108,71 +104,29 @@ const Register = () => {
               </Typography>
             </Box>
             <TextFieldWrapper formik={formik}
-name="firstName"
-label="First Name" />
-            <TextFieldWrapper formik={formik}
-name="lastName"
-label="Last Name" />
+name="fullName"
+label="Full Name" />
             <TextFieldWrapper formik={formik}
 name="company"
 label="Company" />
-            <FormControl fullWidth
-sx={{ my: 2 }}>
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                value={formik.values.role}
-                onChange={formik.handleChange}
-              >
-                <MenuItem value="employee">Employee</MenuItem>
-                <MenuItem value="manager">Manager</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-              </Select>
-            </FormControl>
+            <TextFieldWrapper formik={formik}
+name="identificationType"
+label="Identification Type"
+selectOptions={idTypes} />
+            <TextFieldWrapper formik={formik}
+name="identificationNumber"
+label="Identification Number" />
+            <PhoneField formik={formik}
+name="phoneNumber"
+label="Phone Number"
+/>
             <TextFieldWrapper formik={formik}
 name="email"
 label="Email Address"
 type="email" />
             <TextFieldWrapper formik={formik}
-name="password"
-label="Password"
-type={showPassword ? "text" : "password"}
-inputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            />
-            <TextFieldWrapper formik={formik}
-name="confirmPassword"
-label="Confirm Password"
-type={showConfirmPassword ? "text" : "password"}
-inputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowConfirmPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showConfirmPassword  ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }} 
-            />
+name="role"
+label="Role" />
             <Box
               sx={{
                 alignItems: 'center',
