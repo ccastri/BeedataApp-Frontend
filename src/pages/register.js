@@ -8,6 +8,7 @@ import RegisterSchema from '../utils/register-validation-schema';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
 import PhoneField from '../components/general/phone-field';
+import { ResponsiveDialog } from '../components/register/confirmation-dialog';
 import api from '../lib/axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
@@ -34,20 +35,27 @@ const Register = () => {
 
   const onSubmit = async (values) => {
     console.log(values);
-    // try {
-    //   const { data } = await api.post('/api/register', values);
+    try {
+      const { data } = await api.post('/api/register', values);
 
-    //   if (data.success) {
-    //     Router
-    //       .push('/').catch(console.error);
-    //   }
-    // } catch (err) {
-    //   if (err.response && err.response.status === 409) {
-    //     setErrorMessage(err.response.data.message);
-    //   } else {
-    //     console.error(err);
-    //   }
-    // }
+      if (data.success) {
+        Router
+          .push('/').catch(console.error);
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        setErrorMessage(err.response.data.message);
+      } else {
+        console.error(err);
+      }
+    }
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (formik.isValid) {
+      onSubmit(formik.values);
+    }
   }
 
   const formik = useFormik({
@@ -65,7 +73,6 @@ const Register = () => {
     onSubmit
   });
 
-  console.log(formik.errors);
   return (
     <>
       <Head>
@@ -166,16 +173,12 @@ label="Role" />
               </FormHelperText>
             )}
             <Box sx={{ py: 2 }}>
-              <Button
-                color="primary"
-                disabled={formik.isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
-                Sign Up Now
-              </Button>
+              {formik.isValid && (
+                <ResponsiveDialog 
+                  formikValues={formik.values}
+                  onSubmit={formik.handleSubmit}
+                />
+              )}
               { errorMessage && (
                 <ErrorSnackbar errorMessage={errorMessage}/>
               )
