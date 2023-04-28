@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { 
+import {
     Button,
     Dialog,
     DialogActions,
@@ -28,7 +28,7 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
     };
 
     return (
-        <div>
+        <>
             <Button
                 color="primary"
                 fullWidth
@@ -59,7 +59,7 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
                 >
                     <DialogContentText>
                         <Typography sx={{ width: '100%', marginBottom: 2 }}>
-                            <span style={{fontWeight: 'bold'}}>First Name: </span> {formikValues.fullName}
+                            <span style={{fontWeight: 'bold'}}>Name: </span> {formikValues.fullName}
                         </Typography>
                         <Typography sx={{ width: '100%', marginBottom: 2 }}>
                             <span style={{fontWeight: 'bold'}}>Company Name: </span> {formikValues.company}
@@ -107,6 +107,6 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </>
     );
 }

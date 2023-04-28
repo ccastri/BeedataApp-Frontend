@@ -34,7 +34,6 @@ const Register = () => {
   ];
 
   const onSubmit = async (values) => {
-    console.log(values);
     try {
       const { data } = await api.post('/api/register', values);
 
