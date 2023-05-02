@@ -2,25 +2,23 @@ import React from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
 import NextLink from 'next/link';
-import Router from 'next/router';
 import { useFormik } from 'formik';
 import RegisterSchema from '../utils/register-validation-schema';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
+import CircularProgress from '@mui/material/CircularProgress';
 import PhoneField from '../components/general/phone-field';
 import { ResponsiveDialog } from '../components/register/confirmation-dialog';
-import { CustomizedDialogs } from '../components/register/credentials-dialog';
+import { CredentialDialog } from '../components/register/credentials-dialog';
 import api from '../lib/axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormHelperText,
-  Link,
-  Typography
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Container from '@mui/material/Container';
+import FormHelperText from '@mui/material/FormHelperText';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 
 
 const Register = () => {
@@ -32,6 +30,7 @@ const Register = () => {
     { value: 'CC', label: 'Cédula de ciudadanía' },
     { value: 'CE', label: 'Cédula de extranjería' },
     { value: 'PP', label: 'Pasaporte' },
+    { value: 'TI', label: 'Tarjeta de identidad' },
     { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
   ];
 
@@ -206,7 +205,7 @@ label="Role" />
             </Typography>
           </form>
           {openCredentials && credentials && (
-          <CustomizedDialogs
+          <CredentialDialog
             user={credentials}
             openCredentials={true}
             onClose={() => {

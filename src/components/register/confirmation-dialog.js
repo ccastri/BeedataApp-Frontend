@@ -98,14 +98,13 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
                 Edit
               </Button>
               <Button
-                color="primary"
                 onClick={() => {
                   onSubmit();
                   handleClose();
                 }}
                 fullWidth
                 autoFocus
-                variant="contained"
+                variant="outlined"
               >
                 Submit
               </Button>

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -9,6 +10,7 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
+import { decryptPwd } from '../../utils/decrypt-pwd';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -48,9 +50,12 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export function CustomizedDialogs(props) {
+export function CredentialDialog(props) {
   const { user, openCredentials, onClose } = props;
-  console.log(user);
+
+  const handleOnClick = () => {
+    Router.push('/');
+  };
 
   const handleClose = () => {
     onClose();
@@ -64,21 +69,31 @@ export function CustomizedDialogs(props) {
         open={openCredentials}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Registration Successful!
+          Thank you for registering with us!
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
+            The following credentials will be prompt to you only once.
+            Please save them in a safe place.
+            If you lose them, please contact the Beedata team for assistance.
           </Typography>
           <Typography gutterBottom>
-            Email: {user.email}
+            <span style={{fontWeight: 'bold'}}>Your credentials are: </span>
+          </Typography>
+          <Typography sx={{ width: '100%', marginBottom: 2 }} gutterBottom>
+            <span style={{fontWeight: 'bold'}}>Email: </span> {user.email}
+          </Typography>
+          <Typography gutterBottom>
+            <span style={{fontWeight: 'bold'}}>Password: </span> {decryptPwd(user.encrypted_pwd)}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
+          <Button 
+          autoFocus
+          onClick={handleOnClick}
+          variant="outlined"
+          >
+            Sign in Now
           </Button>
         </DialogActions>
       </BootstrapDialog>
@@ -86,7 +101,7 @@ export function CustomizedDialogs(props) {
   );
 }
 
-CustomizedDialogs.propTypes = {
+CredentialDialog.propTypes = {
   user: PropTypes.object.isRequired,
   openCredentials: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
