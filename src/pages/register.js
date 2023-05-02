@@ -9,6 +9,7 @@ import ErrorSnackbar from '../components/settings/settings-error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
 import PhoneField from '../components/general/phone-field';
 import { ResponsiveDialog } from '../components/register/confirmation-dialog';
+import { CustomizedDialogs } from '../components/register/credentials-dialog';
 import api from '../lib/axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
@@ -24,11 +25,12 @@ import {
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [openCredentials, setOpenCredentials] = useState(false);
+  const [credentials, setCredentials] = useState(null);
 
   const idTypes = [
     { value: 'CC', label: 'Cédula de ciudadanía' },
     { value: 'CE', label: 'Cédula de extranjería' },
-    { value: 'TI', label: 'Tarjeta de identidad' },
     { value: 'PP', label: 'Pasaporte' },
     { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
   ];
@@ -37,9 +39,10 @@ const Register = () => {
     try {
       const { data } = await api.post('/api/register', values);
 
+      // If data success, set credentials and open credentials dialog
       if (data.success) {
-        Router
-          .push('/').catch(console.error);
+        setCredentials(data.user);
+        setOpenCredentials(true);
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
@@ -173,7 +176,7 @@ label="Role" />
             )}
             <Box sx={{ py: 2 }}>
               {formik.isValid && (
-                <ResponsiveDialog 
+                <ResponsiveDialog
                   formikValues={formik.values}
                   onSubmit={formik.handleSubmit}
                 />
@@ -202,6 +205,15 @@ label="Role" />
               </NextLink>
             </Typography>
           </form>
+          {openCredentials && credentials && (
+          <CustomizedDialogs
+            user={credentials}
+            openCredentials={true}
+            onClose={() => {
+              setOpenCredentials(false);
+            }}
+          />
+        )}
         </Container>
       </Box>
     </>
