@@ -34,7 +34,7 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
     };
 
     return (
-        <>
+        <div>
           <Button
             color="primary"
             fullWidth
@@ -54,15 +54,7 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
               {"Confirm Your Information"}
             </DialogTitle>
             <Divider />
-            <DialogContent
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                p: 5
-              }}
-            >
+            <DialogContent dividers>
               <Typography sx={{ width: '100%', marginBottom: 2 }}>
                 <span style={{fontWeight: 'bold'}}>Name: </span> {formikValues.fullName}
               </Typography>
@@ -110,6 +102,6 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
               </Button>
             </DialogActions>
           </BootstrapDialog>
-        </>
+        </div>
     );
 }

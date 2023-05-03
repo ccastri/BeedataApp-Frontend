@@ -77,7 +77,7 @@ export function CredentialDialog(props) {
             Please save them in a safe place.
             If you lose them, please contact the Beedata team for assistance.
           </Typography>
-          <Typography gutterBottom>
+          <Typography sx={{ width: '100%', marginBottom: 2 }} gutterBottom>
             <span style={{fontWeight: 'bold'}}>Your credentials are: </span>
           </Typography>
           <Typography sx={{ width: '100%', marginBottom: 2 }} gutterBottom>
