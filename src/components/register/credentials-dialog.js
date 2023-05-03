@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Router from 'next/router';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -11,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { decryptPwd } from '../../utils/decrypt-pwd';
+import { useRouter } from 'next/router';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -52,9 +52,10 @@ BootstrapDialogTitle.propTypes = {
 
 export function CredentialDialog(props) {
   const { user, openCredentials, onClose } = props;
+  const router = useRouter();
 
   const handleOnClick = () => {
-    Router.push('/');
+    router.push('/');
   };
 
   const handleClose = () => {
