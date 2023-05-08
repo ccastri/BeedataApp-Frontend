@@ -3,6 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 
@@ -75,23 +76,14 @@ const Content = styled(CardContent)(({ theme }) => ({
   padding: theme.spacing(4),
 }));
 
-export const BeeCard = React.memo(function BeeCard() {
+export const ProductPopover = React.memo(function ProductPopover() {
   const theme = useTheme();
   return (
     <RootCard>
       <Media
-        image="/static/logo-beedata.png"
+        image="/static/"
       />
       <Content>
-        <Typography variant="h5"
-gutterBottom
-sx={{ mt: 2, color: '#ffffff' }}>
-          <strong>{'CONNECT TO THE WORLD OF AUTOMATED SERVICES'}</strong>
-        </Typography>
-        <Typography variant="body1"
-sx={{ color: '#FFFFFF' }}>
-          {'Our cloud-based platform allows you to access and share relevant data anytime, anywhere.'}
-        </Typography>
       </Content>
     </RootCard>
   );

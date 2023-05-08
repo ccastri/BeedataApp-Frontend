@@ -8,9 +8,7 @@ import StorageIcon from '@mui/icons-material/Storage';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { Payment as PaymentIcon } from '../../icons/payment';
-import { Selector as SelectorIcon } from '../../icons/selector';
 import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-import { Chat as ChatIcon } from '../../icons/chat';
 import { User as UserIcon } from '../../icons/user';
 import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
@@ -104,58 +102,18 @@ export const DashboardSidebar = (props) => {
             >
               <a>
                 <img
-                  src="/static/beedata.svg"
+                  src="/static/beet_nb.svg"
                   alt="Beedata"
-                  style={{
-                    height: '50%',
-                    width: '90%'
-                  }}
+                  width="100%"
                 />
               </a>
             </NextLink>
-          </Box>
-          <Box sx={{ px: 2 }}>
-            <Box
-              sx={{
-                alignItems: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
-                px: 3,
-                py: '11px',
-                borderRadius: 1
-              }}
-            >
-              <div>
-                <Typography
-                  color="inherit"
-                  variant="subtitle1"
-                >
-                  Beedata
-                </Typography>
-                <Typography
-                  color="neutral.400"
-                  variant="body2"
-                >
-                  Your tier
-                  {' '}
-                  : Premium
-                </Typography>
-              </div>
-              <SelectorIcon
-                sx={{
-                  color: 'neutral.500',
-                  width: 14,
-                  height: 14
-                }}
-              />
-            </Box>
           </Box>
         </div>
         <Divider
           sx={{
             borderColor: '#2D3748',
+            mx: 1,
             my: 3
           }}
         />

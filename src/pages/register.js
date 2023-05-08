@@ -41,8 +41,14 @@ const Register = () => {
     try {
       const { data } = await api.post('/api/register', values);
 
-      // If data success, set credentials and open credentials dialog
+      // If data success, display credentials and purchase free product
       if (data.success) {
+
+        const registrationProduct = {
+          productId: 285,
+          companyId: data.user.company_id
+        };
+        await api.post('/api/purchase-product', registrationProduct);
         setCredentials(data.user);
         setOpenCredentials(true);
       }

@@ -1,96 +1,65 @@
 import PropTypes from 'prop-types';
-import { Avatar, Box, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
-import { Clock as ClockIcon } from '../../icons/clock';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { baseProducts } from '../../data/base_products';
 import { User as UserIcon } from '../../icons/user';
 
-export const ProductCard = ({ product, ...rest }) => (
-  <Card
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%'
-    }}
-    {...rest}
-  >
-    <CardContent>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          pb: 3
-        }}
-      >
-        <Avatar
-          alt="Product"
-          src={product.media}
-          sx={product.sx}
-        />
+export const ProductCard = ({ product, ...rest }) => {
+  // Find the matching base product for this product's name
+  const matchedProduct = baseProducts.find((baseProduct) => product.name.includes(baseProduct.name));
+
+  return (
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+      {...rest}
+    >
+      <CardContent>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            pb: 3
+          }}
+        >
+          <Avatar
+            alt="Product"
+            src={matchedProduct.image}
+            sx={{ height: 100, width: 100 }}
+          />
+        </Box>
+        <Typography
+          align="center"
+          color= "textPrimary"
+          gutterBottom
+          variant="h5"
+        >
+          {matchedProduct.name}
+        </Typography>
+        <Typography
+          align="center"
+          color= "textPrimary"
+          variant="body1"
+        >
+          {matchedProduct.description}
+        </Typography>
+      </CardContent>
+      <Box sx={{ flexGrow: 1 }} />
+      <Divider />
+      <Box sx={{ p: 2 }}>
       </Box>
-      <Typography
-        align="center"
-        color="textPrimary"
-        gutterBottom
-        variant="h5"
-      >
-        {product.title}
-      </Typography>
-      <Typography
-        align="center"
-        color="textPrimary"
-        variant="body1"
-      >
-        {product.description}
-      </Typography>
-    </CardContent>
-    <Box sx={{ flexGrow: 1 }} />
-    <Divider />
-    <Box sx={{ p: 2 }}>
-      <Grid
-        container
-        spacing={2}
-        sx={{ justifyContent: 'space-between' }}
-      >
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <ClockIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            Updated 2hr ago
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <UserIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            {product.totalDownloads}
-            {' '}
-            Users
-          </Typography>
-        </Grid>
-      </Grid>
-    </Box>
-  </Card>
-);
+    </Card>
+  );
+};
 
 ProductCard.propTypes = {
-  product: PropTypes.object.isRequired
+  product: PropTypes.object.isRequired,
 };
