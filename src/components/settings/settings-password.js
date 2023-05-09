@@ -3,6 +3,7 @@ import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '
 
 export const SettingsPassword = (props) => {
   const [values, setValues] = useState({
+    currentPassword: '',
     password: '',
     confirm: ''
   });
@@ -23,6 +24,16 @@ export const SettingsPassword = (props) => {
         />
         <Divider />
         <CardContent>
+        <TextField
+            fullWidth
+            label="Current password"
+            margin="normal"
+            name="currentPassword"
+            onChange={handleChange}
+            type="currentPassword"
+            value={values.currentPassword}
+            variant="outlined"
+          />
           <TextField
             fullWidth
             label="Password"

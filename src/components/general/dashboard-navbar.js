@@ -2,7 +2,14 @@ import React from 'react';
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Bell as BellIcon } from '../../icons/bell';
 import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
@@ -17,6 +24,16 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+
+  // Retrieve user name from JWT token
+  const getUserName = () => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+      return payload.userName;
+    }
+    return '';
+  }
 
   return (
     <>
@@ -61,6 +78,13 @@ export const DashboardNavbar = (props) => {
               </Badge>
             </IconButton>
           </Tooltip>
+          <Typography
+            color="text.secondary"
+            variant="subtitle1"
+            sx={{ ml: 2, mr: 2 }}
+          >
+          {getUserName()}
+          </Typography>
           <Avatar
             onClick={() => setOpenAccountPopover(true)}
             ref={settingsRef}

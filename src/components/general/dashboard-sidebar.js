@@ -9,7 +9,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { Payment as PaymentIcon } from '../../icons/payment';
 import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-import { User as UserIcon } from '../../icons/user';
+import { Cog as CogIcon } from '../../icons/cog';
 import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
 
@@ -51,18 +51,22 @@ const items = [
     title: 'Payments'
   },
   {
-    href: '/account',
-    icon: (<UserIcon fontSize="small" />),
-    target: '_self',
-    title: 'Account'
-  },
-  // {
-  //   href: '/settings',
-  //   icon: (<CogIcon fontSize="small" />),
-  //   title: 'Settings'
-  // }
+    href: '/settings',
+    icon: (<CogIcon fontSize="small" />),
+    title: 'Settings'
+  }
 ];
 
+/** 
+ * Sidebar component for the dashboard page that contains navigation items
+ * 
+ * @param {Object} props - The properties passed to the component
+ * @param {Boolean} props.open - Whether the sidebar is open
+ * @param {Function} props.onClose - Function to close the sidebar
+ * 
+ * @returns {JSX.Element} - The JSX representation of the dashboard sidebar
+ * 
+ */
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
   const router = useRouter();
@@ -105,6 +109,7 @@ export const DashboardSidebar = (props) => {
                   src="/static/beet_nb.svg"
                   alt="Beedata"
                   width="100%"
+                  style={{ marginBottom: '-60px', marginTop: '-10px' }}
                 />
               </a>
             </NextLink>

@@ -32,7 +32,7 @@ const Media = styled(CardMedia)(({ theme }) => ({
   marginRight: 'auto',
   marginTop: -theme.spacing(3),
   height: 0,
-  paddingBottom: '48%',
+  paddingBottom: '45%',
   paddingLeft: '12%',
   paddingRight: '12%',
   borderRadius: theme.spacing(2),
@@ -75,12 +75,19 @@ const Content = styled(CardContent)(({ theme }) => ({
   padding: theme.spacing(4),
 }));
 
+/**
+ * Component to display the side card at login page
+ * The card contains an image and texts that describe the cloud-based platform's features.
+ * 
+ * @return {JSX.Element} - The side card component with an image and text
+ * 
+ */
 export const BeeCard = React.memo(function BeeCard() {
   const theme = useTheme();
   return (
     <RootCard>
       <Media
-        image="/static/logo-beedata.png"
+        image="/static/beet_nb.svg"
       />
       <Content>
         <Typography variant="h5"

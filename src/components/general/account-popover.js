@@ -1,35 +1,47 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import { User as UserIcon } from '../../icons/user';
 
+/** 
+ * Account popover component
+ * 
+ * @param {object} props - component props
+ * @param {object} props.anchorEl - anchor element
+ * @param {object} props.onClose - a function that is called when closing the popover
+ * @param {boolean} props.open - an indicator if the popover is open or not
+ * @param {string} props.redirectLink - a string that specifies the redirection link
+ * 
+ * @returns {JSX.Element} - a JSX.Element representing the account popover component
+ * 
+ */
 export const AccountPopover = (props) => {
+  // retrieve Next.js router object
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
+  // retrieve JWT token from localStorage
   const token = localStorage.getItem('jwt');
 
-  // Check for next-auth Google login session 
-  // or loclastorage JWT token for email login.
+  // Handle user's profile redirection
+  const handleProfile = () => {
+    onClose?.();
+    router.push('/account');
+  }
 
+  // Sign out
   const handleSignOut = async () => {
     onClose?.();
 
     if (token) {
       localStorage.removeItem('jwt');
     }
-  
     router.push('/');
     };
-
-  // Retrieve user name from JWT token
-  const getUserName = () => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-      return payload.userName;
-    }
-    return '';
-  }
 
   return (
     <Popover
@@ -48,17 +60,19 @@ export const AccountPopover = (props) => {
       <Box
         sx={{
           py: 1.5,
-          px: 2
+          px: 2,
+          display: 'flex',
+          alignItems: 'center'
         }}
       >
-        <Typography variant="overline">
-          Account
-        </Typography>
+        <UserIcon sx={{ mr: 1 }} />
         <Typography
-          color="text.secondary"
-          variant="body2"
+          color="primary"
+          variant="subtitle1"
+          onClick={handleProfile}
+          style={{ cursor: 'pointer' }}
         >
-          {getUserName()}
+          My Profile
         </Typography>
       </Box>
       { token && (
