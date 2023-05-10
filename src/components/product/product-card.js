@@ -40,6 +40,9 @@ export const ProductCard = ({ product, ...rest }) => {
     amountAvailable = productDetails[1].trim();
   }
 
+  // Handle Whatsapp busiines account configuration
+  const handleConfigureAccount = () => {};
+
   return (
     <Card
       sx={{
@@ -99,7 +102,11 @@ export const ProductCard = ({ product, ...rest }) => {
           Expires on: {expiryDate.toLocaleDateString('es-CO')}
         </Typography>
         {matchedProduct.name === 'Beet / WhatsApp' && (
-          <Button variant="contained" color="primary">
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={handleConfigureAccount}
+          >
             Configure Account
           </Button>
         )}
