@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
  * @returns {JSX.Element} - The button to launch the WhatsApp Signup flow
  * 
  */
-export const FbSignupFlow = () => {
+export const FbSignupFlow = ({title}) => {
     const router = useRouter();
   
     useEffect(() => {
@@ -17,7 +17,7 @@ export const FbSignupFlow = () => {
         window.fbAsyncInit = function () {
           console.log('Initializing Facebook SDK...');
           FB.init({
-            appId: '931235137882480',
+            appId: process.env.META_APP_ID,
             cookie: true,
             xfbml: true,
             version: 'v16.0'
@@ -40,7 +40,7 @@ export const FbSignupFlow = () => {
     const launchWhatsAppSignup = () => {
       if (typeof window !== 'undefined') {
         const fbq = window.fbq;
-        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup'});
+        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: process.env.META_APP_ID, feature: 'whatsapp_embedded_signup'});
   
         FB.login(function (response) {
           if (response.authResponse) {
@@ -63,8 +63,14 @@ export const FbSignupFlow = () => {
   
     return (
       <>
-        <Script strategy="lazyOnload" src="https://code.jquery.com/jquery-3.6.0.min.js" />
-        <Button variant="contained" onClick={launchWhatsAppSignup}>Launch WhatsApp Signup</Button>
+        <Script strategy="lazyOnload" />
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={launchWhatsAppSignup}
+        >
+        { title }
+        </Button>
       </>
     )
   }

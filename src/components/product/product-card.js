@@ -4,9 +4,8 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { FbSignupFlow } from './fb-signup-flow';
 import { baseProducts } from '../../data/base_products';
 
 /**
@@ -79,36 +78,33 @@ export const ProductCard = ({ product, ...rest }) => {
           color= "textSecondary"
           variant="subtitle1"
         >
-          Available: {amountAvailable} messages / month
+          Available: {amountAvailable} {matchedProduct.unitType} / month
         </Typography>
-        <Typography
+        {/* <Typography
           align="center"
           color= "textPrimary"
           variant="body1"
           sx={{ pt: 2 }}
         >
           {matchedProduct.description}
-        </Typography>
+        </Typography> */}
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
-      <Box sx={{p: 2, display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+      <Box sx={{p: 3, display:"flex", justifyContent:"space-between", alignItems:"center"}}>
         <Typography
           align="left"
-          color= "red"
+          color= "error"
           variant="subtitle2"
-          sx={{  }}
+          sx={{
+            boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.2)',
+            padding: '10px',
+          }}
         >
           Expires on: {expiryDate.toLocaleDateString('es-CO')}
         </Typography>
         {matchedProduct.name === 'Beet / WhatsApp' && (
-          <Button 
-            variant="contained" 
-            color="primary"
-            onClick={handleConfigureAccount}
-          >
-            Configure Account
-          </Button>
+          <FbSignupFlow title='Configure Bussiness Account' />
         )}
       </Box>
     </Card>

@@ -179,13 +179,14 @@ const Register = () => {
                   I have read the
                   {' '}
                   <NextLink
-                    href="#"
+                    href="https://admin.beet.digital/legal"
                     passHref
                   >
                     <Link
                       color="primary"
                       underline="always"
                       variant="subtitle2"
+                      target="_blank"
                     >
                       Terms and Conditions
                     </Link>

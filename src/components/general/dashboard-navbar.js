@@ -104,6 +104,11 @@ export const DashboardNavbar = (props) => {
         anchorEl={settingsRef.current}
         open={openAccountPopover}
         onClose={() => setOpenAccountPopover(false)}
+        sx={{
+          transformOrigin: 'bottom',
+          top: '13px',
+          ml:'10px'
+        }}
       />
     </>
   );

@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { User as UserIcon } from '../../icons/user';
 
 /** 
@@ -53,13 +54,13 @@ export const AccountPopover = (props) => {
       onClose={onClose}
       open={open}
       PaperProps={{
-        sx: { width: '300px' }
+        sx: { width: '300px' },
       }}
       {...other}
     >
       <Box
         sx={{
-          py: 1.5,
+          py: 2,
           px: 2,
           display: 'flex',
           alignItems: 'center'
@@ -89,9 +90,10 @@ export const AccountPopover = (props) => {
           }
         }}
       >
-        <MenuItem onClick={handleSignOut}>
-          Sign out
-        </MenuItem>
+      <MenuItem onClick={handleSignOut} color="textPrimary">
+        <LogoutIcon sx={{ mr: 1 }} />
+        Sign out
+      </MenuItem>
       </MenuList>
       )}
     </Popover>
