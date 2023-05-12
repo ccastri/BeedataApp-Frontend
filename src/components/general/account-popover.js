@@ -90,7 +90,8 @@ export const AccountPopover = (props) => {
           }
         }}
       >
-      <MenuItem onClick={handleSignOut} color="textPrimary">
+      <MenuItem onClick={handleSignOut}
+color="textPrimary">
         <LogoutIcon sx={{ mr: 1 }} />
         Sign out
       </MenuItem>

@@ -50,7 +50,8 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle sx={{ m: 0, p: 2 }} id="responsive-dialog-title">
+            <DialogTitle sx={{ m: 0, p: 2 }}
+id="responsive-dialog-title">
               {"Confirm Your Information"}
             </DialogTitle>
             <Divider />

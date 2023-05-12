@@ -34,7 +34,8 @@ const TextFieldWrapper = ({ formik, name, label, type = "text", selectOptions = 
       }}
     >
       { isSelect && selectOptions.map(option => (
-        <MenuItem key={option.value} value={option.value}>
+        <MenuItem key={option.value}
+value={option.value}>
           {option.label}
         </MenuItem>
       ))}

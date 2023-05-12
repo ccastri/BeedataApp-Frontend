@@ -81,9 +81,14 @@ const Page = () => {
             </Box>
           ) : products.length ? ( // Conditionally render product list if products exist
             <Box sx={{ pt: 3 }}>
-              <Grid container spacing={3}>
+              <Grid container
+spacing={3}>
                 {products.map((product) => (
-                  <Grid item key={product.id} lg={4} md={6} xs={12}>
+                  <Grid item
+key={product.id}
+lg={4}
+md={6}
+xs={12}>
                     <ProductCard product={product} />
                   </Grid>
                 ))}
@@ -99,7 +104,7 @@ const Page = () => {
                 fontWeight: 'bold',
               }}
             >
-              We're sorry, there are currently no active products. Please contact the Beet team for purchase.
+              We&apos;re sorry, there are currently no active products. Please contact the Beet team for purchase.
             </Box>
           )}
         </Container>

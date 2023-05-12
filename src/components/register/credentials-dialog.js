@@ -25,7 +25,8 @@ function BootstrapDialogTitle(props) {
   const { children, onClose, ...other } = props;
 
   return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+    <DialogTitle sx={{ m: 0, p: 2 }}
+{...other}>
       {children}
       {onClose ? (
         <IconButton
@@ -69,7 +70,8 @@ export function CredentialDialog(props) {
         aria-labelledby="customized-dialog-title"
         open={openCredentials}
       >
-        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+        <BootstrapDialogTitle id="customized-dialog-title"
+onClose={handleClose}>
           Thank you for registering with us!
         </BootstrapDialogTitle>
         <DialogContent dividers>
@@ -78,10 +80,12 @@ export function CredentialDialog(props) {
             Please save them in a safe place.
             If you lose them, please contact the Beedata team for assistance.
           </Typography>
-          <Typography sx={{ width: '100%', marginBottom: 2 }} gutterBottom>
+          <Typography sx={{ width: '100%', marginBottom: 2 }}
+gutterBottom>
             <span style={{fontWeight: 'bold'}}>Your credentials are: </span>
           </Typography>
-          <Typography sx={{ width: '100%', marginBottom: 2 }} gutterBottom>
+          <Typography sx={{ width: '100%', marginBottom: 2 }}
+gutterBottom>
             <span style={{fontWeight: 'bold'}}>Email: </span> {user.email}
           </Typography>
           <Typography gutterBottom>
