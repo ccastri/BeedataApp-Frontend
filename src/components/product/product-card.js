@@ -34,7 +34,7 @@ export const ProductCard = ({ product, ...rest }) => {
   if (durationUnit === 'meses') {
     expiryDate = new Date(createDate.setMonth(createDate.getMonth() + duration));
     amountAvailable = productDetails[1].trim();
-  }  else if (unit === 'año') {
+  }  else if (durationUnit === 'año') {
     expiryDate = new Date(createDate.setFullYear(createDate.getFullYear() + duration));
     amountAvailable = productDetails[1].trim();
   }

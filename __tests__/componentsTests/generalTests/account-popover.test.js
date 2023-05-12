@@ -35,7 +35,8 @@ describe.each(viewports)('AccountPopover (%p)', (viewport) => {
     window.dispatchEvent(new Event('resize'));
   });
 
-  it('should render the user name', () => {
+  it('should render "My Profile"', () => {
+    // set up props and localStorage token
     const props = {
       anchorEl: document.createElement('div'),
       onClose: jest.fn(),
@@ -43,9 +44,12 @@ describe.each(viewports)('AccountPopover (%p)', (viewport) => {
     };
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlVzZXIgTmFtZSIsImlhdCI6MTYyMDc5OTg1Nn0.X2N8_6N36X0KjMAvM0hPcSkG40wOmKXXzHi1ZbYJPP8';
     localStorage.setItem('jwt', token);
+  
+    // render component and check for "My Profile" text
     render(<AccountPopover {...props} />);
-    expect(screen.getByText('User Name')).toBeInTheDocument();
+    expect(screen.getByText('My Profile')).toBeInTheDocument();
   });
+  
 
   it('should not render the sign out button when not authenticated', () => {
     const props = {

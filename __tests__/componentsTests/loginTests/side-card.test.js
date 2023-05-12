@@ -48,7 +48,7 @@ describe.each(viewports)('BeeCard (%p)', (viewport) => {
     const { getByRole } = render(<BeeCard />);
     const image = getByRole('img');
     expect(image).toBeInTheDocument();
-    expect(image).toHaveStyle('background-image: url(/static/logo-beedata.png);');
+    expect(image).toHaveStyle('background-image: url(/static/beet_nb.svg);');
   });
 
   it('has the correct padding', () => {
