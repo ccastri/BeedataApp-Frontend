@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendServer = process.env.NEXT_PUBLIC_BACKEND_URL;
+const backendServer = 'https://api.beet.digital';
 
 const api = axios.create({
     baseURL: backendServer,
