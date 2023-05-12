@@ -2,51 +2,61 @@ import React from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
 import NextLink from 'next/link';
-import Router from 'next/router';
 import { useFormik } from 'formik';
-import RegisterSchema from '../utils/register-validation-schema';
+import RegisterSchema from '../components/register/register-validation-schema';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
-import TextFieldWrapper from '../components/settings/settings-textfield-wrapper';
+import TextFieldWrapper from '../components/general/textfield-wrapper';
+import CircularProgress from '@mui/material/CircularProgress';
+import PhoneField from '../components/register/phone-field';
+import { ResponsiveDialog } from '../components/register/confirmation-dialog';
+import { CredentialDialog } from '../components/register/credentials-dialog';
 import api from '../lib/axios';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  Link,
-  MenuItem,
-  Typography,
-  Select
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Container from '@mui/material/Container';
+import FormHelperText from '@mui/material/FormHelperText';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [openCredentials, setOpenCredentials] = useState(false);
+  const [credentials, setCredentials] = useState(null);
 
-  // Manage password visibility
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
-  const handleMouseDownPassword = (event) => event.preventDefault();
+  const idTypes = [
+    { value: 'CC', label: 'Cédula de ciudadanía' },
+    { value: 'CE', label: 'Cédula de extranjería' },
+    { value: 'PP', label: 'Pasaporte' },
+    { value: 'TI', label: 'Tarjeta de identidad' },
+    { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
+  ];
 
   const onSubmit = async (values) => {
+    setLoading(true);
+
     try {
       const { data } = await api.post('/api/register', values);
 
+      // If data success, display credentials and purchase free product
       if (data.success) {
-        Router
-          .push('/').catch(console.error);
+
+        const registrationProduct = {
+          productId: 285,
+          companyId: data.user.company_id
+        };
+        await api.post('/api/purchase-product', registrationProduct);
+        setCredentials(data.user);
+        setOpenCredentials(true);
       }
+
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
+
       if (err.response && err.response.status === 409) {
         setErrorMessage(err.response.data.message);
       } else {
@@ -55,15 +65,22 @@ const Register = () => {
     }
   }
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (formik.isValid) {
+      onSubmit(formik.values);
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
-      email: '',
-      firstName: '',
-      lastName: '',
+      fullName: '',
       company: '',
+      identificationType: '',
+      identificationNumber: '',
+      phoneNumber: '',
+      email: '',
       role: '',
-      password: '',
-      confirmPassword: '',
       policy: false
     },
     validationSchema: RegisterSchema,
@@ -86,7 +103,10 @@ const Register = () => {
           minHeight: '100%'
         }}
       >
-        <Container maxWidth="sm">
+        <Container 
+        maxWidth="sm"
+        sx={{ position: "relative", zIndex: 1 }}
+        >
           <NextLink
             href="/"
             passHref
@@ -98,154 +118,136 @@ const Register = () => {
               Back
             </Button>
           </NextLink>
-          <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ my: 3 }}>
-              <Typography
-                color="textPrimary"
-                variant="h4"
-              >
-                Create a new account
-              </Typography>
-            </Box>
-            <TextFieldWrapper formik={formik}
-name="firstName"
-label="First Name" />
-            <TextFieldWrapper formik={formik}
-name="lastName"
-label="Last Name" />
-            <TextFieldWrapper formik={formik}
-name="company"
-label="Company" />
-            <FormControl fullWidth
-sx={{ my: 2 }}>
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                value={formik.values.role}
-                onChange={formik.handleChange}
-              >
-                <MenuItem value="employee">Employee</MenuItem>
-                <MenuItem value="manager">Manager</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-              </Select>
-            </FormControl>
-            <TextFieldWrapper formik={formik}
-name="email"
-label="Email Address"
-type="email" />
-            <TextFieldWrapper formik={formik}
-name="password"
-label="Password"
-type={showPassword ? "text" : "password"}
-inputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              position: 'relative'
             }}
-            />
-            <TextFieldWrapper formik={formik}
-name="confirmPassword"
-label="Confirm Password"
-type={showConfirmPassword ? "text" : "password"}
-inputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowConfirmPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
+          >       
+            <form onSubmit={formik.handleSubmit}>
+              <Box sx={{ my: 3 }}>
+                <Typography
+                  color="textPrimary"
+                  variant="h4"
+                >
+                  Create a new account
+                </Typography>
+              </Box>
+              <TextFieldWrapper formik={formik}
+  name="fullName"
+  label="Full Name" />
+              <TextFieldWrapper formik={formik}
+  name="company"
+  label="Company" />
+              <TextFieldWrapper formik={formik}
+  name="identificationType"
+  label="Identification Type"
+  selectOptions={idTypes} />
+              <TextFieldWrapper formik={formik}
+  name="identificationNumber"
+  label="Identification Number" />
+              <PhoneField formik={formik}
+  name="phoneNumber"
+  label="Phone Number"
+  />
+              <TextFieldWrapper formik={formik}
+  name="email"
+  label="Email Address"
+  type="email" />
+              <TextFieldWrapper formik={formik}
+  name="role"
+  label="Role" />
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  ml: -1
+                }}
+              >
+                <Checkbox
+                  checked={formik.values.policy}
+                  name="policy"
+                  onChange={formik.handleChange}
+                  data-testid="policy-checkbox"
+                />
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                >
+                  I have read the
+                  {' '}
+                  <NextLink
+                    href="https://admin.beet.digital/legal"
+                    passHref
                   >
-                    {showConfirmPassword  ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }} 
-            />
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                ml: -1
-              }}
-            >
-              <Checkbox
-                checked={formik.values.policy}
-                name="policy"
-                onChange={formik.handleChange}
-                data-testid="policy-checkbox"
-              />
+                    <Link
+                      color="primary"
+                      underline="always"
+                      variant="subtitle2"
+                      target="_blank"
+                    >
+                      Terms and Conditions
+                    </Link>
+                  </NextLink>
+                </Typography>
+              </Box>
+              {Boolean(formik.touched.policy && formik.errors.policy) && (
+                <FormHelperText error>
+                  {formik.errors.policy}
+                </FormHelperText>
+              )}
+              <Box sx={{ py: 2 }}>
+                {formik.isValid && (
+                  <ResponsiveDialog
+                    formikValues={formik.values}
+                    onSubmit={formik.handleSubmit}
+                  />
+                )}
+                { errorMessage && (
+                  <ErrorSnackbar errorMessage={errorMessage}/>
+                )
+                }
+              </Box>
               <Typography
                 color="textSecondary"
                 variant="body2"
               >
-                I have read the
+                Have an account?
                 {' '}
                 <NextLink
-                  href="#"
+                  href="/"
                   passHref
                 >
                   <Link
-                    color="primary"
-                    underline="always"
                     variant="subtitle2"
+                    underline="hover"
                   >
-                    Terms and Conditions
+                    Sign In
                   </Link>
                 </NextLink>
               </Typography>
-            </Box>
-            {Boolean(formik.touched.policy && formik.errors.policy) && (
-              <FormHelperText error>
-                {formik.errors.policy}
-              </FormHelperText>
-            )}
-            <Box sx={{ py: 2 }}>
-              <Button
-                color="primary"
-                disabled={formik.isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
-                Sign Up Now
-              </Button>
-              { errorMessage && (
-                <ErrorSnackbar errorMessage={errorMessage}/>
-              )
-              }
-            </Box>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              Have an account?
-              {' '}
-              <NextLink
-                href="/"
-                passHref
-              >
-                <Link
-                  variant="subtitle2"
-                  underline="hover"
-                >
-                  Sign In
-                </Link>
-              </NextLink>
-            </Typography>
-          </form>
+            </form>
+            <CircularProgress
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                visibility: loading ? 'visible' : 'hidden'
+              }}
+            />
+          </Box>
+          {openCredentials && credentials && (
+          <CredentialDialog
+            user={credentials}
+            openCredentials={true}
+            onClose={() => {
+              setOpenCredentials(false);
+            }}
+          />
+        )}
         </Container>
       </Box>
     </>

@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  TextField, 
-  Typography
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import SuccessSnackbar from '../settings/settings-success-msg';
 import api from '../../lib/axios';
 
 export const AccountProfileDetails = (props) => {
   const [responseMessage, setResponseMessage] = useState('');
   const [formValues, setFormValues] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
+    identificationType: '',
+    identificationNumber: '',
     email: '',
     phone: '',
     country: '',
@@ -36,11 +35,13 @@ export const AccountProfileDetails = (props) => {
       });
   
       if (response.data) {
-        const { name, last_name, email, phone, country, city, billing_email, billing_address } = response.data.user;
+        const { name, identification_type, identification_number, role, email, phone, country, city, billing_email, billing_address } = response.data.user;
   
         setFormValues({
-          firstName: name || '',
-          lastName: last_name || '',
+          fullName: name || '',
+          identificationType: identification_type || '',
+          identificationNumber: identification_number || '',
+          role: role || '',
           email: email || '',
           phone: phone || '',
           country: country || '',
@@ -103,12 +104,12 @@ md={6}
 xs={12}>
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
+                helperText="Please specify yur full name"
+                label="Full name"
+                name="fullName"
                 onChange={handleChange}
                 required
-                value={formValues.firstName}
+                value={formValues.fullName}
                 variant="outlined"
               />
             </Grid>
@@ -117,11 +118,24 @@ md={6}
 xs={12}>
               <TextField
                 fullWidth
-                label="Last name"
-                name="lastName"
+                label="Identification Type"
+                name="identificationType"
                 onChange={handleChange}
                 required
-                value={formValues.lastName}
+                value={formValues.identificationType}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item
+md={6}
+xs={12}>
+              <TextField
+                fullWidth
+                label="Identification Number"
+                name="identificationNumber"
+                onChange={handleChange}
+                required
+                value={formValues.identificationNumber}
                 variant="outlined"
               />
             </Grid>
@@ -146,7 +160,6 @@ xs={12}>
                 label="Phone Number"
                 name="phone"
                 onChange={handleChange}
-                type="number"
                 value={formValues.phone}
                 variant="outlined"
               />

@@ -26,7 +26,7 @@ variant="h4">
 xs={6}
 sx={{ textAlign: 'right' }}>
           <img
-            src="/static/images/products/whatsappbee.svg"
+            src="/static/images/products/beet_whatsapp.svg"
             alt="Whatsapp"
             style={{ width: '80%' }}
           />

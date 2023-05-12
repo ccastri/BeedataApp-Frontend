@@ -3,6 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 
@@ -32,7 +33,7 @@ const Media = styled(CardMedia)(({ theme }) => ({
   marginRight: 'auto',
   marginTop: -theme.spacing(3),
   height: 0,
-  paddingBottom: '45%',
+  paddingBottom: '48%',
   paddingLeft: '12%',
   paddingRight: '12%',
   borderRadius: theme.spacing(2),
@@ -75,30 +76,14 @@ const Content = styled(CardContent)(({ theme }) => ({
   padding: theme.spacing(4),
 }));
 
-/**
- * Component to display the side card at login page
- * The card contains an image and texts that describe the cloud-based platform's features.
- * 
- * @return {JSX.Element} - The side card component with an image and text
- * 
- */
-export const BeeCard = React.memo(function BeeCard() {
+export const ProductPopover = React.memo(function ProductPopover() {
   const theme = useTheme();
   return (
     <RootCard>
       <Media
-        image="/static/beet_nb.svg"
+        image="/static/"
       />
       <Content>
-        <Typography variant="h5"
-gutterBottom
-sx={{ mt: 2, color: '#ffffff' }}>
-          <strong>{'CONNECT TO THE WORLD OF AUTOMATED SERVICES'}</strong>
-        </Typography>
-        <Typography variant="body1"
-sx={{ color: '#FFFFFF' }}>
-          {'Our cloud-based platform allows you to access and share relevant data anytime, anywhere.'}
-        </Typography>
       </Content>
     </RootCard>
   );

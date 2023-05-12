@@ -29,7 +29,7 @@ export const LakeRows = (props) => (
 xs={6}
 sx={{ textAlign: 'right' }}>
           <img
-            src="/static/images/products/lake.svg"
+            src="/static/images/products/beet_lake.svg"
             alt="Whatsapp"
             style={{ width: '80%' }}
           />

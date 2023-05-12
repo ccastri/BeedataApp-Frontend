@@ -7,7 +7,7 @@ import Router from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
-import TextFieldWrapper from '../components/settings/settings-textfield-wrapper';
+import TextFieldWrapper from '../components/general/textfield-wrapper';
 import { BeeCard } from '../components/login/side-card';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';

@@ -4,6 +4,14 @@ import { DashboardLayout } from '../components/general/dashboard-layout';
 import { SettingsNotifications } from '../components/settings/settings-notifications';
 import { SettingsPassword } from '../components/settings/settings-password';
 
+/**
+ * Page component that displays the user's settings.
+ * 
+ * Dependencies: Head, Box, Container, Typography, DashboardLayout, 
+ *               SettingsNotifications, SettingsPassword
+ * Usage: This component is rendered on the /settings page of the application.
+ * 
+ */
 const Page = () => (
   <>
     <Head>
