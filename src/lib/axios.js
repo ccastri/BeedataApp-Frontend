@@ -1,6 +1,8 @@
 import axios from 'axios';
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
-const backendServer = process.env.BACKEND_URL || 'http://localhost:3001' ;
+const backendServer = publicRuntimeConfig.BACKEND_URL;
 
 const api = axios.create({
     baseURL: backendServer,
