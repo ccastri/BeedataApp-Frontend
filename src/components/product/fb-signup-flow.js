@@ -17,7 +17,7 @@ export const FbSignupFlow = ({title}) => {
         window.fbAsyncInit = function () {
           console.log('Initializing Facebook SDK...');
           FB.init({
-            appId: process.env.META_APP_ID,
+            appId: 931235137882480,
             cookie: true,
             xfbml: true,
             version: 'v16.0'
@@ -40,7 +40,7 @@ export const FbSignupFlow = ({title}) => {
     const launchWhatsAppSignup = () => {
       if (typeof window !== 'undefined') {
         const fbq = window.fbq;
-        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: process.env.META_APP_ID, feature: 'whatsapp_embedded_signup'});
+        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: 931235137882480, feature: 'whatsapp_embedded_signup'});
   
         FB.login(function (response) {
           if (response.authResponse) {

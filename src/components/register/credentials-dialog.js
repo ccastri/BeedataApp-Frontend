@@ -9,7 +9,6 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { decryptPwd } from '../../utils/decrypt-pwd';
 import { useRouter } from 'next/router';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -89,7 +88,7 @@ gutterBottom>
             <span style={{fontWeight: 'bold'}}>Email: </span> {user.email}
           </Typography>
           <Typography gutterBottom>
-            <span style={{fontWeight: 'bold'}}>Password: </span> {decryptPwd(user.encrypted_pwd)}
+            <span style={{fontWeight: 'bold'}}>Password: </span> {user.display_pwd}
           </Typography>
         </DialogContent>
         <DialogActions>

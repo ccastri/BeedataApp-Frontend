@@ -1,21 +1,15 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CredentialDialog } from '../../../src/components/register/credentials-dialog';
-import { decryptPwd } from '../../../src/utils/decrypt-pwd'; 
 import { useRouter } from 'next/router';
 
 jest.mock('next/router', () => ({
     useRouter: jest.fn(),
 }));  
 
-// Mock the 'decryptPwd' function
-jest.mock('../../../src/utils/decrypt-pwd', () => ({
-  decryptPwd: jest.fn(),
-}));
-
 const mockUser = {
   email: 'testuser@test.com',
-  encrypted_pwd: 'encryptedPassword',
+  display_pwd: 'randomPassword',
 };
 
 describe('CredentialDialog', () => {
@@ -27,14 +21,13 @@ describe('CredentialDialog', () => {
   it('should render the dialog with the user credentials', () => {
     const onCloseMock = jest.fn();
 
-    decryptPwd.mockReturnValue('password');
 
     render(<CredentialDialog user={mockUser} openCredentials={true} onClose={onCloseMock} />);
 
     const emailText = screen.getByText(`${mockUser.email}`);
     expect(emailText).toBeInTheDocument();
 
-    const passwordText = screen.getByText('password');
+    const passwordText = screen.getByText('randomPassword');
     expect(passwordText).toBeInTheDocument();
  });
 
