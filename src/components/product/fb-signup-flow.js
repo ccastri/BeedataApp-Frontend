@@ -56,10 +56,8 @@ export const FbSignupFlow = ({title}) => {
                         // ... // Prefilled data can go here
                     }
                 },
-                auth_type: 'rerequest',
-                size: 'medium',
-                width: 800,
-                height: 600,
+                window_width: 800,
+                window_height: 600
             });
         }
     };
