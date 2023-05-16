@@ -17,7 +17,7 @@ export const FbSignupFlow = ({title}) => {
         window.fbAsyncInit = function () {
           console.log('Initializing Facebook SDK...');
           FB.init({
-            appId: 931235137882480,
+            appId: '931235137882480',
             cookie: true,
             xfbml: true,
             version: 'v16.0'
@@ -40,11 +40,12 @@ export const FbSignupFlow = ({title}) => {
     const launchWhatsAppSignup = () => {
       if (typeof window !== 'undefined') {
         const fbq = window.fbq;
-        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: 931235137882480, feature: 'whatsapp_embedded_signup'});
+        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup'});
   
         FB.login(function (response) {
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
+            console.log(accessToken);
             // Use this token to call the debug_token API and get the shared WABA's ID
           } else {
             console.log('User cancelled login or did not fully authorize.');
