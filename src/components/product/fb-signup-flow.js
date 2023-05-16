@@ -13,65 +13,85 @@ export const FbSignupFlow = ({title}) => {
     const router = useRouter();
   
     useEffect(() => {
-      if (typeof window !== 'undefined') {
-        window.fbAsyncInit = function () {
-          console.log('Initializing Facebook SDK...');
-          FB.init({
-            appId: '931235137882480',
-            cookie: true,
-            xfbml: true,
-            version: 'v16.0'
-          });
-  
-          FB.AppEvents.logPageView();
-        };
-  
-        (function (d, s, id) {
-          let js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) {return;}
-          js = d.createElement(s);
-          js.id = id;
-          js.src = 'https://connect.facebook.net/en_US/sdk.js';
-          fjs.parentNode.insertBefore(js, fjs);
-        })(document, 'script', 'facebook-jssdk');
-      }
+        if (typeof window !== 'undefined') {
+            window.fbAsyncInit = function () {
+                console.log('Initializing Facebook SDK...');
+                FB.init({
+                    appId: '931235137882480',
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v16.0'
+                });
+      
+                FB.AppEvents.logPageView();
+            };
+      
+            (function (d, s, id) {
+                let js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s);
+                js.id = id;
+                js.src = 'https://connect.facebook.net/en_US/sdk.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            })(document, 'script', 'facebook-jssdk');
+        }
     }, []);
   
     const launchWhatsAppSignup = () => {
-      if (typeof window !== 'undefined') {
-        const fbq = window.fbq;
-        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup'});
-  
-        FB.login(function (response) {
-          if (response.authResponse) {
-            const accessToken = response.authResponse.accessToken;
-            console.log(accessToken);
-            // Use this token to call the debug_token API and get the shared WABA's ID
-          } else {
-            console.log('User cancelled login or did not fully authorize.');
-          }
-        }, {
-          scope: 'whatsapp_business_management',
-          extras: {
-            feature: 'whatsapp_embedded_signup',
-            setup: {
-              // ... // Prefilled data can go here
-            }
-          }
-        });
-      }
+        if (typeof window !== 'undefined') {
+            const fbq = window.fbq;
+            fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup'});
+      
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    const accessToken = response.authResponse.accessToken;
+                    // Get System User access token
+                    // FB.api(
+                    //     '/{app-id}/access_token',
+                    //     'GET',
+                    //     {"client_id":"{app-id}","client_secret":"{app-secret}"},
+                    //     function(response) {
+                    //         const systemAccessToken = response.access_token;
+                    //         // Use this token to call the debug_token API and get the shared WABA's ID
+                    //         FB.api(
+                    //             `/debug_token?input_token=${accessToken}`,
+                    //             {
+                    //                 headers: { 'Authorization': 'Bearer ' + systemAccessToken },
+                    //             },
+                    //             function (response) {
+                    //                 if (response && !response.error) {
+                    //                     /* handle the result */
+                    //                     console.log(response);
+                    //                 }
+                    //             }
+                    //         );
+                    //     }
+                    // );
+                } else {
+                    console.log('User cancelled login or did not fully authorize.');
+                }
+            }, {
+                scope: 'whatsapp_business_management',
+                extras: {
+                    feature: 'whatsapp_embedded_signup',
+                    setup: {
+                        // ... // Prefilled data can go here
+                    }
+                }
+            });
+        }
     };
   
     return (
-      <>
-        <Script strategy="lazyOnload" />
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={launchWhatsAppSignup}
-        >
-        { title }
-        </Button>
-      </>
+        <>
+            <Script strategy="lazyOnload" />
+            <Button
+                variant="outlined"
+                color="primary"
+                onClick={launchWhatsAppSignup}
+            >
+                { title }
+            </Button>
+        </>
     )
-  }
+}

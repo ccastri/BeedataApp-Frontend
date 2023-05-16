@@ -90,8 +90,8 @@ const Login = () => {
             alignItems: 'center',
             minHeight: '100vh',
             width: {xs: '100%', sm: '50%'},
-            pr: {xs: 0, sm: 4},
-            pl: {xs: 0, sm: 4},
+            pr: {xs: 2, sm: 4},
+            pl: {xs: 2, sm: 4},
           }}
         >
           <form onSubmit={formik.handleSubmit}
@@ -193,7 +193,7 @@ sx={{ width: '100%' }}>
             height: '100vh',
             width: '50%',
             background: 'linear-gradient(to bottom, #2D3748, #1E272C)',
-            border: '1px solid #1E272C'
+            border: '1px solid #1E272C',
           }}
           >
           <BeeCard />
