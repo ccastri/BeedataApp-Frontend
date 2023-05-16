@@ -45,28 +45,6 @@ export const FbSignupFlow = ({title}) => {
             FB.login(function (response) {
                 if (response.authResponse) {
                     const accessToken = response.authResponse.accessToken;
-                    // Get System User access token
-                    // FB.api(
-                    //     '/{app-id}/access_token',
-                    //     'GET',
-                    //     {"client_id":"{app-id}","client_secret":"{app-secret}"},
-                    //     function(response) {
-                    //         const systemAccessToken = response.access_token;
-                    //         // Use this token to call the debug_token API and get the shared WABA's ID
-                    //         FB.api(
-                    //             `/debug_token?input_token=${accessToken}`,
-                    //             {
-                    //                 headers: { 'Authorization': 'Bearer ' + systemAccessToken },
-                    //             },
-                    //             function (response) {
-                    //                 if (response && !response.error) {
-                    //                     /* handle the result */
-                    //                     console.log(response);
-                    //                 }
-                    //             }
-                    //         );
-                    //     }
-                    // );
                 } else {
                     console.log('User cancelled login or did not fully authorize.');
                 }
@@ -77,7 +55,11 @@ export const FbSignupFlow = ({title}) => {
                     setup: {
                         // ... // Prefilled data can go here
                     }
-                }
+                },
+                auth_type: 'rerequest',
+                size: 'medium',
+                width: 800,
+                height: 600,
             });
         }
     };
