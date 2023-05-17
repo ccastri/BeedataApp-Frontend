@@ -78,13 +78,15 @@ export const FbSignupFlow = ({title}) => {
           }
         }, {
           scope: 'whatsapp_business_management',
-          display: 'dialog',
+          display: 'popup',
           auth_type: 'rerequest',
           extras: {
             feature: 'whatsapp_embedded_signup',
             "version": 2,
             "sessionInfoVersion": 2,
-          }
+          },
+          width: 500,
+          height: 500,
         });
       }
     }
