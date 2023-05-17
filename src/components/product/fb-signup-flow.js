@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
+import api from '../../lib/api';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow
@@ -70,9 +71,28 @@ export const FbSignupFlow = ({title}) => {
         const fbq = window.fbq;
         fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup' });
 
-        FB.login(function (response) {
+        FB.login(async function (response) {
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
+            console.log('Access Token = ', accessToken);
+
+            FB.logout(function (response) {
+              console.log('User logged out');
+            });
+
+            // try {
+            //   const token = localStorage.getItem('jwt');
+            //   const userResp = await api.post('/api/fb/user-data', {accessToken}, {headers: {Authorization: `Bearer ${token}`}});
+            //   // Log the user data
+            //   console.log(userResp.data);
+
+            //   // Log out the user after a successful API call
+            //   FB.logout(function (response) {
+            //     console.log('User logged out');
+            //   });
+            // } catch (err) {
+            //   console.log('Error fetching user data', err);
+            // }
           } else {
             console.log('User cancelled login or did not fully authorize.');
           }
