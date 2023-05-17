@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
+import api from '../../lib/axios';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow
@@ -73,7 +74,25 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
-            console.log('Access Token = ', accessToken);
+            const token = localStorage.getItem('jwt');
+
+            try {
+              const userData = await api.get('/api/fb-user-waba', {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  'x-access-token': accessToken,
+                },
+              });
+              const data = await userData.json();
+              console.log(data);
+
+            } catch (err) {
+              console.log(err);
+            }
+            // logout from FB
+            FB.logout(function (response) {
+              console.log('User is now logged out from FB');
+            });
           } else {
             console.log('User cancelled login or did not fully authorize.');
           }
