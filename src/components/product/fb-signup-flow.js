@@ -70,8 +70,6 @@ export const FbSignupFlow = ({title}) => {
         const fbq = window.fbq;
         fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup' });
 
-        window.open('', 'WA_EMBEDDED_SIGNUP', 'fullscreen=yes');
-
         FB.login(function (response) {
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
