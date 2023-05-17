@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
-import api from '../../lib/api';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow
