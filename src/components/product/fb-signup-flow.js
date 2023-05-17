@@ -75,24 +75,6 @@ export const FbSignupFlow = ({title}) => {
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
             console.log('Access Token = ', accessToken);
-
-            FB.logout(function (response) {
-              console.log('User logged out');
-            });
-
-            // try {
-            //   const token = localStorage.getItem('jwt');
-            //   const userResp = await api.post('/api/fb/user-data', {accessToken}, {headers: {Authorization: `Bearer ${token}`}});
-            //   // Log the user data
-            //   console.log(userResp.data);
-
-            //   // Log out the user after a successful API call
-            //   FB.logout(function (response) {
-            //     console.log('User logged out');
-            //   });
-            // } catch (err) {
-            //   console.log('Error fetching user data', err);
-            // }
           } else {
             console.log('User cancelled login or did not fully authorize.');
           }
