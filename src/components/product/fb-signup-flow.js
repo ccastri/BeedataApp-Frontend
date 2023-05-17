@@ -78,7 +78,7 @@ export const FbSignupFlow = ({title}) => {
           }
         }, {
           scope: 'whatsapp_business_management',
-          display: 'window',
+          display: 'dialog',
           auth_type: 'rerequest',
           extras: {
             feature: 'whatsapp_embedded_signup',
