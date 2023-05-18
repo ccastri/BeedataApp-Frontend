@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendServer = 'https://api.beet.digital';
+const backendServer = 'http://localhost:3001';
 
 const api = axios.create({
     baseURL: backendServer,

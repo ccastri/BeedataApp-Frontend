@@ -77,22 +77,18 @@ export const FbSignupFlow = ({title}) => {
             const token = localStorage.getItem('jwt');
 
             try {
-              const userData = await api.get('/api/fb-user-waba', {
+              const userData = await api.post('/api/fb-user-waba', {
                 headers: {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': accessToken,
                 },
+                mode: 'cors'
               });
-              const data = await userData.json();
-              console.log(data);
+              console.log(userData);
 
             } catch (err) {
               console.log(err);
             }
-            // logout from FB
-            FB.logout(function (response) {
-              console.log('User is now logged out from FB');
-            });
           } else {
             console.log('User cancelled login or did not fully authorize.');
           }
