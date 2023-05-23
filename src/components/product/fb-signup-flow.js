@@ -10,26 +10,6 @@ import api from '../../lib/axios';
  * 
  */
 
-const sessionInfoListener = (event) => {
-  if (event.origin !== "https://www.facebook.com") return;
-  try {
-    const data = JSON.parse(event.data);
-    if (data.type === 'WA_EMBEDDED_SIGNUP') {
-      // if user finishes the embedded sign up flow
-      if (data.event === 'FINISH') {
-        const {phoneID, wabaID} = data.data;
-      }
-      // if user cancels the embedded sign up flow
-      else {
-        const{currentStep} = data.data;
-      }
-    }
-  } catch {
-    // Don’t parse info that’s not a JSON
-    console.log('Non JSON Response', event.data);
-  }
-};
-
 export const FbSignupFlow = ({title}) => {
   const router = useRouter();
 
@@ -57,11 +37,6 @@ export const FbSignupFlow = ({title}) => {
         fjs.parentNode.insertBefore(js, fjs);
       })(document, 'script', 'facebook-jssdk');
     }
-
-    window.addEventListener('message', sessionInfoListener);
-
-    return () => window.removeEventListener('message', sessionInfoListener);
-
   }, []);
 
   const launchWhatsAppSignup = () => {
@@ -93,12 +68,12 @@ export const FbSignupFlow = ({title}) => {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          scope: 'whatsapp_business_management',
+          scope: 'business_management,whatsapp_business_management',
           display: 'popup',
           extras: {
             feature: 'whatsapp_embedded_signup',
-            "version": 2,
-            "sessionInfoVersion": 2,
+            version: 2,
+            sessionInfoVersion: 2,
           }
         });
       }
