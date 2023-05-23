@@ -12,16 +12,6 @@ import {
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 
-
-const user = {
-  avatar: '/static/images/avatars/beedata.svg',
-  city: 'Medellìn',
-  country: 'Colombia',
-  jobTitle: 'Company',
-  name: 'Beedata SAS',
-  timezone: 'GTM-7'
-};
-
 export const AccountProfile = (props) => {
   const [user, setUser] = useState({});
 

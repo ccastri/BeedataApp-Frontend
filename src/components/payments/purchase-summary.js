@@ -64,7 +64,7 @@ gutterBottom>
                     <TableBody>
                       {data.map((item) => (
                         <TableRow key={item.order_id}>
-                          <TableCell>{item.create_date}</TableCell>
+                          <TableCell>{item.create_date.split(' ')[0]}</TableCell>
                           <TableCell>{item.name}</TableCell>
                           <TableCell>{item.product_qty}</TableCell>
                           <TableCell>{item.price_total}</TableCell>

@@ -77,7 +77,7 @@ onClose={handleClose}>
           <Typography gutterBottom>
             The following credentials will be prompt to you only once.
             Please save them in a safe place.
-            If you lose them, please contact the Beedata team for assistance.
+            If you lose them, please contact the Beet team for assistance.
           </Typography>
           <Typography sx={{ width: '100%', marginBottom: 2 }}
 gutterBottom>

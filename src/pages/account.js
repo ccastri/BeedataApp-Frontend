@@ -8,7 +8,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Account | Beedata
+        Account | Beet
       </title>
     </Head>
     <Box

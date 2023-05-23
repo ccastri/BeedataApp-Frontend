@@ -56,7 +56,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Products | Beedata</title>
+        <title>Products | Beet</title>
       </Head>
       <Box
         component="main"

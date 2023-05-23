@@ -23,7 +23,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-          Beedata
+          Beet
         </title>
         <meta
           name="viewport"

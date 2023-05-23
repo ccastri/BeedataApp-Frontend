@@ -10,7 +10,7 @@ import { DashboardLayout } from '../components/general/dashboard-layout';
 const Page = () => (
   <>
     <Head>
-      <title>Beedata | Dashboard</title>
+      <title>Beet | Dashboard</title>
     </Head>
     <Box
       component="main"

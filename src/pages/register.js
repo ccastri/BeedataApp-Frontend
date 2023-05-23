@@ -91,7 +91,7 @@ const Register = () => {
     <>
       <Head>
         <title>
-          Register | Beedata
+          Register | Beet
         </title>
       </Head>
       <Box

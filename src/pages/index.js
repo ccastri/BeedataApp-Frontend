@@ -71,7 +71,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | Beedata</title>
+        <title>Login | Beet</title>
       </Head>
       <Box
         component="main"

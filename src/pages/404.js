@@ -7,7 +7,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        404 | Beedata
+        404 | Beet
       </title>
     </Head>
     <Box
