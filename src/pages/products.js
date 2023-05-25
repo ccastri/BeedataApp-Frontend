@@ -31,7 +31,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company-products', {
+        const response = await api.get('/api/company-all-products', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

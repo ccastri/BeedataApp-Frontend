@@ -43,14 +43,30 @@ const Register = () => {
 
       // If data success, display credentials and purchase free product
       if (data.success) {
-
-        const registrationProduct = {
-          productId: 285,
-          companyId: data.user.company_id
+        const registrationProductCheck = {
+          productId: 50,
+          companyId: data.user.company_id,
+          productQuantity: 10,
         };
-        await api.post('/api/purchase-product', registrationProduct);
-        setCredentials(data.user);
-        setOpenCredentials(true);
+
+        const { data: check } = await api.get('/api/company-product', registrationProductCheck);
+        console.log("Register: ", check);
+
+        if (check.success) {
+          setCredentials(data.user);
+          setOpenCredentials(true);
+        } else {
+          const registrationProduct = {
+            productId: 50,
+            companyId: data.user.company_id,
+            userId: data.user.id,
+            productQuantity: 10,
+            registerPurchase: true
+          };
+          await api.post('/api/purchase-product', registrationProduct);
+          setCredentials(data.user);
+          setOpenCredentials(true);
+        }
       }
 
       setLoading(false);

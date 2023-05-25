@@ -6,21 +6,34 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { CreditForm } from './credit-dialog';
-import { Wompi } from './wompi';
+import api from '../../lib/axios';
 
 export const BalanceSection = ({ title }) => {
   const [balance, setBalance] = useState(0);
-  const [isCreditFormOpen, setIsCreditFormOpen] = useState(false);
 
-  const handleClick = () => {
-    setIsCreditFormOpen(true);
-  };
+  // Retrieve balance from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await api.get('/api/user', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response && response.data && response.data.user) {
+          setBalance(response.data.user.credit);          
+        } else {
+          console.error('Invalid response:', response);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  const handleClose = () => {
-    setIsCreditFormOpen(false);
-    // reset the form
-  };
+    fetchData();
+  }, []);
+
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -37,11 +50,22 @@ export const BalanceSection = ({ title }) => {
           </Typography>
         </CardContent>
         <Divider />
-        <CardActions>
-          <Box sx={{ width: '100%' }}>
-            <CreditForm />
-          </Box>
-        </CardActions>
+          <CardActions sx={{ mt: 1, mb: 1 }}>
+            <Button 
+              variant="contained"
+              fullWidth
+              color="primary"
+              sx={{ 
+                fontSize: 16, 
+                fontWeight: 'bold',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
+                ml: 2,
+                mr: 2,
+              }}
+            >
+              Add Credit
+            </Button>
+          </CardActions>
       </Card>
     </Box>
   );

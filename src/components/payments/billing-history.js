@@ -58,7 +58,7 @@ data-testid="billing-history-title">
                     <TableHead>
                     <TableRow>
                         <TableCell>Timestamp</TableCell>
-                        <TableCell>Payment Method</TableCell>
+                        <TableCell>Product</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Total</TableCell>
                       </TableRow>
@@ -66,10 +66,10 @@ data-testid="billing-history-title">
                     <TableBody>
                       {data.map((item) => (
                         <TableRow key={item.id}>
-                          <TableCell>{item.created_at}</TableCell>
-                          <TableCell>{item.payment_method}</TableCell>
-                          <TableCell>{item.sandbox_status}</TableCell>
-                          <TableCell>{item.usd}</TableCell>
+                          <TableCell>{item.create_date.split(' ')[0]}</TableCell>
+                          <TableCell>{item.display_name}</TableCell>
+                          <TableCell>{item.state}</TableCell>
+                          <TableCell>{item.price_total}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

@@ -16,8 +16,8 @@ const SuccessSnackbar = ({responseMessage}) => {
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
+        vertical: 'top',
+        horizontal: 'center',
       }}
       open={open}
       autoHideDuration={10000}
