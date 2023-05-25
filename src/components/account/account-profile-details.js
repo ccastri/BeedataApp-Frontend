@@ -28,14 +28,21 @@ export const AccountProfileDetails = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('jwt');
-      const response = await api.get('/api/user', {
+      const userResponse = await api.get('/api/user', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const companyResponse = await api.get('/api/company', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
   
-      if (response.data) {
-        const { name, identification_type, identification_number, role, email, phone, country, city, billing_email, billing_address } = response.data.user;
+      if (userResponse.data && companyResponse.data) {
+        const { name, identification_type, identification_number, role, email, phone, country, city } = userResponse.data.user;
+        const { billing_email, billing_address } = companyResponse.data.company;
   
         setFormValues({
           fullName: name || '',
@@ -65,11 +72,36 @@ export const AccountProfileDetails = (props) => {
   const handleSaveDetails = async () => {
     try {
       const token = localStorage.getItem('jwt');
-      const response = await api.post('/api/update-user', formValues, {
+
+      // update billing fields via /api/update-company
+      const billingFields = {
+        billingEmail: formValues.billingEmail,
+        billingAddress: formValues.billingAddress
+      };
+
+      await api.post('/api/update-company', billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+
+      // update remaining fields via /api/update-user
+      const remainingFields = {
+        fullName: formValues.fullName,
+        identificationType: formValues.identificationType,
+        identificationNumber: formValues.identificationNumber,
+        email: formValues.email,
+        phone: formValues.phone,
+        country: formValues.country,
+        city: formValues.city
+      };
+
+      const response = await api.post('/api/update-user', remainingFields, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
       setResponseMessage(response.data.message); 
     } catch (error) {
       console.error(error);
@@ -198,7 +230,7 @@ xs={12}>
 xs={12}>
               <Typography variant="h6"
 gutterBottom>
-                Billing Information
+                Company Information
               </Typography>
             </Grid>
             <Grid item
@@ -235,6 +267,7 @@ xs={12}>
             color="primary"
             variant="contained"
             onClick={handleSaveDetails}
+            sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
           >
             Save details
           </Button>

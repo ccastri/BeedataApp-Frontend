@@ -49,10 +49,10 @@ const Register = () => {
           productQuantity: 10,
         };
 
-        const { data: check } = await api.get('/api/company-product', registrationProductCheck);
-        console.log("Register: ", check);
+        const productCheck = await api.post('/api/company-product', registrationProductCheck);
+        console.log("This is productCheck: ", productCheck.data);
 
-        if (check.success) {
+        if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
           setOpenCredentials(true);
         } else {

@@ -14,12 +14,21 @@ export const BillingPreferences = ({ title }) => {
 
     const fetchBillingInfo = async () => {
       try {
-        const response = await api.get('/api/billing-info', {
+        const userResponse = await api.get('/api/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        const { billing_address, city, country, billing_email } = response.data.billingInfo;
+
+        const companyResponse = await api.get('/api/company', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const { city, country } = userResponse.data.user;
+        const { billing_address, billing_email } = companyResponse.data.company;
+
         setBillingAddress(billing_address);
         setLocation(`${city}, ${country}`);
         setEmail(billing_email);

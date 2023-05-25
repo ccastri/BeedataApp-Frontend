@@ -70,7 +70,7 @@ export function CredentialDialog(props) {
         open={openCredentials}
       >
         <BootstrapDialogTitle id="customized-dialog-title"
-onClose={handleClose}>
+onClose={handleClose} sx={{ ml: 2, mr: 2, p: 2, fontSize: '1.9rem' }}>
           Thank you for registering with us!
         </BootstrapDialogTitle>
         <DialogContent dividers>
@@ -96,6 +96,7 @@ gutterBottom>
           autoFocus
           onClick={handleOnClick}
           variant="outlined"
+          sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
           >
             Sign in Now
           </Button>

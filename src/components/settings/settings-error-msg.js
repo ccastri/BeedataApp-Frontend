@@ -16,15 +16,21 @@ const ErrorSnackbar = ({errorMessage}) => {
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'left',
       }}
       open={open}
       autoHideDuration={10000}
       onClose={handleClose}
     >
-      <Alert severity='error'
-sx={{ width: '100%', backgroundColor: 'rgba(76, 175, 80, 0.3)' }}>
+      <Alert 
+        severity='error'
+        sx={{
+          width: '100%',
+          backgroundColor: 'rgba(244, 132, 132, 0.5)',
+          fontWeight: 'bold'
+        }}
+      >
         {errorMessage}
       </Alert>
     </Snackbar>

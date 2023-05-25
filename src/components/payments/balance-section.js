@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -16,13 +16,13 @@ export const BalanceSection = ({ title }) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/user', {
+        const response = await api.get('/api/company', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (response && response.data && response.data.user) {
-          setBalance(response.data.user.credit);          
+        if (response && response.data && response.data.company) {
+          setBalance(response.data.company.credit);          
         } else {
           console.error('Invalid response:', response);
         }
