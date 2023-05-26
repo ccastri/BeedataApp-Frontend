@@ -27,7 +27,7 @@ export const ProductListToolbar = (props) => (
         sx={{ m: 1 }}
         variant="h4"
       >
-        Purchased Products
+        Products
       </Typography>
     </Box>
     <Box sx={{ mt: 3 }}>

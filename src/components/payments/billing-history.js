@@ -69,7 +69,7 @@ data-testid="billing-history-title">
                           <TableCell>{item.create_date.split(' ')[0]}</TableCell>
                           <TableCell>{item.display_name}</TableCell>
                           <TableCell>{item.state}</TableCell>
-                          <TableCell>{item.price_total}</TableCell>
+                          <TableCell>{item.price_total} USD</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
