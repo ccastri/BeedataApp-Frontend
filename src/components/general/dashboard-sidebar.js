@@ -1,9 +1,9 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -12,10 +12,11 @@ import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 import { Cog as CogIcon } from '../../icons/cog';
 import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
+import api from '../../lib/axios';
 
 const items = [
   {
-    href: '/dashboard',
+    href: '/coming-soon',
     icon: (<TrendingDownIcon fontSize="small" />),
     target: '_self',
     title: 'Consumption'
@@ -33,7 +34,6 @@ const items = [
     title: 'Beet Lake'
   },
   {
-    href: 'https://pruebas.beedata.co/signin',
     icon: (<SmartToyIcon fontSize="small" />),
     target: '_blank',
     title: 'Beet Bot'
@@ -54,7 +54,7 @@ const items = [
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
-  }
+  },
 ];
 
 /** 
@@ -68,12 +68,42 @@ const items = [
  * 
  */
 export const DashboardSidebar = (props) => {
+  const [n8nDomain, setN8nDomain] = useState(''); 
   const { open, onClose } = props;
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
   });
+
+  // Get user company n8n_domain property
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await api.get('/api/company', {
+          headers: {  
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('response', response);
+        if (response && response.data && response.data.company) {
+          // Check if domain is empty
+          if (response.data.company.n8n_domain) {
+            setN8nDomain(response.data.company.n8n_domain);
+          } else {
+            setN8nDomain('https://pruebas.beedata.co/signin');
+          }
+        } else {
+          console.error('Invalid response:', response);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(
     () => {
@@ -101,7 +131,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink
-              href="/dashboard"
+              href="/comming-soon"
               passHref
             >
               <a>
@@ -127,7 +157,9 @@ export const DashboardSidebar = (props) => {
             <NavItem
               key={item.title}
               icon={item.icon}
-              href={item.href}
+              href={
+                item.title === 'Beet Bot' ? n8nDomain : item.href
+              }
               title={item.title}
               target={item.target}
             />

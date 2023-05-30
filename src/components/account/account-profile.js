@@ -1,14 +1,12 @@
 import React from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Typography
-} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 
@@ -62,12 +60,6 @@ export const AccountProfile = (props) => {
           variant="body2"
         >
           {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Role'}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.company ? user.company.charAt(0).toUpperCase() + user.company.slice(1) : 'Company'}
         </Typography>
       </Box>
     </CardContent>

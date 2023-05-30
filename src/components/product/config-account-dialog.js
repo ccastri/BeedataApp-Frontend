@@ -14,6 +14,8 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import TextFieldWrapper from '../general/textfield-wrapper';
+import SuccessSnackbar from '../settings/settings-success-msg';
+import api from '../../lib/axios';
 
 const description = (
   <>
@@ -73,6 +75,7 @@ const onSubmit = async (values) => {
 
 export const WpConfigAccountDialog = () => {
   const [open, setOpen] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,6 +84,29 @@ export const WpConfigAccountDialog = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const onSubmit = async (values) => {
+    try {
+      const token = localStorage.getItem('jwt');
+
+      const wpAccountDetails = {
+        waba: values.accountId,
+        access_token: values.accessToken,
+      };
+      const response = await api.post('/api/update-company', wpAccountDetails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response && response.data && response.data.company) {
+        setResponseMessage(response.data.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -104,7 +130,7 @@ export const WpConfigAccountDialog = () => {
         variant="contained"
         onClick={handleClickOpen}
         fullWidth
-        sx={{ ml: 2, mr: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+        sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
         >
         Configure Account
       </Button>
@@ -133,7 +159,12 @@ export const WpConfigAccountDialog = () => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={formik.handleSubmit}>
+          <Button 
+            autoFocus
+            variant="outlined"
+            onClick={formik.handleSubmit}
+            sx={{ ml: 2, mr: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+          >
             Save Settings
           </Button>
         </DialogActions>

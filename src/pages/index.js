@@ -37,7 +37,7 @@ const Login = () => {
         localStorage.setItem('jwt', token);
 
         if (typeof Router !== 'undefined') {
-          Router.push("/dashboard").catch(console.error);
+          Router.push("/coming-soon").catch(console.error);
         }
       }
     } catch (err) {

@@ -50,7 +50,6 @@ const Register = () => {
         };
 
         const productCheck = await api.post('/api/company-product', registrationProductCheck);
-        console.log("This is productCheck: ", productCheck.data);
 
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);

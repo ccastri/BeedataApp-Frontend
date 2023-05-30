@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ProductListToolbar } from '../components/product/product-list-toolbar';
+import { ProductWarnings } from '../components/product/product-warnings';
 import { ProductCard } from '../components/product/product-card';
 import { baseProducts } from '../data/base_products';
 import { DashboardLayout } from '../components/general/dashboard-layout';
@@ -14,8 +14,9 @@ import api from '../lib/axios';
 
 Page component that displays user products
 
-Dependencies:
-Usage:
+Dependencies: Head, useState, useEffect, Box, Container, Grid, CircularProgress,
+              ProductWarnings, ProductCard, baseProducts, DashboardLayout, api
+Usage: Used to display user products
  */
 
 const Page = () => {
@@ -72,17 +73,25 @@ const Page = () => {
         }}
       >
         <Container maxWidth={false}>
-          <ProductListToolbar />
+          <ProductWarnings />
           <Grid container spacing={3} mt={3}>
             {baseProducts.map((baseProduct) => {
               const activeProduct = products.find(
                 (product) => product.name.includes(baseProduct.name)
               );
               const isActive = Boolean(activeProduct);
+              const productDetails = isActive ? {
+                display_name: activeProduct.display_name,
+                create_date: activeProduct.create_date
+              } : {};
+
               return (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={baseProduct.id}>
                   <ProductCard
-                    product={baseProduct}
+                    product={{
+                      ...baseProduct,
+                      ...productDetails
+                    }}
                     isActive={isActive}
                   />
                 </Grid>
