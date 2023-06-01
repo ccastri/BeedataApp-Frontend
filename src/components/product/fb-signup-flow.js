@@ -59,7 +59,6 @@ export const FbSignupFlow = ({title}) => {
                 },
                 mode: 'cors'
               });
-              console.log(userData);
 
             } catch (err) {
               console.log(err);

@@ -7,6 +7,8 @@ import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import api from '../../lib/axios';
+import { CreditDialog } from './add-credit-dialog';
+
 
 export const BalanceSection = ({ title }) => {
   const [balance, setBalance] = useState(0);
@@ -34,6 +36,17 @@ export const BalanceSection = ({ title }) => {
     fetchData();
   }, []);
 
+  // Retrieve user role from JWT token
+  const gerUserRole = () => {
+    const token = localStorage.getItem('jwt');
+
+    if (token) {
+      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+      return payload.userRole;
+    }
+    return '';
+  };
+
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -49,23 +62,14 @@ export const BalanceSection = ({ title }) => {
             USD$ {balance}
           </Typography>
         </CardContent>
-        <Divider />
-          <CardActions sx={{ mt: 1, mb: 1 }}>
-            <Button 
-              variant="contained"
-              fullWidth
-              color="primary"
-              sx={{ 
-                fontSize: 16, 
-                fontWeight: 'bold',
-                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
-                ml: 2,
-                mr: 2,
-              }}
-            >
-              Add Credit
-            </Button>
-          </CardActions>
+        {gerUserRole() === 'admin' && (
+          <>
+            <Divider />
+            <CardActions sx={{ mt: 1, mb: 1 }}>
+              <CreditDialog />
+            </CardActions>
+          </>
+        )}
       </Card>
     </Box>
   );

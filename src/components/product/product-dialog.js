@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,72 +10,97 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import TextFieldWrapper from '../general/textfield-wrapper';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import api from '../../lib/axios';
 import { useFormik } from 'formik';
 
-const StyledCard = styled(Card)({
-  maxWidth: '60vw',
-  margin: 'auto',
-  borderRadius: 12,
-  padding: 12,
-  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
+const StyledCard = styled(Card)(({ theme }) => {
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  return {
+    maxWidth: isSmallScreen ? '90vw' : '60vw',
+    margin: 'auto',
+    borderRadius: 12,
+    padding: 12,
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
+  };
 });
 
-const StyledCardMedia = styled(CardMedia)({
-  borderRadius: 6,
-  width: 200,
-  height: 200,
+const StyledCardMedia = styled(CardMedia)(({ theme }) => {
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  return {
+    borderRadius: 6,
+    width: isSmallScreen ? 150 : 200,
+    height: isSmallScreen ? 150 : 200,
+  };
 });
 
 export const ProductDialog = (props) => {
   const { name, description, image } = props;
   const [open, setOpen] = useState(false);
+  const [productOptions, setProductOptions] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productDescription, setProductDescription] = useState('');
+  const [productPrice, setProductPrice] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setProductDescription('');
+    setProductPrice('');
     formik.resetForm(); // Reset form values
     setOpen(false);
   };
 
-  const onSubmit = async (values) => {
-    try {
-      console.log(values);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await api.post('/api/beet-products', {
+          beetProduct: name,
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response && response.data && response.data.productSelection) {
+          setProductOptions(response.data.productSelection);
+        } else {
+          console.error('Invalid response:', response);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    fetchData();
+  }, []);
 
-
-  const durationTypes = [
-        { value: '6 months', label: '6 months' }, 
-        { value: '12 months', label: '12 months' }
-  ];
-
-  const planLevelTypes = [
-        { value: 'Free', label: 'Free' },
-        { value: 'Basic', label: 'Basic' },
-        { value: 'Premium', label: 'Premium' },
-        { value: 'Enterprise', label: 'Enterprise' }
-  ];
-
-  const beetSocialTypes = [
-        { value: '0 Agents', label: '0' },
-        { value: '2 Agents', label: '2' }
-  ];
+  const productTypes = productOptions.map((product) => ({
+    value: product.product_id,
+    label: product.name
+  }));
 
   const formik = useFormik({
     initialValues: {
-      duration: '',
-      plan_level: '',
-      with_social: '',
-  },
-    onSubmit
+      product: '',
+    },
+    onSubmit: () => {}
   });
+
+  const handleChange = (event) => {
+    formik.handleChange(event);
+    const selectedProduct = productOptions.find((product) => product.product_id === event.target.value);
+    if (selectedProduct) {
+      setProductDescription(selectedProduct.description);
+      setProductPrice(selectedProduct.product_alert);
+    }
+    setSelectedProduct(event.target.value);
+  };
 
   return (
     <>
@@ -84,7 +109,7 @@ export const ProductDialog = (props) => {
         variant="contained"
         fullWidth
         color="secondary"
-        sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+        sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
       >
         Purchase
       </Button>
@@ -92,14 +117,14 @@ export const ProductDialog = (props) => {
         open={open}
         onClose={handleClose}
         PaperProps={{
-        sx: {
-          width: useMediaQuery('(max-width:600px)') ? '90vw' :
-            useMediaQuery('(max-width:960px)') ? '60vw' : '30vw',
-          height: useMediaQuery('(max-width:600px)') ? '90vh' :
-            useMediaQuery('(max-width:960px)') ? '80vh' : '60vh',
-          overflow: 'hidden',
-        },
-      }}
+          sx: {
+            width: useMediaQuery('(max-width:600px)') ? '90vw' :
+              useMediaQuery('(max-width:960px)') ? '60vw' : '30vw',
+            height: useMediaQuery('(max-width:600px)') ? '90vh' :
+              useMediaQuery('(max-width:960px)') ? '60vh' : '45vh',
+            overflow: 'hidden',
+          },
+        }}
       >
         <DialogContent>
           <StyledCard>
@@ -112,9 +137,22 @@ export const ProductDialog = (props) => {
                   <Typography gutterBottom variant="h4" component="div">
                     {name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {description}
-                  </Typography>
+                  {selectedProduct && (
+                    <>
+                      <Typography variant="subtitle2" color="text.secondary">
+                        {productDescription}
+                      </Typography>
+                      {productPrice && (
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          sx={{ mt: 2, mb: -1 }}
+                        >
+                          Price: {productPrice} USD
+                        </Typography>
+                      )}
+                    </>
+                  )}
                 </CardContent>
               </Grid>
             </Grid>
@@ -124,29 +162,28 @@ export const ProductDialog = (props) => {
           <DialogActions>
             <Box sx={{ maxWidth: '400px' }}>
               <form onSubmit={formik.handleSubmit}>
-                <TextFieldWrapper
-                  formik={formik}
-                  name="duration"
-                  label="Duration"
-                  selectOptions={durationTypes}
-                />
-                <TextFieldWrapper
-                  formik={formik}
-                  name="plan_level"
-                  label="Plan Level"
-                  selectOptions={planLevelTypes}
-                />
-                <TextFieldWrapper
-                  formik={formik}
-                  name="with_social"
-                  label="With Beet Social"
-                  selectOptions={beetSocialTypes}
-                />
+                <TextField
+                  id="product"
+                  name="product"
+                  label="Choose Product"
+                  select
+                  fullWidth
+                  value={formik.values.product}
+                  onChange={handleChange}
+                  error={formik.touched.product && Boolean(formik.errors.product)}
+                  helperText={formik.touched.product && formik.errors.product}
+                >
+                  {productTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
                 <Button
                   variant="outlined"
                   onClick={handleClose}
                   fullWidth
-                  sx={{ mb: 1, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
+                  sx={{ mb: 1, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                 >
                   Cancel
                 </Button>
@@ -155,7 +192,7 @@ export const ProductDialog = (props) => {
                   type="submit"
                   fullWidth
                   color="secondary"
-                  sx={{ mb: 2, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
+                  sx={{ mb: 2, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                 >
                   Purchase
                 </Button>
@@ -166,4 +203,4 @@ export const ProductDialog = (props) => {
       </Dialog>
     </>
   );
-}
+};

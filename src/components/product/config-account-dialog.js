@@ -136,7 +136,7 @@ export const WpConfigAccountDialog = () => {
       </Button>
       <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <BootstrapDialogTitle
-          sx={{ p: 2, fontSize: '1.7rem', backgroundColor: '#C7E8CA' }}
+          sx={{ p: 2, fontSize: '1.6rem' }}
           id="customized-dialog-title" onClose={handleClose}
         >
           Configure WhatsApp Business Account

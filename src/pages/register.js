@@ -35,6 +35,11 @@ const Register = () => {
     { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
   ];
 
+  const roleTypes = [
+    { value: 'admin', label: 'Admin' },
+    { value: 'user', label: 'User' },
+  ]
+
   const onSubmit = async (values) => {
     setLoading(true);
 
@@ -171,13 +176,15 @@ const Register = () => {
   name="email"
   label="Email Address"
   type="email" />
-              <TextFieldWrapper formik={formik}
+            <TextFieldWrapper formik={formik}
   name="role"
-  label="Role" />
+  label="Role"
+  selectOptions={roleTypes} />
               <Box
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
+                  justifyContent: 'center',
                   ml: -1
                 }}
               >
@@ -186,10 +193,12 @@ const Register = () => {
                   name="policy"
                   onChange={formik.handleChange}
                   data-testid="policy-checkbox"
+                  sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }}
                 />
                 <Typography
                   color="textSecondary"
                   variant="body2"
+                  sx={{ fontSize: 15 }}
                 >
                   I have read the
                   {' '}

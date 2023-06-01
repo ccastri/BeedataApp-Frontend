@@ -50,11 +50,11 @@ const items = [
     target: '_self',
     title: 'Payments'
   },
-  {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
-  },
+  // {
+  //   href: '/settings',
+  //   icon: (<CogIcon fontSize="small" />),
+  //   title: 'Settings'
+  // },
 ];
 
 /** 
@@ -86,7 +86,6 @@ export const DashboardSidebar = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log('response', response);
         if (response && response.data && response.data.company) {
           // Check if domain is empty
           if (response.data.company.n8n_domain) {
@@ -131,7 +130,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink
-              href="/comming-soon"
+              href="/coming-soon"
               passHref
             >
               <a>

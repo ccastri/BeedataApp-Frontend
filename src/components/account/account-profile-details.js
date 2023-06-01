@@ -22,7 +22,9 @@ export const AccountProfileDetails = (props) => {
     country: '',
     city: '',
     billingEmail: '',
-    billingAddress: ''
+    billingAddress: '',
+    waba: '',
+    accessToken: ''
   });
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export const AccountProfileDetails = (props) => {
   
       if (userResponse.data && companyResponse.data) {
         const { name, identification_type, identification_number, role, email, phone, country, city } = userResponse.data.user;
-        const { billing_email, billing_address } = companyResponse.data.company;
+        const { billing_email, billing_address, waba, access_token } = companyResponse.data.company;
   
         setFormValues({
           fullName: name || '',
@@ -54,7 +56,9 @@ export const AccountProfileDetails = (props) => {
           country: country || '',
           city: city || '',
           billingEmail: billing_email || '',
-          billingAddress: billing_address || ''
+          billingAddress: billing_address || '',
+          waba: waba || '',
+          accessToken: access_token || ''
         });
       }
     };
@@ -76,7 +80,9 @@ export const AccountProfileDetails = (props) => {
       // update billing fields via /api/update-company
       const billingFields = {
         billingEmail: formValues.billingEmail,
-        billingAddress: formValues.billingAddress
+        billingAddress: formValues.billingAddress,
+        waba: formValues.waba,
+        accessToken: formValues.accessToken
       };
 
       await api.post('/api/update-company', billingFields, {
@@ -222,43 +228,74 @@ xs={12}>
                 variant="outlined"
               />
             </Grid>
-            <Grid item
-xs={12}>
-              <Divider />
-            </Grid>
-            <Grid item
-xs={12}>
-              <Typography variant="h6"
-gutterBottom>
-                Company Information
-              </Typography>
-            </Grid>
-            <Grid item
-md={6}
-xs={12}>
-              <TextField
-                fullWidth
-                label="Billing Email"
-                name="billingEmail"
-                onChange={handleChange}
-                required
-                value={formValues.billingEmail}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item
-md={6}
-xs={12}>
-              <TextField
-                fullWidth
-                label="Billing Address"
-                name="billingAddress"
-                onChange={handleChange}
-                required
-                value={formValues.billingAddress}
-                variant="outlined"
-              />
-            </Grid>
+            {formValues.role === 'admin' && (
+              <>
+                <Grid item
+  xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item
+  xs={12}>
+                <Typography variant="h6"
+  gutterBottom>
+                  Company Information
+                </Typography>
+              </Grid>
+              <Grid item
+  md={6}
+  xs={12}>
+                <TextField
+                  fullWidth
+                  label="Billing Email"
+                  name="billingEmail"
+                  onChange={handleChange}
+                  required
+                  value={formValues.billingEmail}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item
+  md={6}
+  xs={12}>
+                <TextField
+                  fullWidth
+                  label="Billing Address"
+                  name="billingAddress"
+                  onChange={handleChange}
+                  required
+                  value={formValues.billingAddress}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item
+  md={6}
+  xs={12}>
+                <TextField
+                  fullWidth
+                  label="Waba ID"
+                  name="waba"
+                  onChange={handleChange}
+                  required
+                  value={formValues.waba}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item
+  md={6}
+  xs={12}>
+                <TextField
+                  fullWidth
+                  label="Waba access token"
+                  name="waba_access_token"
+                  onChange={handleChange}
+                  required
+                  value={formValues.accessToken}
+                  variant="outlined"
+                />
+              </Grid>
+              </>
+            ) 
+            }
           </Grid>
         </CardContent>
         <Divider />
