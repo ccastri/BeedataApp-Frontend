@@ -47,7 +47,7 @@ export const DashboardLayout = (props) => {
         open={isSidebarOpen}
       />
       <WhatsAppWidget
-        phoneNo="919884098840"
+        phoneNo="573242191970"
         position="right"
         widgetWidth="400px"
         widgetWidthMobile="260px"

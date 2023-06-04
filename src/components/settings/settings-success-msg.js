@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
-const SuccessSnackbar = ({responseMessage}) => {
+const SuccessSnackbar = ({responseMessage, container}) => {
   const [open, setOpen] = useState(true);
 
   const handleClose = (event, reason) => {
@@ -24,7 +24,13 @@ const SuccessSnackbar = ({responseMessage}) => {
       onClose={handleClose}
     >
       <Alert severity='success'
-sx={{ width: '100%', backgroundColor: 'rgba(76, 175, 80, 0.3)' }}>
+        sx={{
+          width: '100%',
+          backgroundColor: container === 'dialog'
+            ? 'rgba(255, 255, 255, 0.9)'
+            : 'rgba(76, 175, 80, 0.3)',
+        }}
+        >
         {responseMessage}
       </Alert>
     </Snackbar>

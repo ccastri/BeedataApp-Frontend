@@ -69,10 +69,6 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const onSubmit = async (values) => {
-  console.log(values);
-};
-
 export const WpConfigAccountDialog = () => {
   const [open, setOpen] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
@@ -167,6 +163,9 @@ export const WpConfigAccountDialog = () => {
           >
             Save Settings
           </Button>
+          {responseMessage && (
+            <SuccessSnackbar responseMessage={responseMessage} />
+          )}
         </DialogActions>
       </BootstrapDialog>
     </>

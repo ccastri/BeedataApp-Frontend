@@ -8,7 +8,7 @@
    version="1.1"
    id="svg136896"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="lake.svg"
+   sodipodi:docname="lake2.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -29,13 +29,13 @@
      fit-margin-bottom="8"
      inkscape:zoom="0.75722503"
      inkscape:cx="118.19472"
-     inkscape:cy="132.72145"
+     inkscape:cy="132.72144"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="text2220-6-7-4-2" />
   <defs
      id="defs136893">
     <clipPath
@@ -246,20 +246,27 @@
        inkscape:export-filename="D:\Santi\BEE Data SAS\BEE - Documentos\General\Imagen Corporativa\Submarcas\lake.png"
        inkscape:export-xdpi="462.94284"
        inkscape:export-ydpi="462.94284" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:14.6342px;line-height:1.25;font-family:'Antipasto Pro';-inkscape-font-specification:'Antipasto Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#00b3ff;fill-opacity:1;stroke:none;stroke-width:0.40602"
-       x="84.684669"
-       y="83.850761"
+    <g
+       aria-label="Lake"
        id="text2220-6-7-4-2"
-       inkscape:export-filename="D:\Santi\BEE Data SAS\BEE - Documentos\General\Imagen Corporativa\Submarcas\lake.png"
-       inkscape:export-xdpi="462.94284"
-       inkscape:export-ydpi="462.94284"><tspan
-         sodipodi:role="line"
-         id="tspan2218-1-69-4-3"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:15.2994px;font-family:'Antipasto Pro';-inkscape-font-specification:'Antipasto Pro, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#00b3ff;fill-opacity:1;stroke-width:0.40602"
-         x="84.684669"
-         y="83.850761">Lake</tspan></text>
+       style="font-weight:600;font-size:14.6342px;line-height:1.25;font-family:'Antipasto Pro';-inkscape-font-specification:'Antipasto Pro, Semi-Bold';fill:#00b3ff;stroke-width:0.40602">
+      <path
+         d="m 86.344654,83.850761 h 4.031392 0.0306 c 0.405434,0 0.726722,-0.336586 0.726722,-0.74967 0,-0.420734 -0.336587,-0.757321 -0.757321,-0.757321 l -3.174625,-0.0076 v -7.519655 c 0,-0.428384 -0.344237,-0.757321 -0.76497,-0.757321 -0.420734,0 -0.75732,0.328937 -0.75732,0.757321 v 8.284625 c 0,0.367185 0.305988,0.74967 0.665523,0.74967 z"
+         style="font-size:15.2994px"
+         id="path2257" />
+      <path
+         d="m 95.22594,83.942558 c 0.787919,0 1.52229,-0.305988 2.118967,-0.787919 0.03825,0.390134 0.336587,0.696122 0.742021,0.696122 0.436033,0 0.780269,-0.351886 0.780269,-0.780269 v -2.80744 c -0.02295,-1.996572 -1.644685,-3.618308 -3.641257,-3.618308 -2.004221,0 -3.648907,1.637036 -3.648907,3.648907 0,2.011871 1.644686,3.648907 3.648907,3.648907 z m 0,-1.52994 c -1.170404,0 -2.118967,-0.956213 -2.118967,-2.118967 0,-1.178054 0.948563,-2.111317 2.118967,-2.111317 1.185704,0 2.118967,0.933263 2.118967,2.111317 0,1.162754 -0.933263,2.118967 -2.118967,2.118967 z"
+         style="font-size:15.2994px"
+         id="path2259" />
+      <path
+         d="m 101.16209,83.850761 c 0.40543,0 0.74202,-0.328937 0.74202,-0.74967 v -1.461093 l 0.94856,-0.902665 1.82063,2.769192 c 0.1377,0.221841 0.38249,0.344236 0.62728,0.344236 0.41308,0 0.76497,-0.351886 0.76497,-0.76497 0,-0.145344 -0.0459,-0.290688 -0.13005,-0.420733 l -1.95067,-2.991033 1.73648,-1.652335 c 0.14534,-0.145344 0.22184,-0.336587 0.22184,-0.527829 0,-0.191243 -0.0842,-0.390135 -0.21419,-0.535479 -0.15299,-0.152994 -0.34424,-0.237141 -0.54313,-0.237141 -0.17594,0 -0.35189,0.06885 -0.49723,0.206542 l -2.77684,2.715643 v -4.83461 c 0,-0.420734 -0.32894,-0.749671 -0.74967,-0.749671 -0.41309,0 -0.77262,0.328937 -0.77262,0.749671 v 8.292275 c 0,0.420733 0.35188,0.74967 0.77262,0.74967 z"
+         style="font-size:15.2994px"
+         id="path2261" />
+      <path
+         d="m 110.36465,83.934908 c 1.1551,0 1.85122,-0.413084 2.34081,-0.826168 0.33658,-0.283038 0.36718,-0.703772 0.16064,-1.00211 -0.27539,-0.397785 -0.78792,-0.550779 -1.12451,-0.175943 -0.29833,0.328937 -0.72672,0.543128 -1.37694,0.543128 -0.94092,0 -1.72883,-0.627275 -1.97363,-1.491691 h 4.88816 c 0.43604,0 0.74967,-0.298338 0.74967,-0.726722 -0.023,-1.996571 -1.66763,-3.610658 -3.6642,-3.610658 -2.01187,0 -3.66421,1.629386 -3.66421,3.648907 0,2.019521 1.65234,3.641257 3.66421,3.641257 z m -2.01952,-4.222634 c 0.20654,-0.910315 1.01741,-1.614087 2.04247,-1.614087 1.02506,0 1.85887,0.680823 2.07307,1.614087 z"
+         style="font-size:15.2994px"
+         id="path2263" />
+    </g>
     <rect
        style="fill:#ffffff;stroke-width:0.134266;stroke-linecap:round;stroke-linejoin:bevel"
        id="rect1304-6-9-6"

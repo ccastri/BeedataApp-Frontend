@@ -12,7 +12,8 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import TextFieldWrapper from '../general/textfield-wrapper';
+import SuccessSnackbar from '../settings/settings-success-msg';
+import ErrorSnackbar from '../settings/settings-error-msg';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import api from '../../lib/axios';
 import { useFormik } from 'formik';
@@ -44,6 +45,7 @@ export const ProductDialog = (props) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -85,11 +87,37 @@ export const ProductDialog = (props) => {
     label: product.name
   }));
 
+  const onSubmit = async (values) => {
+    try {
+      const token = localStorage.getItem('jwt');
+
+      const purchaseDetails = {
+        productId: values.product,
+        productQuantity: 1,
+        productPrice: productPrice,
+      };
+      
+      const response = await api.post('/api/purchase-product', purchaseDetails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response && response.data && response.data.purchase) {
+        setResponseMessage(response.data.message);
+        
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       product: '',
     },
-    onSubmit: () => {}
+    onSubmit
   });
 
   const handleChange = (event) => {
@@ -120,8 +148,7 @@ export const ProductDialog = (props) => {
           sx: {
             width: useMediaQuery('(max-width:600px)') ? '90vw' :
               useMediaQuery('(max-width:960px)') ? '60vw' : '30vw',
-            height: useMediaQuery('(max-width:600px)') ? '90vh' :
-              useMediaQuery('(max-width:960px)') ? '60vh' : '45vh',
+            height: useMediaQuery('(max-width:600px)') ? '90vh' : '60vh',
             overflow: 'hidden',
           },
         }}
@@ -197,6 +224,9 @@ export const ProductDialog = (props) => {
                   Purchase
                 </Button>
               </form>
+              {responseMessage && (
+                  <SuccessSnackbar responseMessage={responseMessage} container={'dialog'} />
+              )}
             </Box>
           </DialogActions>
         </Box>

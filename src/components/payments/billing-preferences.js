@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 
@@ -92,6 +97,11 @@ gutterBottom>
               </Typography>
             </Grid>
           </Grid>
+          <Alert severity="info" sx={{ mt: 2 }}>
+            <Typography variant="body2">
+              This information can only be edited on admin profile.
+            </Typography>
+          </Alert>
         </CardContent>
       </Card>
     </Box>

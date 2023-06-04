@@ -21,7 +21,7 @@ Usage: Used to display user products
 
 const Page = () => {
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
+  const [pack, setPack] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +34,7 @@ const Page = () => {
         });
   
         if (response && response.data && response.data.products) {
-          setProducts(response.data.products);
+          setPack(response.data.products);
         }
         
       } catch (error) {
@@ -44,6 +44,7 @@ const Page = () => {
     }
     fetchData();
   }, []);
+
 
   if (loading) {
     return (
@@ -60,6 +61,38 @@ const Page = () => {
     );
   }
 
+  const products = pack.map(product => {
+    const bulkProducts = baseProducts.map(baseProduct => {
+      if (product.beet_app_product && product.beet_app_product.includes(baseProduct.name)) {
+        return {
+          ...baseProduct,
+          details: {
+            display_name: product.display_name || '',
+            create_date: product.create_date || '',
+            beet_expiration_time: product.beet_expiration_time || '',
+            beet_renewal_time: product.beet_renewal_time || '',
+            beet_renewal_exp_unit: product.beet_renewal_exp_unit || '',
+          },
+          beet_app_product: product.beet_app_product,
+          isActive: true,
+        };
+      } else {
+        return {
+          ...baseProduct,
+          isActive: false,
+        };
+      }
+    });
+  
+    return {
+      bulkProducts,
+    };
+  });
+  
+  
+
+  console.log(products);
+
   return (
     <>
       <Head>
@@ -75,28 +108,18 @@ const Page = () => {
         <Container maxWidth={false}>
           <ProductWarnings />
           <Grid container spacing={3} mt={3}>
-            {baseProducts.map((baseProduct) => {
-              const activeProduct = products.find(
-                (product) => product.name.includes(baseProduct.name)
-              );
-              const isActive = Boolean(activeProduct);
-              const productDetails = isActive ? {
-                display_name: activeProduct.display_name,
-                create_date: activeProduct.create_date
-              } : {};
-
-              return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={baseProduct.id}>
-                  <ProductCard
-                    product={{
-                      ...baseProduct,
-                      ...productDetails
-                    }}
-                    isActive={isActive}
-                  />
-                </Grid>
-              );
-            })}
+          {products.flatMap(product => product.bulkProducts).map((product) => {
+            return (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+                <ProductCard
+                  product={product}
+                  purchaseDetails={product.details}
+                  beetDetails={product.beet_app_product}
+                  isActive={product.isActive}
+                />
+              </Grid>
+            );
+          })}
           </Grid>
         </Container>
       </Box>
@@ -104,6 +127,10 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page) => (
+  <DashboardLayout>
+    {page}
+  </DashboardLayout>
+);
 
 export default Page;
