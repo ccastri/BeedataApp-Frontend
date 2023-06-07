@@ -64,7 +64,7 @@ export const AccountProfile = (props) => {
       </Box>
     </CardContent>
     <Divider />
-    <CardActions>
+    {/* <CardActions>
       <Button
         color="primary"
         fullWidth
@@ -72,7 +72,7 @@ export const AccountProfile = (props) => {
       >
         Upload picture
       </Button>
-    </CardActions>
+    </CardActions> */}
   </Card>
 );
 }

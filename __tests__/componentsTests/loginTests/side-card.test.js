@@ -16,6 +16,16 @@ const viewports = [
   { width: 2560, height: 1440 }, // Desktop
 ];
 
+/*
+Test Suite for BeeCard component
+
+Test cases:
+- renders card content correctly
+- applies correct styles
+- renders the image correctly
+- has the correct padding
+*/
+
 describe.each(viewports)('BeeCard (%p)', (viewport) => {
   beforeEach(() => {
     // set viewport size for the test

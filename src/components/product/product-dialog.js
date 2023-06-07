@@ -45,6 +45,7 @@ export const ProductDialog = (props) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
+  const [errorCreditMessage, setErrorCreditMessage] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
 
   const handleClickOpen = () => {
@@ -90,6 +91,21 @@ export const ProductDialog = (props) => {
   const onSubmit = async (values) => {
     try {
       const token = localStorage.getItem('jwt');
+
+      // Get Company credit
+      const creditResponse = await api.get('/api/company', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (creditResponse && creditResponse.data && creditResponse.data.company) {
+        const companyCredit = creditResponse.data.company.credit;
+        if (companyCredit < productPrice) {
+          setErrorCreditMessage('Insufficient credit to purchase product');
+          return;
+        }
+      }
 
       const purchaseDetails = {
         productId: values.product,
@@ -226,6 +242,9 @@ export const ProductDialog = (props) => {
               </form>
               {responseMessage && (
                   <SuccessSnackbar responseMessage={responseMessage} container={'dialog'} />
+              )}
+              {errorCreditMessage && (
+                  <ErrorSnackbar responseMessage={errorCreditMessage} container={'dialog'} />
               )}
             </Box>
           </DialogActions>

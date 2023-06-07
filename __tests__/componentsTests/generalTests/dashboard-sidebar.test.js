@@ -11,6 +11,15 @@ jest.mock('next/router', () => ({
     }),
   }));
 
+/*
+Test Suite for DashboardSidebar component
+
+Test cases:
+- renders the sidebar
+- renders a permanent sidebar on large screens
+- does not render when the screen size is smaller than lg
+*/
+
 describe('DashboardSidebar', () => {
     it('should render successfully', () => {
         const { container } = render(

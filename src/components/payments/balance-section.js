@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import api from '../../lib/axios';
 import { CreditDialog } from './add-credit-dialog';
+import { getUserRole } from '../../utils/get-user-role';
 
 
 export const BalanceSection = ({ title }) => {
@@ -36,18 +37,6 @@ export const BalanceSection = ({ title }) => {
     fetchData();
   }, []);
 
-  // Retrieve user role from JWT token
-  const gerUserRole = () => {
-    const token = localStorage.getItem('jwt');
-
-    if (token) {
-      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-      return payload.userRole;
-    }
-    return '';
-  };
-
-
   return (
     <Box sx={{ mb: 3 }}>
       <Typography variant="h4" component="h2" gutterBottom>
@@ -62,7 +51,7 @@ export const BalanceSection = ({ title }) => {
             USD$ {balance}
           </Typography>
         </CardContent>
-        {gerUserRole() === 'admin' && (
+        {getUserRole() === 'admin' && (
           <>
             <Divider />
             <CardActions sx={{ mt: 1, mb: 1 }}>

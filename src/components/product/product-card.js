@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import api from '../../lib/axios';
+import { getUserRole } from '../../utils/get-user-role';
 import { WpConfigAccountDialog } from './config-account-dialog';
 import { ProductDialog } from './product-dialog';
 
@@ -99,15 +100,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
     }
     fetchData();
   }, []);
-
-  // Retrieve user role from JWT token
-  const getUserRole = () => {
-    if (token) {
-      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-      return payload.userRole;
-    }
-    return '';
-  };
 
   if (loading) {
     return (

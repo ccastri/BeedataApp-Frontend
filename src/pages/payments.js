@@ -11,7 +11,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Payment | Beet
+        Payments | Beet
       </title>
     </Head>
     <Box sx={{ flexGrow: 1, pt: 10 }}>

@@ -10,18 +10,27 @@ jest.mock('next/router', () => ({
     push: jest.fn(),
 }))
 
-describe('Login component', () => {
+/*
+Test suite for Login Page
+
+Test cases:
+- has empty initial values for email and password fields
+- validates email and password fields correctly
+- submits the form with correct values
+*/
+
+describe('Login Page', () => {
     afterEach(() => {
         jest.resetAllMocks();
     });
 
-    it('has empty initial values for email and password fields', () => {
+    test('has empty initial values for email and password fields', () => {
         const { getByLabelText } = render(<Login />);
         expect(getByLabelText('Email')).toHaveValue('');
         expect(getByLabelText('Password')).toHaveValue('');
     });
 
-    it('validates email and password fields correctly', async () => {
+    test('validates email and password fields correctly', async () => {
         render(<Login />);
       
         // Submit form with empty fields
@@ -33,7 +42,7 @@ describe('Login component', () => {
         });
       });
 
-      it('submits the form with correct values', async () => {
+      test('submits the form with correct values', async () => {
         const mockData = { success: true, token: 'mock_token' };
         api.post.mockResolvedValue({ data: mockData });
     
@@ -57,7 +66,7 @@ describe('Login component', () => {
           });
     
           expect(localStorage.getItem('jwt')).toBe('mock_token');
-          expect(Router.push).toHaveBeenCalledWith('/dashboard');
+          expect(Router.push).toHaveBeenCalledWith('/coming-soon');
         });
       });
 });

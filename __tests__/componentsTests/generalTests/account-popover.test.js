@@ -21,6 +21,18 @@ const viewports = [
   { width: 2560, height: 1440 }, // Desktop
 ];
 
+/*
+Test suite for AccountPopover component
+
+Test cases:
+- AccountPopover renders "My Profile" when authenticated
+- AccountPopover does not render "My Profile" when not authenticated
+- AccountPopover renders "Sign out" when authenticated
+- AccountPopover does not render "Sign out" when not authenticated
+- AccountPopover calls onClose when "Sign out" is clicked
+- AccountPopover removes token from localStorage when "Sign out" is clicked
+*/
+
 describe.each(viewports)('AccountPopover (%p)', (viewport) => {
   beforeEach(() => {
     // set viewport size for the test

@@ -2,6 +2,16 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ResponsiveDialog } from '../../../src/components/register/confirmation-dialog';
 
+/*
+Test suite for the ResponsiveDialog component.
+
+test cases:
+- renders the sign up button
+- opens the dialog when the button is clicked
+- displays the formik values inside the dialog
+- calls onSubmit prop when submit button is clicked
+*/
+
 describe('ResponsiveDialog', () => {
   const formikValues = { fullName: 'John Doe', company: 'Acme Inc.', identificationType: 'PP', identificationNumber: '1234567890', phoneNumber: '+1 123-456-7890', email: 'johndoe@example.com', role: 'Developer' };
   const onSubmitMock = jest.fn();
