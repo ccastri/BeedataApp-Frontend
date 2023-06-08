@@ -39,14 +39,14 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
 });
 
 export const ProductDialog = (props) => {
-  const { name, description, image } = props;
+  const { name, image } = props;
   const [open, setOpen] = useState(false);
   const [productOptions, setProductOptions] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
-  const [errorCreditMessage, setErrorCreditMessage] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,6 +55,8 @@ export const ProductDialog = (props) => {
   const handleClose = () => {
     setProductDescription('');
     setProductPrice('');
+    setErrorMessage('');
+    setResponseMessage('');
     formik.resetForm(); // Reset form values
     setOpen(false);
   };
@@ -99,10 +101,11 @@ export const ProductDialog = (props) => {
         },
       });
 
+      // Check if credit is enough to purchase product
       if (creditResponse && creditResponse.data && creditResponse.data.company) {
-        const companyCredit = creditResponse.data.company.credit;
+        const companyCredit = Number(creditResponse.data.company.credit);
         if (companyCredit < productPrice) {
-          setErrorCreditMessage('Insufficient credit to purchase product');
+          setErrorMessage('Not enough credit to purchase product');
           return;
         }
       }
@@ -121,7 +124,6 @@ export const ProductDialog = (props) => {
 
       if (response && response.data && response.data.purchase) {
         setResponseMessage(response.data.message);
-        
       }
 
     } catch (error) {
@@ -141,7 +143,7 @@ export const ProductDialog = (props) => {
     const selectedProduct = productOptions.find((product) => product.product_id === event.target.value);
     if (selectedProduct) {
       setProductDescription(selectedProduct.description);
-      setProductPrice(selectedProduct.product_alert);
+      setProductPrice(selectedProduct.price);
     }
     setSelectedProduct(event.target.value);
   };
@@ -203,7 +205,7 @@ export const ProductDialog = (props) => {
         </DialogContent>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <DialogActions>
-            <Box sx={{ maxWidth: '400px' }}>
+            <Box sx={{ minWidth: '25vw', maxWidth: '26vw', minHeight: '25vh', maxHeight: '35vh'}}>
               <form onSubmit={formik.handleSubmit}>
                 <TextField
                   id="product"
@@ -243,8 +245,8 @@ export const ProductDialog = (props) => {
               {responseMessage && (
                   <SuccessSnackbar responseMessage={responseMessage} container={'dialog'} />
               )}
-              {errorCreditMessage && (
-                  <ErrorSnackbar responseMessage={errorCreditMessage} container={'dialog'} />
+              {errorMessage && (
+                  <ErrorSnackbar errorMessage={errorMessage} container={'dialog'} />
               )}
             </Box>
           </DialogActions>

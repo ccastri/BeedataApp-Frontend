@@ -17,7 +17,7 @@ const ErrorSnackbar = ({errorMessage, container}) => {
     <Snackbar
       anchorOrigin={{
         vertical: 'top',
-        horizontal: 'left',
+        horizontal: 'center',
       }}
       open={open}
       autoHideDuration={10000}
@@ -28,7 +28,7 @@ const ErrorSnackbar = ({errorMessage, container}) => {
         sx={{
           width: '100%',
           backgroundColor:  container === 'dialog'
-          ? 'rgba(255, 0, 0, 0.9)' : 'rgba(244, 132, 132, 0.5)',
+          ? 'rgb(236, 205, 180, 0.9)' : 'rgba(244, 132, 132, 0.4)',
         }}
       >
         {errorMessage}

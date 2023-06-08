@@ -33,11 +33,11 @@ const items = [
     target: '_blank',
     title: 'Beet Lake'
   },
-  {
-    icon: (<SmartToyIcon fontSize="small" />),
-    target: '_blank',
-    title: 'Beet Bot'
-  },
+  // {
+  //   icon: (<SmartToyIcon fontSize="small" />),
+  //   target: '_blank',
+  //   title: 'Beet Bot'
+  // },
   {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),

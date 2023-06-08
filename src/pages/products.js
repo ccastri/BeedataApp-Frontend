@@ -61,7 +61,7 @@ const Page = () => {
     );
   }
 
-  const products = pack.map(product => {
+  const products = pack.length > 0 ? pack.map(product => {
     const bulkProducts = baseProducts.map(baseProduct => {
       if (product.beet_app_product && product.beet_app_product.includes(baseProduct.name)) {
         return {
@@ -87,11 +87,7 @@ const Page = () => {
     return {
       bulkProducts,
     };
-  });
-  
-  
-
-  console.log(products);
+  }) : baseProducts.map(baseProduct => ({bulkProducts: {...baseProduct, isActive: false}}));
 
   return (
     <>
