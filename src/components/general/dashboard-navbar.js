@@ -30,7 +30,7 @@ export const DashboardNavbar = (props) => {
     const token = localStorage.getItem('jwt');
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-      return payload.userName;
+      return payload.userName.toUpperCase();
     }
     return '';
   }
@@ -67,7 +67,7 @@ export const DashboardNavbar = (props) => {
             <MenuIcon fontSize="small" />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
-          <Tooltip title="Notifications">
+          {/* <Tooltip title="Notifications">
             <IconButton sx={{ ml: 1 }}>
               <Badge
                 badgeContent={4}
@@ -77,7 +77,7 @@ export const DashboardNavbar = (props) => {
                 <BellIcon fontSize="small" />
               </Badge>
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <Typography
             color="text.secondary"
             variant="subtitle1"

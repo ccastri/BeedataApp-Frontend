@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 
@@ -14,12 +19,21 @@ export const BillingPreferences = ({ title }) => {
 
     const fetchBillingInfo = async () => {
       try {
-        const response = await api.get('/api/billing-info', {
+        const userResponse = await api.get('/api/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        const { billing_address, city, country, billing_email } = response.data.billingInfo;
+
+        const companyResponse = await api.get('/api/company', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const { city, country } = userResponse.data.user;
+        const { billing_address, billing_email } = companyResponse.data.company;
+
         setBillingAddress(billing_address);
         setLocation(`${city}, ${country}`);
         setEmail(billing_email);
@@ -83,6 +97,11 @@ gutterBottom>
               </Typography>
             </Grid>
           </Grid>
+          <Alert severity="info" sx={{ mt: 2 }}>
+            <Typography variant="body2">
+              This information can only be edited on admin profile.
+            </Typography>
+          </Alert>
         </CardContent>
       </Card>
     </Box>

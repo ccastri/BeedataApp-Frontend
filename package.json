@@ -44,6 +44,7 @@
     "react-dom": "18.2.0",
     "react-leaflet": "^4.2.0",
     "react-perfect-scrollbar": "1.5.8",
+    "react-whatsapp-chat-widget": "^1.1.6",
     "socket.io-client": "^4.6.1",
     "uuid": "9.0.0",
     "yup": "0.32.11"

@@ -10,6 +10,18 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
+/*
+Test Suite for AuthGuard component
+
+Test cases:
+- renders children when verification is complete and user is authorized
+- redirects to home page when verification is complete and user is not authorized
+- redirects to home page when verification fails
+- redirects to home page when token is not found
+- should render loading indicator while verifying token
+- should remove the JWT token from localStorage when invalid token
+ */
+
 describe('AuthGuard', () => {
   const token = 'fake-token';
   const mockChildren = <div data-testid="child">Hello World</div>;

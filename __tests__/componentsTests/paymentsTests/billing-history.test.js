@@ -5,6 +5,15 @@ import { BillingHistory } from '../../../src/components/payments/billing-history
 
 jest.mock('../../../src/lib/axios');
 
+/*
+Test suite for BillingHistory component
+
+Test cases:
+-  Renders title
+-  Renders no billing history message when data is empty
+-  Renders billing history table when data is not empty
+*/
+
 describe('BillingHistory', () => {
     const token = 'fake-token';
 
@@ -37,8 +46,8 @@ describe('BillingHistory', () => {
 
     test('renders billing history table when data is not empty', async () => {
       const mockData = [
-        { id: 1, date: '2022-01-01', amount: 100 },
-        { id: 2, date: '2022-02-01', amount: 200 },
+        { id: 1, create_date: '2022-01-01 3:00', amount: 100 },
+        { id: 2, create_date: '2022-02-01 4:00', amount: 200 },
       ];
       api.get.mockResolvedValueOnce({ data: { billingHistory: mockData } });
   

@@ -35,6 +35,11 @@ const Register = () => {
     { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
   ];
 
+  const roleTypes = [
+    { value: 'admin', label: 'Admin' },
+    { value: 'user', label: 'User' },
+  ]
+
   const onSubmit = async (values) => {
     setLoading(true);
 
@@ -43,14 +48,29 @@ const Register = () => {
 
       // If data success, display credentials and purchase free product
       if (data.success) {
-
-        const registrationProduct = {
-          productId: 285,
-          companyId: data.user.company_id
+        const registrationProductCheck = {
+          productId: 50,
+          companyId: data.user.company_id,
+          productQuantity: 10,
         };
-        await api.post('/api/purchase-product', registrationProduct);
-        setCredentials(data.user);
-        setOpenCredentials(true);
+
+        const productCheck = await api.post('/api/company-product', registrationProductCheck);
+
+        if (productCheck.data.message === 'Product exists') {
+          setCredentials(data.user);
+          setOpenCredentials(true);
+        } else {
+          const registrationProduct = {
+            productId: 50,
+            companyId: data.user.company_id,
+            userId: data.user.id,
+            productQuantity: 10,
+            registerPurchase: true
+          };
+          await api.post('/api/purchase-product', registrationProduct);
+          setCredentials(data.user);
+          setOpenCredentials(true);
+        }
       }
 
       setLoading(false);
@@ -91,7 +111,7 @@ const Register = () => {
     <>
       <Head>
         <title>
-          Register | Beedata
+          Register | Beet
         </title>
       </Head>
       <Box
@@ -156,13 +176,15 @@ const Register = () => {
   name="email"
   label="Email Address"
   type="email" />
-              <TextFieldWrapper formik={formik}
+            <TextFieldWrapper formik={formik}
   name="role"
-  label="Role" />
+  label="Role"
+  selectOptions={roleTypes} />
               <Box
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
+                  justifyContent: 'center',
                   ml: -1
                 }}
               >
@@ -171,10 +193,12 @@ const Register = () => {
                   name="policy"
                   onChange={formik.handleChange}
                   data-testid="policy-checkbox"
+                  sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }}
                 />
                 <Typography
                   color="textSecondary"
                   variant="body2"
+                  sx={{ fontSize: 15 }}
                 >
                   I have read the
                   {' '}

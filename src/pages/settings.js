@@ -16,7 +16,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Settings | Beedata
+        Settings | Beet
       </title>
     </Head>
     <Box

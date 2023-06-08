@@ -37,7 +37,7 @@ const Login = () => {
         localStorage.setItem('jwt', token);
 
         if (typeof Router !== 'undefined') {
-          Router.push("/dashboard").catch(console.error);
+          Router.push("/coming-soon").catch(console.error);
         }
       }
     } catch (err) {
@@ -71,7 +71,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | Beedata</title>
+        <title>Login | Beet</title>
       </Head>
       <Box
         component="main"
@@ -155,6 +155,7 @@ sx={{ width: '100%' }}>
                 size="large"
                 type="submit"
                 variant="contained"
+                sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
               >
                 Sign In Now
               </Button>

@@ -5,6 +5,13 @@ import { styled } from '@mui/material/styles';
 import { AuthGuard } from './auth-guard';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
+import dynamic from 'next/dynamic';
+import "react-whatsapp-chat-widget/index.css";
+
+const WhatsAppWidget = dynamic(() => import("react-whatsapp-chat-widget"), {
+  ssr: false,
+});
+
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -38,6 +45,32 @@ export const DashboardLayout = (props) => {
       <DashboardSidebar
         onClose={() => setSidebarOpen(false)}
         open={isSidebarOpen}
+      />
+      <WhatsAppWidget
+        phoneNo="573242191970"
+        position="right"
+        widgetWidth="400px"
+        widgetWidthMobile="260px"
+        autoOpen={true}
+        autoOpenTimer={5000}
+        messageBox={true}
+        iconSize="80"
+        iconColor="white"
+        iconBgColor="#5ad167"
+        headerIcon="/static/beet_nb.svg"
+        headerIconColor="#FFFFFF"
+        headerTxtColor="#FFFFFF"
+        headerBgColor="#095E54"
+        headerTitle="Beet Bot"
+        headerCaption="Online"
+        bodyBgColor="#ECF8F9"
+        chatPersonName="Beet Bot"
+        chatMessage={<>Hi there 👋 <br /><br /> How can I help you?</>}
+        footerBgColor="#f0f0f0"
+        placeholder="Type a message.."
+        btnBgColor="#4FCE5D"
+        btnTxt="Send"
+        btnTxtColor="#FFFFFF"
       />
     </AuthGuard>
   );

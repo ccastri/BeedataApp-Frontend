@@ -5,48 +5,57 @@ import { BillingPreferences } from '../../../src/components/payments/billing-pre
 
 jest.mock('../../../src/lib/axios');
 
+/*
+Test suite for BillingPreferences component
+
+Test cases:
+- Renders billing preferences correctly
+*/
+
 describe('BillingPreferences', () => {
   beforeEach(() => {
-    localStorage.setItem('jwt', 'fakeJwt');
+    localStorage.setItem('jwt', 'test_token');
   });
 
   afterEach(() => {
     localStorage.removeItem('jwt');
+    jest.clearAllMocks();
   });
 
-  test('displays billing info', async () => {
-    const billingInfo = {
-      billing_address: '123 Main St',
-      city: 'San Francisco',
-      country: 'USA',
-      billing_email: 'test@test.com'
-    };
-    api.get.mockResolvedValue({ data: { billingInfo } });
-
-    render(<BillingPreferences title="Billing Preferences" />);
-
-    // Wait for the data to be fetched and displayed
-    const billingAddress = await screen.findByText(billingInfo.billing_address);
-    const location = await screen.findByText(`${billingInfo.city}, ${billingInfo.country}`);
-    const email = await screen.findByText(billingInfo.billing_email);
-
-    expect(billingAddress).toBeInTheDocument();
-    expect(location).toBeInTheDocument();
-    expect(email).toBeInTheDocument();
-  });
-
-  test('renders component with empty billing information', async () => {
-    api.get.mockResolvedValueOnce({
-      data: { billingInfo: [] },
+  test('render billing preferences correctly', async () => {
+    api.get.mockImplementation((url, config) => {
+      if (url === '/api/user') {
+        return Promise.resolve({
+          data: {
+            user: {
+              city: 'test_city',
+              country: 'test_country',
+            },
+          },
+        });
+      } else if (url === '/api/company') {
+        return Promise.resolve({
+          data: {
+            company: {
+              billing_address: 'test_billing_address',
+              billing_email: 'test_billing_email',
+            },
+          },
+        });
+      }
     });
-  
+
     await act(async () => {
-        render(<BillingPreferences title="Billing Preferences" />);
-      });
-  
-    expect(screen.getByText('Billing Preferences')).toBeInTheDocument();
+      render(<BillingPreferences title="Billing Preferences" />);
+    });
+
     expect(screen.getByText('Billing Address')).toBeInTheDocument();
+    expect(screen.getByText('test_billing_address')).toBeInTheDocument();
+
     expect(screen.getByText('Location')).toBeInTheDocument();
+    expect(screen.getByText('test_city, test_country')).toBeInTheDocument();
+
     expect(screen.getByText('Billing Email')).toBeInTheDocument();
+    expect(screen.getByText('test_billing_email')).toBeInTheDocument();
   });
 });

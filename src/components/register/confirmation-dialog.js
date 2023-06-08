@@ -41,6 +41,7 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
             size="large"
             variant="contained"
             onClick={handleClickOpen}
+            sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
           >
             Sign Up Now
           </Button>
@@ -50,14 +51,14 @@ export const ResponsiveDialog = ({formikValues, onSubmit}) => {
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle sx={{ m: 0, p: 2 }}
+            <DialogTitle sx={{ ml: 2, mr: 2, p: 2, fontSize: '1.9rem' }}
 id="responsive-dialog-title">
               {"Confirm Your Information"}
             </DialogTitle>
             <Divider />
             <DialogContent dividers>
               <Typography sx={{ width: '100%', marginBottom: 2 }}>
-                <span style={{fontWeight: 'bold'}}>Name: </span> {formikValues.fullName}
+                <span style={{fontWeight: 'bold' }}>Name: </span> {formikValues.fullName}
               </Typography>
               <Typography sx={{ width: '100%', marginBottom: 2 }}>
                 <span style={{fontWeight: 'bold'}}>Company Name: </span> {formikValues.company}
@@ -87,6 +88,7 @@ id="responsive-dialog-title">
                 onClick={handleClose}
                 fullWidth
                 variant="contained"
+                sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
               >
                 Edit
               </Button>
@@ -98,6 +100,7 @@ id="responsive-dialog-title">
                 fullWidth
                 autoFocus
                 variant="outlined"
+                sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
               >
                 Submit
               </Button>

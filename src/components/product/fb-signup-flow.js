@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
+import api from '../../lib/axios';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow
@@ -8,26 +9,6 @@ import Button from '@mui/material/Button';
  * @returns {JSX.Element} - The button to launch the WhatsApp Signup flow
  * 
  */
-
-const sessionInfoListener = (event) => {
-  if (event.origin !== "https://www.facebook.com") return;
-  try {
-    const data = JSON.parse(event.data);
-    if (data.type === 'WA_EMBEDDED_SIGNUP') {
-      // if user finishes the embedded sign up flow
-      if (data.event === 'FINISH') {
-        const {phoneID, wabaID} = data.data;
-      }
-      // if user cancels the embedded sign up flow
-      else {
-        const{currentStep} = data.data;
-      }
-    }
-  } catch {
-    // Don’t parse info that’s not a JSON
-    console.log('Non JSON Response', event.data);
-  }
-};
 
 export const FbSignupFlow = ({title}) => {
   const router = useRouter();
@@ -56,11 +37,6 @@ export const FbSignupFlow = ({title}) => {
         fjs.parentNode.insertBefore(js, fjs);
       })(document, 'script', 'facebook-jssdk');
     }
-
-    window.addEventListener('message', sessionInfoListener);
-
-    return () => window.removeEventListener('message', sessionInfoListener);
-
   }, []);
 
   const launchWhatsAppSignup = () => {
@@ -73,17 +49,30 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
-            console.log('Access Token = ', accessToken);
+            const token = localStorage.getItem('jwt');
+
+            try {
+              const userData = await api.post('/api/fb-user-waba', {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  'x-access-token': accessToken,
+                },
+                mode: 'cors'
+              });
+
+            } catch (err) {
+              console.log(err);
+            }
           } else {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          scope: 'whatsapp_business_management',
+          scope: 'business_management,whatsapp_business_management',
           display: 'popup',
           extras: {
             feature: 'whatsapp_embedded_signup',
-            "version": 2,
-            "sessionInfoVersion": 2,
+            version: 2,
+            sessionInfoVersion: 2,
           }
         });
       }

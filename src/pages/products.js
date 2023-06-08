@@ -4,59 +4,95 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ProductListToolbar } from '../components/product/product-list-toolbar';
+import { ProductWarnings } from '../components/product/product-warnings';
 import { ProductCard } from '../components/product/product-card';
+import { baseProducts } from '../data/base_products';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 import api from '../lib/axios';
 
-
 /**
- * Page component that displays user products fetched from the API.
- * 
- * Dependencies: Head, useState, useEffect, Box, Container, Grid, 
- *               CircularProgress, ProductListToolbar, ProductCard, DashboardLayout, api
- * Usage: This component is rendered on the /products page of the application. 
- *        It fetches the user's products from the API and displays them in a grid or an 
- *        error message if there are no active products. It implements the DashboardLayout
- *        component as a layout wrapper.
+
+Page component that displays user products
+
+Dependencies: Head, useState, useEffect, Box, Container, Grid, CircularProgress,
+              ProductWarnings, ProductCard, baseProducts, DashboardLayout, api
+Usage: Used to display user products
  */
 
 const Page = () => {
-  // Get user products from API
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pack, setPack] = useState([]);
 
-  // Fetch user's products from the API when the page loads
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company-products', {
+        const response = await api.get('/api/company-all-products', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
-        setLoading(false);
-
-        // If the response is valid, set the products state variable
+  
         if (response && response.data && response.data.products) {
-          setProducts(response.data.products);
-        } else {
-          console.error('Invalid response:', response);
+          setPack(response.data.products);
         }
+        
       } catch (error) {
         console.error(error);
       }
-    };
-
+      setLoading(false);
+    }
     fetchData();
   }, []);
+
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const products = pack.length > 0 ? pack.map(product => {
+    const bulkProducts = baseProducts.map(baseProduct => {
+      if (product.beet_app_product && product.beet_app_product.includes(baseProduct.name)) {
+        return {
+          ...baseProduct,
+          details: {
+            display_name: product.display_name || '',
+            create_date: product.create_date || '',
+            beet_expiration_time: product.beet_expiration_time || '',
+            beet_renewal_time: product.beet_renewal_time || '',
+            beet_renewal_exp_unit: product.beet_renewal_exp_unit || '',
+          },
+          beet_app_product: product.beet_app_product,
+          isActive: true,
+        };
+      } else {
+        return {
+          ...baseProduct,
+          isActive: false,
+        };
+      }
+    });
+  
+    return {
+      bulkProducts,
+    };
+  }) : baseProducts.map(baseProduct => ({bulkProducts: {...baseProduct, isActive: false}}));
 
   return (
     <>
       <Head>
-        <title>Products | Beedata</title>
+        <title>Products | Beet</title>
       </Head>
       <Box
         component="main"
@@ -66,53 +102,31 @@ const Page = () => {
         }}
       >
         <Container maxWidth={false}>
-          <ProductListToolbar />
-          {loading ? ( // Render CircularProgress if loading state is true
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '50vh',
-                fontWeight: 'bold',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          ) : products.length ? ( // Conditionally render product list if products exist
-            <Box sx={{ pt: 3 }}>
-              <Grid container
-spacing={3}>
-                {products.map((product) => (
-                  <Grid item
-key={product.id}
-lg={4}
-md={6}
-xs={12}>
-                    <ProductCard product={product} />
-                  </Grid>
-                ))}
+          <ProductWarnings />
+          <Grid container spacing={3} mt={3}>
+          {products.flatMap(product => product.bulkProducts).map((product) => {
+            return (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+                <ProductCard
+                  product={product}
+                  purchaseDetails={product.details}
+                  beetDetails={product.beet_app_product}
+                  isActive={product.isActive}
+                />
               </Grid>
-            </Box>
-          ) : ( // Render error message if no products exist
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '50vh',
-                fontWeight: 'bold',
-              }}
-            >
-              We&apos;re sorry, there are currently no active products. Please contact the Beet team for purchase.
-            </Box>
-          )}
+            );
+          })}
+          </Grid>
         </Container>
       </Box>
     </>
   );
 };
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page) => (
+  <DashboardLayout>
+    {page}
+  </DashboardLayout>
+);
 
 export default Page;

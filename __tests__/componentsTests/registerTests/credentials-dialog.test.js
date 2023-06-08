@@ -12,6 +12,15 @@ const mockUser = {
   display_pwd: 'randomPassword',
 };
 
+/*
+Test suite for the CredentialDialog component
+
+Test cases:
+- should render the dialog with the user credentials
+- should call the onClose function when the dialog is closed
+- should redirect to / when the "Sign in Now" button is clicked
+*/
+
 describe('CredentialDialog', () => {
   beforeEach(() => {
     jest.clearAllMocks();

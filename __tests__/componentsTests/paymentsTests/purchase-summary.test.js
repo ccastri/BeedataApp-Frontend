@@ -5,6 +5,14 @@ import api from '../../../src/lib/axios';
 
 jest.mock('../../../src/lib/axios');
 
+/*
+Test suite for PurchaseSummary component
+
+Test cases:
+- Renders no purchase history message
+- Renders purchase history table
+*/
+
 describe('PurchaseSummary', () => {
     test('renders no purchase history message', async () => {
       api.get.mockResolvedValueOnce({ data: { purchaseHistory: [] } });
