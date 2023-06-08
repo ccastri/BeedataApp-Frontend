@@ -97,7 +97,8 @@ gutterBottom>
               </Typography>
             </Grid>
           </Grid>
-          <Alert severity="info" sx={{ mt: 2 }}>
+          <Alert severity="info"
+sx={{ mt: 2 }}>
             <Typography variant="body2">
               This information can only be edited on admin profile.
             </Typography>

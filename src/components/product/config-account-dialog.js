@@ -19,12 +19,16 @@ import api from '../../lib/axios';
 
 const description = (
   <>
-    To use our bots, you need to configure a WhatsApp Business Account. If you don't know how, you can follow{' '}
-    <Link href="https://www.facebook.com/business/help/2087193751603668?id=2129163877102343" target="_blank" rel="noopener">
+    To use our bots, you need to configure a WhatsApp Business Account. If you don&apos;t know how, you can follow{' '}
+    <Link href="https://www.facebook.com/business/help/2087193751603668?id=2129163877102343"
+      target="_blank"
+      rel="noopener">
       this guide
     </Link>
-    . We also need you to generate a system user token. If you don't know how, you can follow{' '}
-    <Link href="https://www.facebook.com/business/help/503306463479099?id=2190812977867143&ref=search_new_1" target="_blank" rel="noopener">
+    . We also need you to generate a system user token. If you don&apos;t know how, you can follow{' '}
+    <Link href="https://www.facebook.com/business/help/503306463479099?id=2190812977867143&ref=search_new_1"
+      target="_blank"
+      rel="noopener">
       this guide
     </Link>
     .
@@ -44,7 +48,8 @@ function BootstrapDialogTitle(props) {
   const { children, onClose, ...other } = props;
 
   return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+    <DialogTitle sx={{ m: 0, p: 2 }}
+{...other}>
       {children}
       {onClose ? (
         <IconButton
@@ -130,15 +135,19 @@ export const WpConfigAccountDialog = () => {
         >
         Configure Account
       </Button>
-      <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+      <BootstrapDialog onClose={handleClose}
+aria-labelledby="customized-dialog-title"
+open={open}>
         <BootstrapDialogTitle
           sx={{ p: 2, fontSize: '1.6rem', backgroundColor: '#111827', color: '#FFFFFF' }}
-          id="customized-dialog-title" onClose={handleClose}
+          id="customized-dialog-title"
+onClose={handleClose}
         >
           Configure WhatsApp Business Account
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+          <Typography variant="subtitle1"
+sx={{ mb: 2 }}>
             {description}
           </Typography>
           <form onSubmit={formik.handleSubmit}>

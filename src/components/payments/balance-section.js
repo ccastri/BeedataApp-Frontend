@@ -39,15 +39,21 @@ export const BalanceSection = ({ title }) => {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography variant="h4" component="h2" gutterBottom>
+      <Typography variant="h4"
+component="h2"
+gutterBottom>
         {title}
       </Typography>
       <Card>
         <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5"
+component="h2"
+gutterBottom>
             Current Balance
           </Typography>
-          <Typography variant="h4" component="div" sx={{ mb: 2 }}>
+          <Typography variant="h4"
+component="div"
+sx={{ mb: 2 }}>
             USD$ {balance}
           </Typography>
         </CardContent>

@@ -29,7 +29,8 @@ export const ProductWarnings = (props) => (
       <Card>
         <CardContent>
           <Box>
-            <Stack sx={{ width: '100%' }} spacing={2}>
+            <Stack sx={{ width: '100%' }}
+spacing={2}>
               <Alert severity="info">
                 Before using our <b>bots</b>, please make sure to configure your business WhatsApp account.
                 This will ensure that you can receive messages from our bots and get the most out of our services.

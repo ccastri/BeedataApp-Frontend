@@ -103,10 +103,17 @@ const Page = () => {
       >
         <Container maxWidth={false}>
           <ProductWarnings />
-          <Grid container spacing={3} mt={3}>
+          <Grid container
+spacing={3}
+mt={3}>
           {products.flatMap(product => product.bulkProducts).map((product) => {
             return (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+              <Grid item
+xs={12}
+sm={6}
+md={4}
+lg={3}
+key={product.id}>
                 <ProductCard
                   product={product}
                   purchaseDetails={product.details}

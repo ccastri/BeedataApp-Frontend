@@ -48,7 +48,8 @@ const Page = () => (
                 >
                     This page will be available soon
                 </Typography>
-                <Typography variant="subtitle1" color="text.secondary">
+                <Typography variant="subtitle1"
+color="text.secondary">
                     We are working hard to bring you the best experience possible. Please check back soon.
                 </Typography>
             </CardContent>

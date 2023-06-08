@@ -39,6 +39,9 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
 export const CreditDialog = () => {
   const [open, setOpen] = useState(false);
 
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const isMediumScreen = useMediaQuery('(max-width:960px)');
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -95,27 +98,31 @@ export const CreditDialog = () => {
         open={open}
         onClose={handleClose}
         PaperProps={{
-        sx: {
-          width: useMediaQuery('(max-width:600px)') ? '90vw' :
-            useMediaQuery('(max-width:960px)') ? '60vw' : '30vw',
-          height: useMediaQuery('(max-width:600px)') ? '70vh' :
-            useMediaQuery('(max-width:960px)') ? '60vh' : '45vh',
-          overflow: 'hidden',
-        },
+          sx: {
+            width: isSmallScreen ? '90vw' : isMediumScreen ? '60vw' : '30vw',
+            height: isSmallScreen ? '70vh' : isMediumScreen ? '60vh' : '45vh',
+            overflow: 'hidden',
+          },
       }}
       >
         <DialogContent>
           <StyledCard>
-            <Grid container spacing={2}>
-              <Grid item xs={5}>
+            <Grid container
+spacing={2}>
+              <Grid item
+xs={5}>
                 <StyledCardMedia image='/static/beet_nb.svg' />
               </Grid>
-              <Grid item xs={7}>
+              <Grid item
+xs={7}>
                 <CardContent>
-                  <Typography gutterBottom variant="h4" component="div">
+                  <Typography gutterBottom
+variant="h4"
+component="div">
                     Credit
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2"
+color="text.secondary">
                     Add credit to your account. <b>Your credit will be invoiced at the end of the month</b>.
                   </Typography>
                 </CardContent>

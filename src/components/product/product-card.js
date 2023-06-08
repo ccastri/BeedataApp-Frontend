@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -42,6 +42,7 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
 export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, ...rest }) => {
   const [isConfigured, setIsConfigured] = useState(false);
   const [loading, setLoading] = useState(true);
+  const isActiveRef = useRef(isActive);
 
   const beetDetailsT = beetDetails ? beetDetails.replace(/^{"|"}$/g, '').replace(/\\"/g, '"') : '';
   const parseBeetDetails = beetDetailsT ? JSON.parse(beetDetailsT) : '';
@@ -68,7 +69,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
   useEffect(() => {
     const currentDate = new Date();
     if (currentDate >= expirationDate) {
-      isActive = false;
+      isActiveRef.current = false;
     }
   }, [expirationDate]);
 
@@ -99,7 +100,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return (
@@ -128,7 +129,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             display: 'flex',
             justifyContent: 'center',
             pb: 3,
-            filter: !isActive ? 'grayscale(100%)' : 'none',
+            filter: !isActiveRef.current ? 'grayscale(100%)' : 'none',
           }}
         >
           <Avatar
@@ -140,7 +141,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         <Box
           sx={{
             textAlign: 'center',
-            filter: !isActive ? 'grayscale(100%)' : 'none',
+            filter: !isActiveRef.current ? 'grayscale(100%)' : 'none',
           }}
         >
           <Typography
@@ -156,7 +157,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             color="textSecondary"
             variant="subtitle1"
           >
-            {isActive ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : "Not available"}
+            {isActiveRef.current ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : "Not available"}
           </Typography>
         </Box>
       </CardContent>
@@ -166,7 +167,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         {getUserRole() === 'admin' && product.id === 1 && !isConfigured && (
           <WpConfigAccountDialog />
         )}
-        {getUserRole() === 'admin' && !isActive && (
+        {getUserRole() === 'admin' && !isActiveRef.current && (
           <ProductDialog
             image={product.image}
             name={product.name}

@@ -48,6 +48,9 @@ export const ProductDialog = (props) => {
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const isMediumScreen = useMediaQuery('(max-width:960px)');
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -83,7 +86,7 @@ export const ProductDialog = (props) => {
     };
 
     fetchData();
-  }, []);
+  }, [name]);
 
   const productTypes = productOptions.map((product) => ({
     value: product.product_id,
@@ -164,27 +167,33 @@ export const ProductDialog = (props) => {
         onClose={handleClose}
         PaperProps={{
           sx: {
-            width: useMediaQuery('(max-width:600px)') ? '90vw' :
-              useMediaQuery('(max-width:960px)') ? '60vw' : '30vw',
-            height: useMediaQuery('(max-width:600px)') ? '90vh' : '60vh',
+            width: isSmallScreen ? '90vw' : isMediumScreen ? '60vw' : '40vw',
+            height: isSmallScreen ? '70vh' : isMediumScreen ? '75vh' : '60vh',
             overflow: 'hidden',
           },
+
         }}
       >
         <DialogContent>
           <StyledCard>
-            <Grid container spacing={2}>
-              <Grid item xs={5}>
+            <Grid container
+spacing={2}>
+              <Grid item
+xs={5}>
                 <StyledCardMedia image={image} />
               </Grid>
-              <Grid item xs={7}>
+              <Grid item
+xs={7}>
                 <CardContent>
-                  <Typography gutterBottom variant="h4" component="div">
+                  <Typography gutterBottom
+variant="h4"
+component="div">
                     {name}
                   </Typography>
                   {selectedProduct && (
                     <>
-                      <Typography variant="subtitle2" color="text.secondary">
+                      <Typography variant="subtitle2"
+color="text.secondary">
                         {productDescription}
                       </Typography>
                       {productPrice && (
@@ -205,7 +214,13 @@ export const ProductDialog = (props) => {
         </DialogContent>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <DialogActions>
-            <Box sx={{ minWidth: '25vw', maxWidth: '26vw', minHeight: '25vh', maxHeight: '35vh'}}>
+            <Box sx={{ 
+                minWidth: isSmallScreen ? '40vw' : isMediumScreen ? '35vw' : '25vw',
+                maxWidth: isSmallScreen ? '60vw' : isMediumScreen ? '36vw' : '26vw',
+                minHeight: isSmallScreen ? '40vh' : isMediumScreen ? '35vh' : '25vh',
+                maxHeight: isSmallScreen ? '30vh' : isMediumScreen ? '35vh' : '35vh'
+              }}
+            >
               <form onSubmit={formik.handleSubmit}>
                 <TextField
                   id="product"
@@ -219,7 +234,8 @@ export const ProductDialog = (props) => {
                   helperText={formik.touched.product && formik.errors.product}
                 >
                   {productTypes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                    <MenuItem key={option.value}
+value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
@@ -243,10 +259,12 @@ export const ProductDialog = (props) => {
                 </Button>
               </form>
               {responseMessage && (
-                  <SuccessSnackbar responseMessage={responseMessage} container={'dialog'} />
+                  <SuccessSnackbar responseMessage={responseMessage}
+container={'dialog'} />
               )}
               {errorMessage && (
-                  <ErrorSnackbar errorMessage={errorMessage} container={'dialog'} />
+                  <ErrorSnackbar errorMessage={errorMessage}
+container={'dialog'} />
               )}
             </Box>
           </DialogActions>
