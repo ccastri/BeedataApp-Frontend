@@ -65,8 +65,8 @@ export const PurchaseSummary = ({ title }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {data.slice(currentPage * 5, (currentPage + 1) * 5).map((item) => (
-                          <TableRow key={`${item.order_id}-${Math.floor(Math.random() * 20) + 1}`}>
+                        {data.slice(currentPage * 5, (currentPage + 1) * 5).map((item, index) => (
+                          <TableRow key={`${item.order_id}-${index}`}>
                             <TableCell>{item.create_date.split(' ')[0]}</TableCell>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.product_qty}</TableCell>
