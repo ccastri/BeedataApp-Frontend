@@ -68,9 +68,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
   // Check if expiration date is equal or greater than the current date
   useEffect(() => {
     const currentDate = new Date();
-    if (currentDate >= expirationDate) {
-      isActiveRef.current = false;
-    }
+    isActiveRef.current = (currentDate < expirationDate);
   }, [expirationDate]);
 
   const token = localStorage.getItem('jwt');
@@ -174,7 +172,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             description={product.description}
           />
         )}
-        {isActive && (
+        {isActiveRef.current && (
           <Box
             sx={{
               flexGrow: 1,

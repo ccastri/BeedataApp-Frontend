@@ -88,7 +88,7 @@ describe('ProductCard', () => {
   test('renders the expiration date when active', async () => {
     const purchaseDetails = {
       beet_renewal_time: 1,
-      beet_renewal_exp_unit: 'day',
+      beet_renewal_exp_unit: 'days',
       beet_expiration_time: 1,
       create_date: new Date().toISOString(),
     };
