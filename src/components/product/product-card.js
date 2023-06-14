@@ -12,6 +12,7 @@ import api from '../../lib/axios';
 import { getUserRole } from '../../utils/get-user-role';
 import { WpConfigAccountDialog } from './config-account-dialog';
 import { ProductDialog } from './product-dialog';
+import { ProductActivation } from './product-activation';
 
 const cardStyle = {
   display: 'flex',
@@ -106,7 +107,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center', // center contents vertically
+          alignItems: 'center',
           height: '100%',
           pb: 3
         }}
@@ -162,16 +163,22 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
       <CardActions>
-        {getUserRole() === 'admin' && product.id === 1 && !isConfigured && (
+        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
           <WpConfigAccountDialog />
         )}
-        {getUserRole() === 'admin' && !isActiveRef.current && (
+        {getUserRole() === 'admin' && !isActiveRef.current && product.id !== 1 && (
           <ProductDialog
             image={product.image}
             name={product.name}
-            description={product.description}
           />
         )}
+        {/* {getUserRole() === 'admin' && !isActiveRef.current && product.id === 1 && (
+          <ProductActivation
+            name={product.name}
+            image={product.image}
+            description={product.description}
+          />
+        )} */}
         {isActiveRef.current && (
           <Box
             sx={{

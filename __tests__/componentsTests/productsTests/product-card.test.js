@@ -28,7 +28,7 @@ describe('ProductCard', () => {
   });
 
   const product = {
-    id: 1,
+    id: 2,
     name: 'Test Product',
     image: 'test-image.jpg',
     description: 'This is a test product',

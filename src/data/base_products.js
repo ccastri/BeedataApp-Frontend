@@ -1,30 +1,33 @@
 export const baseProducts = [
+    // {
+    //     id: 1,
+    //     name: 'Beet / Consumable WhatsApp',
+    //     image: '/static/images/products/beet_whatsapp.svg',
+    //     description: 'Activate to enable automatic sending of WhatsApp messages using bots. Each sent message will be deducted from your current credit.',
+    //     unitType: 'messages'
+    // },
     {
-        id: 1,
+        id: 2,
         name: 'Beet / WhatsApp',
         image: '/static/images/products/beet_whatsapp.svg',
-        description: 'Send and receive messages from WhatsApp',
         unitType: 'messages'
     },
     {
-        id: 2,
+        id: 3,
         name: 'Beet / Bot',
         image: '/static/images/products/beet_bot2.svg',
-        description: 'Create and manage bots',
         unitType: 'executions'
     },
     {
-        id: 3,
+        id: 4,
         name: 'Beet / Lake',
         image: '/static/images/products/beet_lake2.svg',
-        description: 'Store and retrieve data',
         unitType: 'rows'
     },
     {
-        id: 4,
+        id: 5,
         name: 'Beet / Social',
         image: '/static/images/products/beet_social2.svg',
-        description: 'Manage customer interactions',
         unitType: 'agents'
     },
 ];
