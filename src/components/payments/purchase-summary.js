@@ -65,7 +65,7 @@ export const PurchaseSummary = ({ title }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {data.slice(currentPage * 5, (currentPage + 1) * 5).map((item, index) => (
+                        {data.slice(currentPage * 5, (currentPage + 1) * 5).reverse().map((item, index) => (
                           <TableRow key={`${item.order_id}-${index}`}>
                             <TableCell>{item.create_date.split(' ')[0]}</TableCell>
                             <TableCell>{item.name}</TableCell>
