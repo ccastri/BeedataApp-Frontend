@@ -27,7 +27,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company-all-products', {
+        const response = await api.get('/api/v1/products/company-all-products', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -92,7 +92,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Products | Beet</title>
+        <title>Beet | Products</title>
       </Head>
       <Box
         component="main"

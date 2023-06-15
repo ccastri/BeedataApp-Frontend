@@ -37,7 +37,7 @@ describe('ProductCard', () => {
   test('renders the product name', async () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText('Test Product')).toBeInTheDocument());
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
         headers: {
             Authorization: `Bearer ${null}`,
         },
@@ -48,7 +48,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByAltText('Product')).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -62,7 +62,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText(/Available/i)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -75,7 +75,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={false} />);
     await waitFor(() => expect(screen.getByText('Not available')).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -95,7 +95,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} purchaseDetails={purchaseDetails} />);
     await waitFor(() => expect(screen.getByText(/Expires on:/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -115,7 +115,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={false} purchaseDetails={purchaseDetails} />);
     await waitFor(() => expect(screen.getByText(/Not available/)).toBeInTheDocument());
   
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -134,7 +134,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText(/Configure/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -147,7 +147,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={false} />);
     await waitFor(() => expect(screen.getByText(/Purchase/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },

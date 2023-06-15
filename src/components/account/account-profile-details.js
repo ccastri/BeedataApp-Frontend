@@ -30,13 +30,13 @@ export const AccountProfileDetails = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('jwt');
-      const userResponse = await api.get('/api/user', {
+      const userResponse = await api.get('/api/v1/users/user', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const companyResponse = await api.get('/api/company', {
+      const companyResponse = await api.get('/api/v1/companies/company', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -77,7 +77,7 @@ export const AccountProfileDetails = (props) => {
     try {
       const token = localStorage.getItem('jwt');
 
-      // update billing fields via /api/update-company
+      // update billing fields via /api/v1/companies/update-company
       const billingFields = {
         billingEmail: formValues.billingEmail,
         billingAddress: formValues.billingAddress,
@@ -85,7 +85,7 @@ export const AccountProfileDetails = (props) => {
         accessToken: formValues.accessToken
       };
 
-      await api.post('/api/update-company', billingFields, {
+      await api.post('/api/v1/companies/update-company', billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -102,7 +102,7 @@ export const AccountProfileDetails = (props) => {
         city: formValues.city
       };
 
-      const response = await api.post('/api/update-user', remainingFields, {
+      const response = await api.post('/api/v1/users/update-user', remainingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }

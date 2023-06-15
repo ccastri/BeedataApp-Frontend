@@ -68,7 +68,7 @@ export const ProductDialog = (props) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.post('/api/beet-products', {
+        const response = await api.post('/api/v1/products/beet-products', {
           beetProduct: name,
         }, {
           headers: {
@@ -98,7 +98,7 @@ export const ProductDialog = (props) => {
       const token = localStorage.getItem('jwt');
 
       // Get Company credit
-      const creditResponse = await api.get('/api/company', {
+      const creditResponse = await api.get('/api/v1/companies/company', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +119,7 @@ export const ProductDialog = (props) => {
         productPrice: productPrice,
       };
       
-      const response = await api.post('/api/purchase-product', purchaseDetails, {
+      const response = await api.post('/api/v1/products/purchase-product', purchaseDetails, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

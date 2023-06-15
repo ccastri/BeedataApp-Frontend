@@ -94,7 +94,7 @@ export const WpConfigAccountDialog = () => {
         waba: values.accountId,
         access_token: values.accessToken,
       };
-      const response = await api.post('/api/update-company', wpAccountDetails, {
+      const response = await api.post('/api/v1/companies/update-company', wpAccountDetails, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -28,7 +28,7 @@ const Login = () => {
   const onSubmit = async (values) => {
     try {
 
-      const { data } = await api.post("/api/login", values);
+      const { data } = await api.post('/api/v1/users/login', values);
       
       if (data.success) {
         const token = data.token;
@@ -37,7 +37,7 @@ const Login = () => {
         localStorage.setItem('jwt', token);
 
         if (typeof Router !== 'undefined') {
-          Router.push("/coming-soon").catch(console.error);
+          Router.push("/dashboard").catch(console.error);
         }
       }
     } catch (err) {

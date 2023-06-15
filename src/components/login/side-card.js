@@ -80,6 +80,7 @@ const Content = styled(CardContent)(({ theme }) => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
 }));
+
 /**
  * Component to display the side card at login page
  * The card contains an image and texts that describe the cloud-based platform's features.

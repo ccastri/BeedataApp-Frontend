@@ -23,7 +23,7 @@ export const BillingHistory = ({ title }) => {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('jwt');
-          const response = await api.get('/api/billing-history', {
+          const response = await api.get('/api/v1/payments/billing-history', {
             headers: {
               Authorization: `Bearer ${token}`,
             },

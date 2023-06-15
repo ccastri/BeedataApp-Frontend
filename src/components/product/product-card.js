@@ -78,7 +78,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/api/company', {
+        const response = await api.get('/api/v1/companies/company', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -172,13 +172,13 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             name={product.name}
           />
         )}
-        {/* {getUserRole() === 'admin' && !isActiveRef.current && product.id === 1 && (
+        {getUserRole() === 'admin' && !isActiveRef.current && product.id === 1 && (
           <ProductActivation
             name={product.name}
             image={product.image}
             description={product.description}
           />
-        )} */}
+        )}
         {isActiveRef.current && (
           <Box
             sx={{

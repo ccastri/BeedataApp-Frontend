@@ -44,7 +44,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const { data } = await api.post('/api/register', values);
+      const { data } = await api.post('/api/v1/users/register', values);
 
       // If data success, display credentials and purchase free product
       if (data.success) {
@@ -54,7 +54,7 @@ const Register = () => {
           productQuantity: 10,
         };
 
-        const productCheck = await api.post('/api/company-product', registrationProductCheck);
+        const productCheck = await api.post('/api/v1/products/company-product', registrationProductCheck);
 
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
@@ -67,7 +67,7 @@ const Register = () => {
             productQuantity: 10,
             registerPurchase: true
           };
-          await api.post('/api/purchase-product', registrationProduct);
+          await api.post('/api/v1/products/purchase-product', registrationProduct);
           setCredentials(data.user);
           setOpenCredentials(true);
         }

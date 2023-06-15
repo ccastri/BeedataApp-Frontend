@@ -17,7 +17,7 @@ export const AccountProfile = (props) => {
     const getUser = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/user', {
+        const response = await api.get('/api/v1/users/user', {
           headers: {
             Authorization: `Bearer ${token}`
           }

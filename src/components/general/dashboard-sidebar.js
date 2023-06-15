@@ -16,7 +16,7 @@ import api from '../../lib/axios';
 
 const items = [
   {
-    href: '/coming-soon',
+    href: '/dashboard',
     icon: (<TrendingDownIcon fontSize="small" />),
     target: '_self',
     title: 'Consumption'
@@ -33,11 +33,12 @@ const items = [
     target: '_blank',
     title: 'Beet Lake'
   },
-  // {
-  //   icon: (<SmartToyIcon fontSize="small" />),
-  //   target: '_blank',
-  //   title: 'Beet Bot'
-  // },
+  {
+    href: '/bots',
+    icon: (<SmartToyIcon fontSize="small" />),
+    target: '_self',
+    title: 'Beet Bots'
+  },
   {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
@@ -81,7 +82,7 @@ export const DashboardSidebar = (props) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company', {
+        const response = await api.get('/api/v1/companies/company', {
           headers: {  
             Authorization: `Bearer ${token}`,
           },
@@ -130,7 +131,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink
-              href="/coming-soon"
+              href="/dashboard"
               passHref
             >
               <a>

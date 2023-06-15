@@ -87,7 +87,7 @@ describe('WpConfigAccountDialog', () => {
           waba: 'abc123',
           access_token: 'def456',
         };
-        expect(api.post).toHaveBeenCalledWith('/api/update-company', requestData, expect.any(Object));
+        expect(api.post).toHaveBeenCalledWith('/api/v1/companies/update-company', requestData, expect.any(Object));
     });
     
     test('should display success message when response is successful', async () => {
