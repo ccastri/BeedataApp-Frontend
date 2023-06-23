@@ -62,6 +62,7 @@ export const PurchaseSummary = ({ title }) => {
                           <TableCell>Product</TableCell>
                           <TableCell>Quantity</TableCell>
                           <TableCell>Total Price</TableCell>
+                          <TableCell>Status</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -71,6 +72,7 @@ export const PurchaseSummary = ({ title }) => {
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.product_qty}</TableCell>
                             <TableCell>{item.price_total} USD</TableCell>
+                            <TableCell>{item.state}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>

@@ -12,12 +12,12 @@ export const baseProducts = [
         image: '/static/images/products/beet_whatsapp.svg',
         unitType: 'messages'
     },
-    {
-        id: 3,
-        name: 'Beet / Bot',
-        image: '/static/images/products/beet_bot2.svg',
-        unitType: 'executions'
-    },
+    // {
+    //     id: 3,
+    //     name: 'Beet / Bot',
+    //     image: '/static/images/products/beet_bot2.svg',
+    //     unitType: 'executions'
+    // },
     {
         id: 4,
         name: 'Beet / Lake',

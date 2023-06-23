@@ -34,7 +34,7 @@ xs={12}>
           </Grid>
           <Grid item
 xs={12}>
-            <BillingHistory title="Billing History" />
+            <BillingHistory title="Recharge History" />
           </Grid>
         </Grid>
       </Container>
