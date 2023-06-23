@@ -16,7 +16,7 @@ describe('ProductCard', () => {
     api.get.mockResolvedValue({
       data: {
         company: {
-          waba: 'whatsapp number',
+          waba_id: 'whatsapp number',
           access_token: 'access token',
         },
       },

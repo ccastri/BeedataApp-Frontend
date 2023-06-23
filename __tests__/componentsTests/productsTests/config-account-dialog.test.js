@@ -84,7 +84,7 @@ describe('WpConfigAccountDialog', () => {
         });
       
         const requestData = {
-          waba: 'abc123',
+          waba_id: 'abc123',
           access_token: 'def456',
         };
         expect(api.post).toHaveBeenCalledWith('/api/v1/companies/update-company', requestData, expect.any(Object));

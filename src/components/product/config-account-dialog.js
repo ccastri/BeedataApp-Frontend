@@ -91,7 +91,7 @@ export const WpConfigAccountDialog = () => {
       const token = localStorage.getItem('jwt');
 
       const wpAccountDetails = {
-        waba: values.accountId,
+        waba_id: values.accountId,
         access_token: values.accessToken,
       };
       const response = await api.post('/api/v1/companies/update-company', wpAccountDetails, {

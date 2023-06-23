@@ -87,8 +87,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         if (response && response.data && response.data.company) {
           const company = response.data.company;
 
-          // Check is Waba and access token fields are not empty
-          if (company.waba && company.access_token) {
+          // Check is Waba ID and access token fields are not empty
+          if (company.waba_id && company.access_token) {
             setIsConfigured(true);
           }
         }

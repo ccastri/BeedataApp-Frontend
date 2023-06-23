@@ -23,7 +23,7 @@ export const AccountProfileDetails = (props) => {
     city: '',
     billingEmail: '',
     billingAddress: '',
-    waba: '',
+    waba_id: '',
     accessToken: ''
   });
 
@@ -44,7 +44,7 @@ export const AccountProfileDetails = (props) => {
   
       if (userResponse.data && companyResponse.data) {
         const { name, identification_type, identification_number, role, email, phone, country, city } = userResponse.data.user;
-        const { billing_email, billing_address, waba, access_token } = companyResponse.data.company;
+        const { billing_email, billing_address, waba_id, access_token } = companyResponse.data.company;
   
         setFormValues({
           fullName: name || '',
@@ -57,7 +57,7 @@ export const AccountProfileDetails = (props) => {
           city: city || '',
           billingEmail: billing_email || '',
           billingAddress: billing_address || '',
-          waba: waba || '',
+          waba_id: waba_id || '',
           accessToken: access_token || ''
         });
       }
@@ -81,7 +81,7 @@ export const AccountProfileDetails = (props) => {
       const billingFields = {
         billingEmail: formValues.billingEmail,
         billingAddress: formValues.billingAddress,
-        waba: formValues.waba,
+        waba_id: formValues.waba_id,
         accessToken: formValues.accessToken
       };
 
@@ -273,10 +273,10 @@ xs={12}>
                 <TextField
                   fullWidth
                   label="Waba ID"
-                  name="waba"
+                  name="waba_id"
                   onChange={handleChange}
                   required
-                  value={formValues.waba}
+                  value={formValues.waba_id}
                   variant="outlined"
                 />
               </Grid>
