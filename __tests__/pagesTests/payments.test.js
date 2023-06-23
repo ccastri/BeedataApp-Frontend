@@ -30,6 +30,6 @@ describe('Payments component', () => {
     
       test('renders BillingHistory component', () => {
         const { getByText } = render(<Payments />);
-        expect(getByText('Billing History')).toBeInTheDocument();
+        expect(getByText('Recharge History')).toBeInTheDocument();
       });
 });
