@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getUserRole } from '../../utils/get-user-role';
+import { WpConfigAccountDialog } from './config-account-dialog';
+import { FbSignupFlow } from './fb-signup-flow';
+import { ProductDialog } from './product-dialog';
+import { ProductActivation } from './product-activation';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -9,10 +14,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import api from '../../lib/axios';
-import { getUserRole } from '../../utils/get-user-role';
-import { WpConfigAccountDialog } from './config-account-dialog';
-import { ProductDialog } from './product-dialog';
-import { ProductActivation } from './product-activation';
+
 
 const cardStyle = {
   display: 'flex',
@@ -87,8 +89,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         if (response && response.data && response.data.company) {
           const company = response.data.company;
 
-          // Check is Waba ID and access token fields are not empty
-          if (company.waba_id && company.access_token) {
+          // Check if access token field is not empty
+          if (company.access_token) {
             setIsConfigured(true);
           }
         }
@@ -164,6 +166,9 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
       <Divider />
       <CardActions>
         {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
+          <FbSignupFlow title={'Add Permissions'}/>
+        )}
+        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
           <WpConfigAccountDialog />
         )}
         {getUserRole() === 'admin' && !isActiveRef.current && product.id !== 1 && (

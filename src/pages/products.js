@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ProductWarnings } from '../components/product/product-warnings';
 import { ProductCard } from '../components/product/product-card';
+import { FbSignupFlow } from '../components/product/fb-signup-flow';
 import { baseProducts } from '../data/base_products';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 import api from '../lib/axios';

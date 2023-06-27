@@ -28,7 +28,9 @@ const ErrorSnackbar = ({errorMessage, container}) => {
         sx={{
           width: '100%',
           backgroundColor:  container === 'dialog'
-          ? 'rgb(236, 205, 180, 0.9)' : 'rgba(244, 132, 132, 0.4)',
+          ? 'rgb(236, 205, 180, 0.9)' : 'rgba(244, 132, 132, 0.7)',
+          color: 'rgb(0, 0, 0)',
+          fontSize: '1.0rem',
         }}
       >
         {errorMessage}
