@@ -43,7 +43,7 @@ const items = [
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
     target: '_self',
-    title: 'Beet Market'
+    title: 'Beet Tools'
   },
   {
     href: '/payments',

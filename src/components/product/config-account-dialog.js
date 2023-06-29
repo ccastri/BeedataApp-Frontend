@@ -133,8 +133,55 @@ export const WpConfigAccountDialog = () => {
     fetchData();
   }, [token]);
 
+  // Update the user's company access token or add a new waba ID with its phone number ID
   const onSubmit = async (values) => {
+    if (values.systemUserAccessToken !== '' && values.systemUserAccessToken !== formik.values.systemUserAccessToken) {
+      try{
+        await api.post('/api/v1/companies/update-company', {systemUserAccessToken: values.systemUserAccessToken}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    if (values.whatsappBusinessAccountID !== '' && values.phoneNumberID !== '') {
+      try{
+        await api.post('/api/v1/whatsapp/wabas', {wabaID: values.whatsappBusinessAccountID, phoneNumberID: values.phoneNumberID}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Reload the page
+    window.location.reload();
   }
+
+  const handleDelete = async (wabaID, phoneNumberID) => {
+    try{
+      const response = await api.delete('/api/v1/whatsapp/wabas', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          wabaID: wabaID,
+          phoneNumberID: phoneNumberID
+        }
+      });
+      console.log(response)
+      // Remove the row from the grid
+      setWabas(prevWabas => prevWabas.filter(waba => waba.waba_id !== wabaID));
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -280,6 +327,7 @@ export const WpConfigAccountDialog = () => {
                     <IconButton 
                       aria-label="delete"
                       sx={{ ml: -2 }}
+                      onClick={() => handleDelete(waba.waba_id, waba.phone_id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -321,6 +369,7 @@ export const WpConfigAccountDialog = () => {
               }}
             >
               <Button 
+                onClick={formik.handleSubmit}
                 autoFocus
                 variant="outlined"
                 sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}

@@ -44,11 +44,10 @@ export const FbSignupFlow = ({title}) => {
       // Check if the FB object is defined before using it
       if (typeof FB !== 'undefined') {
         FB.login(async function (response) {
+          console.log('FB response: ', response);
           if (response.authResponse) {
-            console.log('response: ', response);
             const accessToken = response.authResponse.accessToken;
             const token = localStorage.getItem('jwt');
-
             try {
               const userData = await api.get('/api/v1/facebook/fb-user-token', {
                 headers: {
@@ -66,8 +65,8 @@ export const FbSignupFlow = ({title}) => {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          config_id: '795160012113064', // configuration ID goes here
-          response_type: 'code'   // must be set to 'code' for SUAT
+          config_id: '3471523013132484', // configuration ID goes here
+          response_type: 'code' 
         });
       }
     }
@@ -76,9 +75,10 @@ export const FbSignupFlow = ({title}) => {
   return (
     <Button
       variant="outlined"
+      fullWidth
       color="primary"
       onClick={launchWhatsAppSignup}
-      sx={{ ml: -2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+      sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
     >
       { title }
     </Button>

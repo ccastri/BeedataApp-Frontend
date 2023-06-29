@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getUserRole } from '../../utils/get-user-role';
 import { WpConfigAccountDialog } from './config-account-dialog';
 import { FbSignupFlow } from './fb-signup-flow';
+import { SocialAgentSelection } from './agents-dialog';
 import { ProductDialog } from './product-dialog';
 import { ProductActivation } from './product-activation';
 import PropTypes from 'prop-types';
@@ -166,7 +167,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
       <Divider />
       <CardActions>
         {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
-          <FbSignupFlow title={'Add Permissions'}/>
+          <FbSignupFlow title={'Permissions'}/>
         )}
         {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
           <WpConfigAccountDialog />
@@ -184,6 +185,9 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             description={product.description}
           />
         )}
+        {getUserRole() === 'admin' && product.id === 5 && (
+          <SocialAgentSelection />
+        )}
         {isActiveRef.current && (
           <Box
             sx={{
@@ -198,15 +202,16 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
                 ml: 2,
                 mb: 2,
                 mt: 1,
+                borderRadius: '6px',
                 textAlign: 'center',
                 boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
-                backgroundColor: '#F7F7F7',
+                backgroundColor: '#EFEFEF',
                 p: 2,
               }}
             >
               <Typography
                 align="center"
-                color="#D21312"
+                color="#333333"
                 variant="subtitle2"
               >
                 Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
