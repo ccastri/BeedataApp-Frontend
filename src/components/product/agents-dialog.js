@@ -14,6 +14,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import TextFieldWrapper from '../general/textfield-wrapper';
+import SuccessSnackbar from '../settings/settings-success-msg';
+import * as Yup from 'yup';
 import api from '../../lib/axios';
 
 
@@ -70,36 +72,38 @@ export const SocialAgentSelection = () => {
   const token = localStorage.getItem('jwt');
 
   const columns = [
-    { field: 'name', headerName: 'Name', width: 100 },
+    { field: 'name', headerName: 'Name', width: 200 },
     { field: 'role', headerName: 'Role', width: 50 },
     { field: 'department', headerName: 'Department', width: 100 },
-    { field: 'delete', headerName: '', width: 20 },
+    { field: 'delete', headerName: '', width: 5 },
   ];
 
   const agentRows = agents.map((agent, index) => ({
     id: index,
+    agent_id: agent.agent_id,
     name: agent.name,
     role: agent.role,
-    department: agent.department_id,
+    department: agent.department_name,
+    department_id: agent.department_id,
   }));
 
-  // Fetch all users associated to a company
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.get('/api/v1/users/users-group-by', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUsers(response.data.users);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchUsers();
-
-  }, [token]);
+    // Fetch all users associated to a company
+    useEffect(() => {
+      const fetchUsers = async () => {
+        try {
+          const response = await api.get('/api/v1/users/users-group-by', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUsers(response.data.users);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchUsers();
+  
+    }, [token]);
 
   // Fetch assigned agents
   useEffect(() => {
@@ -128,7 +132,6 @@ export const SocialAgentSelection = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
         setDepartments(response.data.departments);
       } catch (err) {
         console.log(err);
@@ -144,16 +147,95 @@ export const SocialAgentSelection = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setResponseMessage('');
+    // Reset formik values to initial state
+    formik.resetForm();
   };
 
-  const handleDelete = async (row) => { };
+  const handleAgentsDelete = async (row) => { 
+    try {
+      const response = await api.delete('/api/v1/social/agents', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          agent: row,
+        },
+      });
+      setResponseMessage(response.data.message);
+      setAgents(agents.filter((agent) => !(agent.agent_id === row.agent_id && agent.department_id === row.department_id)));
 
-  const onSubmit = async (values) => { };
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  const handleDepartmentDelete = async () => {
+    try {
+      const response = await api.delete('/api/v1/social/departments', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          departmentId: formik.values.departmentToDelete,
+        },
+      });
+      console.log('response: ', response);
+      setResponseMessage(response.data.message);
+      setDepartments(departments.filter((department) => (department.department_id !== formik.values.departmentToDelete)));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onSubmit = async (values) => {
+    console.log('values: ', values);
+    if(values.agent !== '' && values.department !== '') {
+      try {
+        const response = await api.post('/api/v1/social/agents', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            userId: values.agent,
+            departmentId: values.department,
+          },
+        });
+        setResponseMessage(response.data.message);
+        setAgents([...agents, { agent_id: response.data.user.agent_id, name: response.data.user.name, role: response.data.user.role, department_name: response.data.department.department_name, department_id: response.data.department.department_id }]);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if(values.newDepartment !== ''){
+      try {
+        const response = await api.post('/api/v1/social/departments', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            departmentName: values.newDepartment,
+          },
+        });
+        console.log('response onsubmit: ', response)
+        setResponseMessage(response.data.message);
+        setDepartments([...departments, { department_id: response.data.addedDepartment._id , department_name: values.newDepartment }]);
+        console.log('departments: ', departments)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    // Reset formik values to initial state
+    formik.resetForm();
+  };
+
+  // Formik initial values and validation
   const formik = useFormik({
     initialValues: {
       agent: '',
       department: '',
+      newDepartment: '',
+      departmentToDelete: '',
     },
     onSubmit
   });
@@ -186,7 +268,7 @@ export const SocialAgentSelection = () => {
             variant="body1"
             gutterBottom
           >
-            Select the Beet Social agents you want to use for this product.
+            Assign company users as agents of a department.
           </Typography>
           <Grid
             container
@@ -201,7 +283,7 @@ export const SocialAgentSelection = () => {
                 label="Agent"
                 name="agent"
                 sx={{ width: '100%' }}
-                selectOptions={users.map((user) => ({ value: user.name, label: user.name }))}
+                selectOptions={users.map((user) => ({ value: user.id, label: user.name }))}
               />
             </Grid>
             <Grid item xs={6}>
@@ -210,7 +292,7 @@ export const SocialAgentSelection = () => {
                 label="Department"
                 name="department"
                 sx={{ width: '100%' }}
-                selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_id }))}
+                selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
               />
             </Grid>
           </Grid>
@@ -243,7 +325,7 @@ export const SocialAgentSelection = () => {
             variant="body1"
             sx={{ ml: 1, mb: 2 }}
           >
-            Description
+            Create a new department or delete any department that is no longer needed.
           </Typography>
           <Grid
             container
@@ -281,6 +363,43 @@ export const SocialAgentSelection = () => {
               </Box>
             </Grid>
           </Grid>
+          <Grid
+            container
+            spacing={1}
+            justifyContent="center"
+            alignItems="center"
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+          >
+            <Grid item xs={6}>
+              <TextFieldWrapper
+                formik={formik}
+                label="Choose a Department"
+                name="departmentToDelete"
+                sx={{ width: '100%' }}
+                selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  mt: 1,
+                  mr: 0,
+                  ml: 'auto',
+                }}
+              >
+                <Button
+                  onClick={handleDepartmentDelete}
+                  autoFocus
+                  variant="outlined"
+                  sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
           <Typography
             sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
             variant="subtitle2"
@@ -292,14 +411,37 @@ export const SocialAgentSelection = () => {
             variant="body1"
             sx={{ ml: 1, mb: 3 }}
           >
-            Description
+            Check the current agents assigned to company departments. 
+            Each agent can be unassigned at any time by clicking the delete button, 
+            but their information won't be erased. 
+            Once unassigned, an agent can be assigned to another department as needed.
           </Typography>
-          <SimpleTable
-            columns={columns}
-            rows={agentRows}
-            onDeleteRow={handleDelete}
-          />
+          {agents.length !== 0 ? (
+            <SimpleTable
+              columns={columns}
+              rows={agentRows}
+              onDeleteRow={handleAgentsDelete}
+            />
+          ) : (
+            <Typography
+                sx={{
+                  ml: 1,
+                  mr: 2,
+                  mb: 2,
+                  mt: 2,
+                  textAlign: 'center',
+                  fontSize: '1.1rem',
+                }}
+              variant="body1"
+              gutterBottom
+            >
+              No agents assigned to departments.
+            </Typography>
+          )}
         </DialogContent>
+        {responseMessage && (
+          <SuccessSnackbar responseMessage={responseMessage} />
+        )}
       </BootstrapDialog>
     </>
   );

@@ -34,7 +34,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export const SimpleTable = ({ columns, rows, onDeleteRow }) => {
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 500, mb: 4 }} aria-label="customized table">
+            <Table sx={{ minWidth: 400, mb: 3 }} aria-label="customized table">
                 <TableHead>
                     <TableRow>
                         {columns.map((column) => (
@@ -45,13 +45,13 @@ export const SimpleTable = ({ columns, rows, onDeleteRow }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, index) => (
+                    {rows.map((row) => (
                         <StyledTableRow key={row.id}>
                             <StyledTableCell>{row.name}</StyledTableCell>
                             <StyledTableCell>{row.role}</StyledTableCell>
                             <StyledTableCell>{row.department}</StyledTableCell>
                             <StyledTableCell>
-                                <IconButton aria-label="delete" onClick={() => onDeleteRow(row.id)}>
+                                <IconButton aria-label="delete" onClick={() => onDeleteRow(row)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </StyledTableCell>

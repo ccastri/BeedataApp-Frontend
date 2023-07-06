@@ -67,7 +67,6 @@ export const CreditDialog = () => {
       });
 
       if (result.data.success) {
-        console.log(result.data.message);
         handleClose();
       }
     } catch (error) {
