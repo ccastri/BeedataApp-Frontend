@@ -111,7 +111,7 @@ export const WpConfigAccountDialog = () => {
       }
     }
     fetchData();
-  }, [token]);
+  }, [token, formik]);
 
   // Get user's current company waba IDs and phone numbers
   useEffect(() => {
@@ -122,7 +122,6 @@ export const WpConfigAccountDialog = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
         if (response && response.data && response.data.wabas) {
           setWabas(response.data.wabas)
         }
@@ -308,7 +307,8 @@ export const WpConfigAccountDialog = () => {
                   alignItems="center"
                   sx={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <Grid item xs={6}>
+                  <Grid item
+xs={6}>
                     <Typography
                       color="textSecondary"
                       sx={{ ml: 2 }}
@@ -316,14 +316,16 @@ export const WpConfigAccountDialog = () => {
                       {waba.waba_id}
                     </Typography>
                   </Grid>
-                  <Grid item xs={5}>
+                  <Grid item
+xs={5}>
                     <Typography
                       color="textSecondary"
                     >
                       {waba.phone_id}
                     </Typography>
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item
+xs={1}>
                     <IconButton 
                       aria-label="delete"
                       sx={{ ml: -2 }}
@@ -342,7 +344,8 @@ export const WpConfigAccountDialog = () => {
               alignItems="center"
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
-              <Grid item xs={6}>
+              <Grid item
+xs={6}>
                 <TextFieldWrapper
                   formik={formik}
                   label="WhatsApp Business Account ID"
@@ -350,7 +353,8 @@ export const WpConfigAccountDialog = () => {
                   sx={{ width: '100%' }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item
+xs={6}>
                 <TextFieldWrapper
                   formik={formik}
                   label="Phone Number ID"

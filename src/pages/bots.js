@@ -51,9 +51,16 @@ const Page = () => {
             >
                 <Container maxWidth={false}>
                     <BotWarnings />
-                    <Grid container spacing={3} mt={3}>
+                    <Grid container
+spacing={3}
+mt={3}>
                         {baseBots.map((bot) => (
-                            <Grid item key={bot.id} xs={12} sm={6} md={4} lg={3}>
+                            <Grid item
+key={bot.id}
+xs={12}
+sm={6}
+md={4}
+lg={3}>
                                 <BotCard bot={bot} />
                             </Grid>
                         ))}

@@ -1,11 +1,11 @@
 export const baseProducts = [
-    {
-        id: 1,
-        name: 'Beet / Consumable WhatsApp',
-        image: '/static/images/products/beet_whatsapp.svg',
-        description: 'Activate to enable automatic sending of WhatsApp messages using bots. Each sent message will be deducted from your current credit.',
-        unitType: 'messages'
-    },
+    // {
+    //     id: 1,
+    //     name: 'Beet / Consumable WhatsApp',
+    //     image: '/static/images/products/beet_whatsapp.svg',
+    //     description: 'Activate to enable automatic sending of WhatsApp messages using bots. Each sent message will be deducted from your current credit.',
+    //     unitType: 'messages'
+    // },
     {
         id: 2,
         name: 'Beet / WhatsApp',

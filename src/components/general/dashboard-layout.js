@@ -50,9 +50,9 @@ export const DashboardLayout = (props) => {
         phoneNo="573242191970"
         position="right"
         widgetWidth="400px"
-        widgetWidthMobile="260px"
-        autoOpen={true}
-        autoOpenTimer={5000}
+        widgetWidthMobile="100px"
+        autoOpen={false}
+        autoOpenTimer={3000}
         messageBox={true}
         iconSize="80"
         iconColor="white"

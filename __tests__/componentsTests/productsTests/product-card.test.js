@@ -16,7 +16,6 @@ describe('ProductCard', () => {
     api.get.mockResolvedValue({
       data: {
         company: {
-          waba_id: 'whatsapp number',
           access_token: 'access token',
         },
       },
@@ -124,23 +123,37 @@ describe('ProductCard', () => {
     const expirationDate = screen.queryByText(/Expires on:/);
     expect(expirationDate).not.toBeInTheDocument();
   });
-  
+
   test('displays the whatsapp configuration dialog for admins', async () => {
-    api.get.mockResolvedValue({
-      data: {
-        company: { },
-      },
-    });
     render(<ProductCard product={product} isActive={true} />);
-    await waitFor(() => expect(screen.getByText(/Configure/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Configure Account/)).toBeInTheDocument());
 
     expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
     });
-    const configureButton = screen.getByText(/Configure/);
-    expect(configureButton).toBeInTheDocument();  
+    
+    const configureButton = screen.getByText(/Configure Account/);
+    expect(configureButton).toBeInTheDocument(); 
+  });
+  
+  test('displays the Facebook sign in flow for permissions granting for admins', async () => {
+    api.get.mockResolvedValue({
+      data: {
+        company: { },
+      },
+    });
+    render(<ProductCard product={product} isActive={true} />);
+    await waitFor(() => expect(screen.getByText(/Permissions/)).toBeInTheDocument());
+
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
+      headers: {
+        Authorization: `Bearer ${null}`,
+      },
+    });
+    const permissionsButton = screen.getByText(/Permissions/);
+    expect(permissionsButton).toBeInTheDocument();  
   });
 
   test('displays the product dialog for admins', async () => {

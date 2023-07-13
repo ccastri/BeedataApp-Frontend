@@ -66,7 +66,7 @@ describe('Login Page', () => {
           });
     
           expect(localStorage.getItem('jwt')).toBe('mock_token');
-          expect(Router.push).toHaveBeenCalledWith('/dashboard');
+          expect(Router.push).toHaveBeenCalledWith('/coming-soon');
         });
       });
 });

@@ -1,7 +1,13 @@
 import * as Yup from 'yup';
 
 const stringField = (required, max) => Yup.string().max(max).required(required);
-const email = () => Yup.string().email('Must be a valid email').max(255).required('Email is required');
+const email = () => Yup.string().email('Must be a valid email').max(255).required('Email is required').test(
+  'company-email',
+  'Only company or institution email domains are allowed',
+  function (value) {
+    return /^[\w.%+-]+@([a-z0-9-]+\.)+[a-z]{2,}$/.test(value) && !/(gmail|outlook|hotmail|yahoo|icloud|aol|mail|zoho|gmx|inbox|yandex|ymail)/i.test(value);
+  }
+);
 const password = () => Yup.string()
     .required('Password is required')
     .matches(

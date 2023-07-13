@@ -42,7 +42,15 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
   return expirationDate;
 }
 
-
+/**
+ * ProductCard component that displays Beet's available products.
+ * 
+ * Dependencies: useState, useEffect, useRef, getUserRole, WpConfigAccountDialog,
+ *              FbSignupFlow, SocialAgentSelection, ProductDialog, ProductActivation,
+ *             PropTypes, Avatar, Box, Card, CardContent, CardActions, Divider,
+ *            Typography, CircularProgress, api.
+ * Usage: Used to display Beet's available products.
+ */
 export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, ...rest }) => {
   const [isConfigured, setIsConfigured] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -162,12 +170,45 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             {isActiveRef.current ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : "Not available"}
           </Typography>
         </Box>
+        {isActiveRef.current && (
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                mr: 2,
+                ml: 2,
+                mb: 0,
+                mt: 3,
+                borderRadius: '6px',
+                textAlign: 'center',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
+                backgroundColor: '#EFEFEF',
+                p: 2,
+              }}
+            >
+              <Typography
+                align="center"
+                color="#333333"
+                variant="subtitle2"
+              >
+                Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
-      <Divider />
+      {product.id !== 4 && (
+        <Divider />
+      )}
       <CardActions>
         {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
-          <FbSignupFlow title={'Permissions'}/>
+          <FbSignupFlow title={'Permissions'} />
         )}
         {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
           <WpConfigAccountDialog />
@@ -187,37 +228,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         )}
         {getUserRole() === 'admin' && product.id === 5 && (
           <SocialAgentSelection />
-        )}
-        {isActiveRef.current && (
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                mr: 2,
-                ml: 2,
-                mb: 2,
-                mt: 1,
-                borderRadius: '6px',
-                textAlign: 'center',
-                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
-                backgroundColor: '#EFEFEF',
-                p: 2,
-              }}
-            >
-              <Typography
-                align="center"
-                color="#333333"
-                variant="subtitle2"
-              >
-                Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
-              </Typography>
-            </Box>
-          </Box>
         )}
       </CardActions>
     </Card>

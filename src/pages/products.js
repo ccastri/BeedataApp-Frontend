@@ -6,18 +6,17 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ProductWarnings } from '../components/product/product-warnings';
 import { ProductCard } from '../components/product/product-card';
-import { FbSignupFlow } from '../components/product/fb-signup-flow';
 import { baseProducts } from '../data/base_products';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 import api from '../lib/axios';
 
 /**
 
-Page component that displays user products
+Page component that displays user purchased products information.
 
 Dependencies: Head, useState, useEffect, Box, Container, Grid, CircularProgress,
-              ProductWarnings, ProductCard, baseProducts, DashboardLayout, api
-Usage: Used to display user products
+              ProductWarnings, ProductCard, baseProducts, DashboardLayout, api.
+Usage: Used to display user purchased products base on Beet's base products.
  */
 
 const Page = () => {

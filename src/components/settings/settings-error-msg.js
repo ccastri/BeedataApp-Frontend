@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
-const ErrorSnackbar = ({errorMessage, container}) => {
+const ErrorSnackbar = ({errorMessage, variant, anchorOrigin, sx}) => {
   const [open, setOpen] = useState(true);
 
   const handleClose = (event, reason) => {
@@ -15,22 +15,19 @@ const ErrorSnackbar = ({errorMessage, container}) => {
 
   return (
     <Snackbar
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
-      }}
+      anchorOrigin={anchorOrigin ? anchorOrigin :
+        { vertical: 'top', horizontal: 'left' }
+      }
       open={open}
-      autoHideDuration={10000}
+      autoHideDuration={3000}
       onClose={handleClose}
     >
       <Alert 
         severity='error'
+        variant={variant ? variant : 'standard'}
         sx={{
           width: '100%',
-          backgroundColor:  container === 'dialog'
-          ? 'rgb(236, 205, 180, 0.9)' : 'rgba(244, 132, 132, 0.7)',
-          color: 'rgb(0, 0, 0)',
-          fontSize: '1.0rem',
+          ...sx
         }}
       >
         {errorMessage}

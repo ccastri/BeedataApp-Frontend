@@ -3,23 +3,20 @@ import { useState } from 'react';
 import { BeeCard } from '../components/login/side-card';
 import { useFormik } from 'formik';
 import Head from 'next/head';
-import api from '../lib/axios';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import * as Yup from 'yup';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-
+import api from '../lib/axios';
 
 const Login = () => {
 
@@ -42,7 +39,7 @@ const Login = () => {
         localStorage.setItem('jwt', token);
 
         if (typeof Router !== 'undefined') {
-          Router.push("/dashboard").catch(console.error);
+          Router.push("/coming-soon").catch(console.error);
         }
       }
     } catch (err) {
@@ -165,7 +162,13 @@ sx={{ width: '100%' }}>
                 Sign In Now
               </Button>
               {errorMessage && (
-                <ErrorSnackbar errorMessage={errorMessage} />
+                <ErrorSnackbar
+                  errorMessage={errorMessage}
+                  sx={{ 
+                    mt: 5,
+                    fontWeight: 400,
+                  }}
+                />
               )}
             </Box>
             <Typography

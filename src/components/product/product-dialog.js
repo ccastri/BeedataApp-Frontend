@@ -38,6 +38,15 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
   };
 });
 
+/**
+ * ProductDialog component that displays product information for purchase.
+ * 
+ * Dependencies: useState, useEffect, styled, Box, Card, CardMedia, CardContent,
+ *              Typography, Dialog, DialogContent, DialogActions, Grid, Button,
+ *             TextField, MenuItem, SuccessSnackbar, ErrorSnackbar, useMediaQuery,
+ *             api, useFormik.
+ * Usage: Used to display product information for purchase.
+ */
 export const ProductDialog = (props) => {
   const { name, image } = props;
   const [open, setOpen] = useState(false);
