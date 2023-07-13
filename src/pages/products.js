@@ -12,11 +12,11 @@ import api from '../lib/axios';
 
 /**
 
-Page component that displays user products
+Page component that displays user purchased products information.
 
 Dependencies: Head, useState, useEffect, Box, Container, Grid, CircularProgress,
-              ProductWarnings, ProductCard, baseProducts, DashboardLayout, api
-Usage: Used to display user products
+              ProductWarnings, ProductCard, baseProducts, DashboardLayout, api.
+Usage: Used to display user purchased products base on Beet's base products.
  */
 
 const Page = () => {
@@ -27,7 +27,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company-all-products', {
+        const response = await api.get('/api/v1/products/company-all-products', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -92,7 +92,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Products | Beet</title>
+        <title>Beet | Products</title>
       </Head>
       <Box
         component="main"

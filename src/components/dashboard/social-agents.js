@@ -29,7 +29,7 @@ export const SocialAgents = (props) => (
 xs={6}
 sx={{ textAlign: 'right' }}>
           <img
-            src="/static/images/products/beet_social.svg"
+            src="/static/images/products/beet_social2.svg"
             alt="social"
             style={{ width: '80%' }}
           />

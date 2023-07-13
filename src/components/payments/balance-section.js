@@ -19,7 +19,7 @@ export const BalanceSection = ({ title }) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company', {
+        const response = await api.get('/api/v1/companies/company', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

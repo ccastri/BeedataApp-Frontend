@@ -45,7 +45,6 @@ export const ProductActivation = (props) => {
   };
 
   const handleClose = () => {
-    formik.resetForm(); // Reset form values
     setOpen(false);
   };
 

@@ -16,7 +16,6 @@ describe('ProductCard', () => {
     api.get.mockResolvedValue({
       data: {
         company: {
-          waba: 'whatsapp number',
           access_token: 'access token',
         },
       },
@@ -37,7 +36,7 @@ describe('ProductCard', () => {
   test('renders the product name', async () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText('Test Product')).toBeInTheDocument());
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
         headers: {
             Authorization: `Bearer ${null}`,
         },
@@ -48,7 +47,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByAltText('Product')).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -62,7 +61,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText(/Available/i)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -75,7 +74,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={false} />);
     await waitFor(() => expect(screen.getByText('Not available')).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -95,7 +94,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={true} purchaseDetails={purchaseDetails} />);
     await waitFor(() => expect(screen.getByText(/Expires on:/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -115,7 +114,7 @@ describe('ProductCard', () => {
     render(<ProductCard product={product} isActive={false} purchaseDetails={purchaseDetails} />);
     await waitFor(() => expect(screen.getByText(/Not available/)).toBeInTheDocument());
   
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
@@ -124,30 +123,44 @@ describe('ProductCard', () => {
     const expirationDate = screen.queryByText(/Expires on:/);
     expect(expirationDate).not.toBeInTheDocument();
   });
-  
+
   test('displays the whatsapp configuration dialog for admins', async () => {
+    render(<ProductCard product={product} isActive={true} />);
+    await waitFor(() => expect(screen.getByText(/Configure Account/)).toBeInTheDocument());
+
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
+      headers: {
+        Authorization: `Bearer ${null}`,
+      },
+    });
+    
+    const configureButton = screen.getByText(/Configure Account/);
+    expect(configureButton).toBeInTheDocument(); 
+  });
+  
+  test('displays the Facebook sign in flow for permissions granting for admins', async () => {
     api.get.mockResolvedValue({
       data: {
         company: { },
       },
     });
     render(<ProductCard product={product} isActive={true} />);
-    await waitFor(() => expect(screen.getByText(/Configure/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Permissions/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },
     });
-    const configureButton = screen.getByText(/Configure/);
-    expect(configureButton).toBeInTheDocument();  
+    const permissionsButton = screen.getByText(/Permissions/);
+    expect(permissionsButton).toBeInTheDocument();  
   });
 
   test('displays the product dialog for admins', async () => {
     render(<ProductCard product={product} isActive={false} />);
     await waitFor(() => expect(screen.getByText(/Purchase/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/company', {
+    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
       headers: {
         Authorization: `Bearer ${null}`,
       },

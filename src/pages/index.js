@@ -1,20 +1,22 @@
 import React from 'react';
-import Head from 'next/head';
 import { useState } from 'react';
-import api from '../lib/axios';
+import { BeeCard } from '../components/login/side-card';
+import { useFormik } from 'formik';
+import Head from 'next/head';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import NextLink from 'next/link';
 import Router from 'next/router';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ErrorSnackbar from '../components/settings/settings-error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
-import { BeeCard } from '../components/login/side-card';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Box, Button, Container, Grid, Link, Typography } from '@mui/material';
-
+import api from '../lib/axios';
 
 const Login = () => {
 
@@ -28,7 +30,7 @@ const Login = () => {
   const onSubmit = async (values) => {
     try {
 
-      const { data } = await api.post("/api/login", values);
+      const { data } = await api.post('/api/v1/users/login', values);
       
       if (data.success) {
         const token = data.token;
@@ -160,7 +162,13 @@ sx={{ width: '100%' }}>
                 Sign In Now
               </Button>
               {errorMessage && (
-                <ErrorSnackbar errorMessage={errorMessage} />
+                <ErrorSnackbar
+                  errorMessage={errorMessage}
+                  sx={{ 
+                    mt: 5,
+                    fontWeight: 400,
+                  }}
+                />
               )}
             </Box>
             <Typography

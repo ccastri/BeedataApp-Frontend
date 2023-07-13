@@ -22,21 +22,19 @@ export const AccountProfileDetails = (props) => {
     country: '',
     city: '',
     billingEmail: '',
-    billingAddress: '',
-    waba: '',
-    accessToken: ''
+    billingAddress: ''
   });
 
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('jwt');
-      const userResponse = await api.get('/api/user', {
+      const userResponse = await api.get('/api/v1/users/user', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const companyResponse = await api.get('/api/company', {
+      const companyResponse = await api.get('/api/v1/companies/company', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -44,7 +42,7 @@ export const AccountProfileDetails = (props) => {
   
       if (userResponse.data && companyResponse.data) {
         const { name, identification_type, identification_number, role, email, phone, country, city } = userResponse.data.user;
-        const { billing_email, billing_address, waba, access_token } = companyResponse.data.company;
+        const { billing_email, billing_address } = companyResponse.data.company;
   
         setFormValues({
           fullName: name || '',
@@ -56,9 +54,7 @@ export const AccountProfileDetails = (props) => {
           country: country || '',
           city: city || '',
           billingEmail: billing_email || '',
-          billingAddress: billing_address || '',
-          waba: waba || '',
-          accessToken: access_token || ''
+          billingAddress: billing_address || ''
         });
       }
     };
@@ -77,15 +73,13 @@ export const AccountProfileDetails = (props) => {
     try {
       const token = localStorage.getItem('jwt');
 
-      // update billing fields via /api/update-company
+      // update billing fields via /api/v1/companies/update-company
       const billingFields = {
         billingEmail: formValues.billingEmail,
         billingAddress: formValues.billingAddress,
-        waba: formValues.waba,
-        accessToken: formValues.accessToken
       };
 
-      await api.post('/api/update-company', billingFields, {
+      await api.post('/api/v1/companies/update-company', billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -102,7 +96,7 @@ export const AccountProfileDetails = (props) => {
         city: formValues.city
       };
 
-      const response = await api.post('/api/update-user', remainingFields, {
+      const response = await api.post('/api/v1/users/update-user', remainingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -264,32 +258,6 @@ xs={12}>
                   onChange={handleChange}
                   required
                   value={formValues.billingAddress}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item
-  md={6}
-  xs={12}>
-                <TextField
-                  fullWidth
-                  label="Waba ID"
-                  name="waba"
-                  onChange={handleChange}
-                  required
-                  value={formValues.waba}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item
-  md={6}
-  xs={12}>
-                <TextField
-                  fullWidth
-                  label="Waba access token"
-                  name="waba_access_token"
-                  onChange={handleChange}
-                  required
-                  value={formValues.accessToken}
                   variant="outlined"
                 />
               </Grid>

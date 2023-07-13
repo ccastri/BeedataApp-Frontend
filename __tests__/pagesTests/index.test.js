@@ -60,7 +60,7 @@ describe('Login Page', () => {
         fireEvent.submit(screen.getByText('Sign In Now'));
     
         await waitFor(() => {
-          expect(api.post).toHaveBeenCalledWith('/api/login', {
+          expect(api.post).toHaveBeenCalledWith('/api/v1/users/login', {
             email: 'test@example.com',
             password: 'Password123',
           });

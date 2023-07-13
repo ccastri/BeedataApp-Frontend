@@ -1,4 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getUserRole } from '../../utils/get-user-role';
+import { WpConfigAccountDialog } from './config-account-dialog';
+import { FbSignupFlow } from './fb-signup-flow';
+import { SocialAgentSelection } from './agents-dialog';
+import { ProductDialog } from './product-dialog';
+import { ProductActivation } from './product-activation';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -9,10 +15,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import api from '../../lib/axios';
-import { getUserRole } from '../../utils/get-user-role';
-import { WpConfigAccountDialog } from './config-account-dialog';
-import { ProductDialog } from './product-dialog';
-import { ProductActivation } from './product-activation';
+
 
 const cardStyle = {
   display: 'flex',
@@ -39,7 +42,15 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
   return expirationDate;
 }
 
-
+/**
+ * ProductCard component that displays Beet's available products.
+ * 
+ * Dependencies: useState, useEffect, useRef, getUserRole, WpConfigAccountDialog,
+ *              FbSignupFlow, SocialAgentSelection, ProductDialog, ProductActivation,
+ *             PropTypes, Avatar, Box, Card, CardContent, CardActions, Divider,
+ *            Typography, CircularProgress, api.
+ * Usage: Used to display Beet's available products.
+ */
 export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, ...rest }) => {
   const [isConfigured, setIsConfigured] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -78,7 +89,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/api/company', {
+        const response = await api.get('/api/v1/companies/company', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -87,8 +98,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         if (response && response.data && response.data.company) {
           const company = response.data.company;
 
-          // Check is Waba and access token fields are not empty
-          if (company.waba && company.access_token) {
+          // Check if access token field is not empty
+          if (company.access_token) {
             setIsConfigured(true);
           }
         }
@@ -159,26 +170,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             {isActiveRef.current ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : "Not available"}
           </Typography>
         </Box>
-      </CardContent>
-      <Box sx={{ flexGrow: 1 }} />
-      <Divider />
-      <CardActions>
-        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
-          <WpConfigAccountDialog />
-        )}
-        {getUserRole() === 'admin' && !isActiveRef.current && product.id !== 1 && (
-          <ProductDialog
-            image={product.image}
-            name={product.name}
-          />
-        )}
-        {/* {getUserRole() === 'admin' && !isActiveRef.current && product.id === 1 && (
-          <ProductActivation
-            name={product.name}
-            image={product.image}
-            description={product.description}
-          />
-        )} */}
         {isActiveRef.current && (
           <Box
             sx={{
@@ -191,23 +182,52 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
               sx={{
                 mr: 2,
                 ml: 2,
-                mb: 2,
-                mt: 1,
+                mb: 0,
+                mt: 3,
+                borderRadius: '6px',
                 textAlign: 'center',
                 boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
-                backgroundColor: '#F7F7F7',
+                backgroundColor: '#EFEFEF',
                 p: 2,
               }}
             >
               <Typography
                 align="center"
-                color="#D21312"
+                color="#333333"
                 variant="subtitle2"
               >
                 Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
               </Typography>
             </Box>
           </Box>
+        )}
+      </CardContent>
+      <Box sx={{ flexGrow: 1 }} />
+      {product.id !== 4 && (
+        <Divider />
+      )}
+      <CardActions>
+        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
+          <FbSignupFlow title={'Permissions'} />
+        )}
+        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
+          <WpConfigAccountDialog />
+        )}
+        {getUserRole() === 'admin' && !isActiveRef.current && product.id !== 1 && (
+          <ProductDialog
+            image={product.image}
+            name={product.name}
+          />
+        )}
+        {getUserRole() === 'admin' && !isActiveRef.current && product.id === 1 && (
+          <ProductActivation
+            name={product.name}
+            image={product.image}
+            description={product.description}
+          />
+        )}
+        {getUserRole() === 'admin' && product.id === 5 && (
+          <SocialAgentSelection />
         )}
       </CardActions>
     </Card>

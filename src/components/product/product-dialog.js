@@ -38,6 +38,15 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
   };
 });
 
+/**
+ * ProductDialog component that displays product information for purchase.
+ * 
+ * Dependencies: useState, useEffect, styled, Box, Card, CardMedia, CardContent,
+ *              Typography, Dialog, DialogContent, DialogActions, Grid, Button,
+ *             TextField, MenuItem, SuccessSnackbar, ErrorSnackbar, useMediaQuery,
+ *             api, useFormik.
+ * Usage: Used to display product information for purchase.
+ */
 export const ProductDialog = (props) => {
   const { name, image } = props;
   const [open, setOpen] = useState(false);
@@ -68,7 +77,7 @@ export const ProductDialog = (props) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.post('/api/beet-products', {
+        const response = await api.post('/api/v1/products/beet-products', {
           beetProduct: name,
         }, {
           headers: {
@@ -98,7 +107,7 @@ export const ProductDialog = (props) => {
       const token = localStorage.getItem('jwt');
 
       // Get Company credit
-      const creditResponse = await api.get('/api/company', {
+      const creditResponse = await api.get('/api/v1/companies/company', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +128,7 @@ export const ProductDialog = (props) => {
         productPrice: productPrice,
       };
       
-      const response = await api.post('/api/purchase-product', purchaseDetails, {
+      const response = await api.post('/api/v1/products/purchase-product', purchaseDetails, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

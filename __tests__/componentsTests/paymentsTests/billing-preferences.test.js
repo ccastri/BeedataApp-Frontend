@@ -24,7 +24,7 @@ describe('BillingPreferences', () => {
 
   test('render billing preferences correctly', async () => {
     api.get.mockImplementation((url, config) => {
-      if (url === '/api/user') {
+      if (url === '/api/v1/users/user') {
         return Promise.resolve({
           data: {
             user: {
@@ -33,7 +33,7 @@ describe('BillingPreferences', () => {
             },
           },
         });
-      } else if (url === '/api/company') {
+      } else if (url === '/api/v1/companies/company') {
         return Promise.resolve({
           data: {
             company: {

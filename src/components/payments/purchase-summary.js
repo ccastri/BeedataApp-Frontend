@@ -22,7 +22,7 @@ export const PurchaseSummary = ({ title }) => {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem('jwt');
-          const response = await api.get('/api/purchase-history', {
+          const response = await api.get('/api/v1/payments/purchase-history', {
             headers: {
               Authorization: `Bearer ${token}`,
             },

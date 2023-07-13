@@ -34,15 +34,16 @@ const items = [
     title: 'Beet Lake'
   },
   // {
+  //   href: '/bots',
   //   icon: (<SmartToyIcon fontSize="small" />),
-  //   target: '_blank',
-  //   title: 'Beet Bot'
+  //   target: '_self',
+  //   title: 'Beet Bots'
   // },
   {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
     target: '_self',
-    title: 'Beet Market'
+    title: 'Beet Tools'
   },
   {
     href: '/payments',
@@ -81,7 +82,7 @@ export const DashboardSidebar = (props) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/company', {
+        const response = await api.get('/api/v1/companies/company', {
           headers: {  
             Authorization: `Bearer ${token}`,
           },

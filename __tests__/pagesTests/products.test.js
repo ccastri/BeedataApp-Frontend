@@ -13,7 +13,7 @@ describe('Products page', () => {
     });
 
     test('gets products information', async () => {
-        // mock data for api.get('/api/company-all-products')
+        // mock data for api.get('/api/v1/products/company-all-products')
         const mockResponse = {
             data: {
                 products: [
@@ -31,7 +31,7 @@ describe('Products page', () => {
         api.get.mockResolvedValue(mockResponse);
 
         const { getByText } = render(<Page />);
-        await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/company-all-products', { "headers": { "Authorization": "Bearer null" } }));
+        await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/products/company-all-products', { "headers": { "Authorization": "Bearer null" } }));
     });
 
 });

@@ -19,13 +19,13 @@ export const BillingPreferences = ({ title }) => {
 
     const fetchBillingInfo = async () => {
       try {
-        const userResponse = await api.get('/api/user', {
+        const userResponse = await api.get('/api/v1/users/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const companyResponse = await api.get('/api/company', {
+        const companyResponse = await api.get('/api/v1/companies/company', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

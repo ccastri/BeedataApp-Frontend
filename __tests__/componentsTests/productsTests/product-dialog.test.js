@@ -31,7 +31,7 @@ describe('ProductDialog', () => {
     }];
     api.post.mockResolvedValueOnce({ data: { productSelection: mockProductOptions } });
     render(<ProductDialog name="Product 1" description="Description of Product 1" image="path/to/image.png" />);
-    await waitFor(() => expect(api.post).toHaveBeenCalledWith('/api/beet-products', {
+    await waitFor(() => expect(api.post).toHaveBeenCalledWith('/api/v1/products/beet-products', {
         beetProduct: 'Product 1'
     }, {
         headers: {

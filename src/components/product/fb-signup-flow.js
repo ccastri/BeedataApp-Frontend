@@ -34,7 +34,11 @@ export const FbSignupFlow = ({title}) => {
         js = d.createElement(s);
         js.id = id;
         js.src = 'https://connect.facebook.net/en_US/sdk.js';
-        fjs.parentNode.insertBefore(js, fjs);
+        if (fjs) {
+          fjs.parentNode.insertBefore(js, fjs);
+        } else {
+          document.head.appendChild(js);
+        }
       })(document, 'script', 'facebook-jssdk');
     }
   }, []);
@@ -43,16 +47,13 @@ export const FbSignupFlow = ({title}) => {
     if (typeof window !== 'undefined') {
       // Check if the FB object is defined before using it
       if (typeof FB !== 'undefined') {
-        const fbq = window.fbq;
-        fbq && fbq('trackCustom', 'WhatsAppOnboardingStart', {appId: '931235137882480', feature: 'whatsapp_embedded_signup' });
-
         FB.login(async function (response) {
+          console.log('FB response: ', response);
           if (response.authResponse) {
             const accessToken = response.authResponse.accessToken;
             const token = localStorage.getItem('jwt');
-
             try {
-              const userData = await api.post('/api/fb-user-waba', {
+              const userData = await api.get('/api/v1/facebook/fb-user-token', {
                 headers: {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': accessToken,
@@ -63,17 +64,13 @@ export const FbSignupFlow = ({title}) => {
             } catch (err) {
               console.log(err);
             }
-          } else {
+          }
+          else {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          scope: 'business_management,whatsapp_business_management',
-          display: 'popup',
-          extras: {
-            feature: 'whatsapp_embedded_signup',
-            version: 2,
-            sessionInfoVersion: 2,
-          }
+          config_id: '3471523013132484', // configuration ID goes here
+          response_type: 'code' 
         });
       }
     }
@@ -82,8 +79,10 @@ export const FbSignupFlow = ({title}) => {
   return (
     <Button
       variant="outlined"
+      fullWidth
       color="primary"
       onClick={launchWhatsAppSignup}
+      sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
     >
       { title }
     </Button>
