@@ -50,13 +50,13 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           console.log('FB response: ', response);
           if (response.authResponse) {
-            const accessToken = response.authResponse.accessToken;
+            const signedRequest = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
               const userData = await api.get('/api/v1/facebook/fb-user-token', {
                 headers: {
                   Authorization: `Bearer ${token}`,
-                  'x-access-token': accessToken,
+                  'x-access-token': signedRequest,
                 },
                 mode: 'cors'
               });
