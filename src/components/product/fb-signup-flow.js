@@ -68,7 +68,7 @@ export const FbSignupFlow = ({title}) => {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          config_id: '3471523013132484', // configuration ID goes here
+          config_id: 3471523013132484, // configuration ID goes here
           response_type: 'code' 
         });
       }
