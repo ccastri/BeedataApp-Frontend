@@ -54,7 +54,7 @@ export const FbSignupFlow = ({title}) => {
             const signedRequest = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
-              const userData = await api.get('/api/v1/facebook/fb-user-token', {
+              const userData = await api.post('/api/v1/facebook/fb-user-token', {
                 headers: {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': signedRequest,
