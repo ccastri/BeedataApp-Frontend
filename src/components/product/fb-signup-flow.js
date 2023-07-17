@@ -68,7 +68,7 @@ export const FbSignupFlow = ({title}) => {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          config_id: 3471523013132484, // configuration ID goes here
+          scope: 'business_management, whatsapp_business_management, whatsapp_business_messaging',
           response_type: 'code' 
         });
       }
