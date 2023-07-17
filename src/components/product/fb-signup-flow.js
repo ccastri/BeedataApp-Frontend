@@ -11,7 +11,6 @@ import api from '../../lib/axios';
  */
 
 export const FbSignupFlow = ({title}) => {
-  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -49,18 +48,14 @@ export const FbSignupFlow = ({title}) => {
       if (typeof FB !== 'undefined') {
         FB.login(async function (response) {
           console.log('FB response: ', response);
-          console.log('Current URL:', window.location.href);
           if (response.authResponse) {
             const signedRequest = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
-              const userData = await api.post('/api/v1/facebook/fb-user-token', {
+              const userData = await api.get('/api/v1/facebook/fb-user-token', {
                 headers: {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': signedRequest,
-                },
-                params: {
-                  redirectUri: window.location.href
                 },
                 mode: 'cors'
               });
