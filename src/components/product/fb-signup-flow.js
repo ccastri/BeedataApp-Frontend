@@ -59,6 +59,9 @@ export const FbSignupFlow = ({title}) => {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': signedRequest,
                 },
+                params: {
+                  redirectUri: window.location.href
+                },
                 mode: 'cors'
               });
 
