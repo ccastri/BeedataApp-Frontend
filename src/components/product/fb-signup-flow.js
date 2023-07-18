@@ -19,7 +19,7 @@ export const FbSignupFlow = ({title}) => {
           appId: '931235137882480',
           cookie: true,
           xfbml: true,
-          version: 'v16.0'
+          version: 'v17.0'
         });
 
         FB.AppEvents.logPageView();

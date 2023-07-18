@@ -88,6 +88,53 @@ export const WpConfigAccountDialog = () => {
 
   const token = localStorage.getItem('jwt');
 
+  // Update the user's company access token or add a new waba ID with its phone number ID
+  const onSubmit = async (values) => {
+    if (values.systemUserAccessToken !== '' && values.systemUserAccessToken !== formik.values.systemUserAccessToken) {
+      try {
+        await api.post('/api/v1/companies/update-company', { systemUserAccessToken: values.systemUserAccessToken }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    if (values.whatsappBusinessAccountID !== '' && values.phoneNumberID !== '') {
+      try {
+        await api.post('/api/v1/whatsapp/wabas', { wabaID: values.whatsappBusinessAccountID, phoneNumberID: values.phoneNumberID }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Reload the page
+    window.location.reload();
+  };
+  
+  const formik = useFormik({
+    initialValues: {
+      systemUserAccessToken: '',
+      whatsappBusinessAccountID: '',
+      phoneNumberID: '',
+    },
+    validationSchema: Yup.object({
+      systemUserAccessToken: Yup
+        .string(),
+      whatsappBusinessAccountID: Yup
+        .string(),
+      phoneNumberID: Yup
+        .string()
+    }),
+    onSubmit,
+  });
+
   // Get the current user's company access token
   useEffect(() => {
     const fetchData = async () => {
@@ -132,38 +179,8 @@ export const WpConfigAccountDialog = () => {
     fetchData();
   }, [token]);
 
-  // Update the user's company access token or add a new waba ID with its phone number ID
-  const onSubmit = async (values) => {
-    if (values.systemUserAccessToken !== '' && values.systemUserAccessToken !== formik.values.systemUserAccessToken) {
-      try{
-        await api.post('/api/v1/companies/update-company', {systemUserAccessToken: values.systemUserAccessToken}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    if (values.whatsappBusinessAccountID !== '' && values.phoneNumberID !== '') {
-      try{
-        await api.post('/api/v1/whatsapp/wabas', {wabaID: values.whatsappBusinessAccountID, phoneNumberID: values.phoneNumberID}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    // Reload the page
-    window.location.reload();
-  }
-
   const handleDelete = async (wabaID, phoneNumberID) => {
-    try{
+    try {
       const response = await api.delete('/api/v1/whatsapp/wabas', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -181,23 +198,6 @@ export const WpConfigAccountDialog = () => {
       console.error(err);
     }
   };
-
-  const formik = useFormik({
-    initialValues: {
-      systemUserAccessToken: '',
-      whatsappBusinessAccountID: '',
-      phoneNumberID: '',
-    },
-    validationSchema: Yup.object({
-      systemUserAccessToken: Yup
-        .string(),
-      whatsappBusinessAccountID: Yup
-        .string(),
-      phoneNumberID: Yup
-        .string()
-    }),
-    onSubmit,
-  });
 
   return (
     <>
@@ -240,6 +240,7 @@ export const WpConfigAccountDialog = () => {
             name="systemUserAccessToken"
             label="System User Access Token"
             type={showPassword ? 'text' : 'password'}
+            autoComplete="off"
             inputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -256,15 +257,15 @@ export const WpConfigAccountDialog = () => {
             }}
             sx={{ width: '100%' }}
           />
-                     <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                mt: 2,
-                mr: 0,
-                ml: 'auto',
-              }}
-            >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              mt: 2,
+              mr: 0,
+              ml: 'auto',
+            }}
+          >
             <Button
               autoFocus
               onClick={formik.handleSubmit}
@@ -273,7 +274,7 @@ export const WpConfigAccountDialog = () => {
             >
               Save
             </Button>
-            </Box>
+          </Box>
           <Typography
             sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
             variant="subtitle2"
@@ -308,7 +309,7 @@ export const WpConfigAccountDialog = () => {
                   sx={{ display: 'flex', justifyContent: 'space-between' }}
                 >
                   <Grid item
-xs={6}>
+                    xs={6}>
                     <Typography
                       color="textSecondary"
                       sx={{ ml: 2 }}
@@ -317,7 +318,7 @@ xs={6}>
                     </Typography>
                   </Grid>
                   <Grid item
-xs={5}>
+                    xs={5}>
                     <Typography
                       color="textSecondary"
                     >
@@ -325,8 +326,8 @@ xs={5}>
                     </Typography>
                   </Grid>
                   <Grid item
-xs={1}>
-                    <IconButton 
+                    xs={1}>
+                    <IconButton
                       aria-label="delete"
                       sx={{ ml: -2 }}
                       onClick={() => handleDelete(waba.waba_id, waba.phone_id)}
@@ -345,7 +346,7 @@ xs={1}>
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <Grid item
-xs={6}>
+                xs={6}>
                 <TextFieldWrapper
                   formik={formik}
                   label="WhatsApp Business Account ID"
@@ -354,7 +355,7 @@ xs={6}>
                 />
               </Grid>
               <Grid item
-xs={6}>
+                xs={6}>
                 <TextFieldWrapper
                   formik={formik}
                   label="Phone Number ID"
@@ -372,7 +373,7 @@ xs={6}>
                 ml: 'auto',
               }}
             >
-              <Button 
+              <Button
                 onClick={formik.handleSubmit}
                 autoFocus
                 variant="outlined"
@@ -393,19 +394,19 @@ xs={6}>
             variant="body1"
             sx={{ ml: 1, mb: 2 }}
           >
-            Change the permissions granted to Beet on Facebook. 
+            Change the permissions granted to Beet on Facebook.
             This will generate a new system user token automatically.
           </Typography>
           <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                mt: 2,
-                mr: 0,
-                ml: 'auto',
-              }}
-            >
-              <FbSignupFlow title={'Add Permissions'} />
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              mt: 2,
+              mr: 0,
+              ml: 'auto',
+            }}
+          >
+            <FbSignupFlow title={'Add Permissions'} />
           </Box>
         </DialogContent>
       </BootstrapDialog>

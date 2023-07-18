@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, MenuItem } from '@mui/material';
 
-const TextFieldWrapper = ({ formik, name, label, type = "text", selectOptions = [], inputProps }) => {
+const TextFieldWrapper = ({ formik, name, autoComplete, label, type = "text", selectOptions = [], inputProps }) => {
   const isSelect = selectOptions.length > 0;
   return (
     <TextField
@@ -11,6 +11,7 @@ const TextFieldWrapper = ({ formik, name, label, type = "text", selectOptions = 
       label={label}
       margin="normal"
       name={name}
+      autoComplete={autoComplete ? autoComplete : 'on'}
       onBlur={formik.handleBlur}
       onChange={formik.handleChange}
       type={type}
