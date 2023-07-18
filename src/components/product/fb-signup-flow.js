@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import api from '../../lib/axios';
 
@@ -47,18 +46,19 @@ export const FbSignupFlow = ({title}) => {
       // Check if the FB object is defined before using it
       if (typeof FB !== 'undefined') {
         FB.login(async function (response) {
-          console.log('FB response: ', response);
           if (response.authResponse) {
             const signedRequest = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
-              const userData = await api.get('/api/v1/facebook/callback', {
+              await api.get('/api/v1/facebook/callback', {
                 headers: {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': signedRequest,
                 },
                 mode: 'cors'
               });
+
+              window.location.reload();
 
             } catch (err) {
               console.log(err);
