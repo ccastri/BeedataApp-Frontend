@@ -92,7 +92,7 @@ export const WpConfigAccountDialog = () => {
   const onSubmit = async (values) => {
     if (values.systemUserAccessToken !== '' && values.systemUserAccessToken !== formik.values.systemUserAccessToken) {
       try {
-        await api.post('/api/v1/companies/update-company', { systemUserAccessToken: values.systemUserAccessToken }, {
+        await api.post('/api/v1/companies/update-company', { accessToken: values.systemUserAccessToken, expiryAt: '' }, {
           headers: {
             Authorization: `Bearer ${token}`,
           }
