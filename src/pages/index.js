@@ -11,6 +11,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import * as Yup from 'yup';
@@ -197,10 +198,13 @@ sx={{ width: '100%' }}>
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '100vh',
-            width: '50%',
+            minHeight: '100vh',
+            width: {xs: '100%', sm: '50%'},
+            pr: {xs: 2, sm: 4},
+            pl: {xs: 2, sm: 4},
             background: 'linear-gradient(to bottom, #2D3748, #1E272C)',
             border: '1px solid #1E272C',
           }}

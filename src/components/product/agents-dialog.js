@@ -406,7 +406,7 @@ xs={6}>
             severity="info"
             sx={{ ml: 1, mr: 2, mb: 2, mt: 2 }}
           >
-            Please note that in order to assign an agent to a department, you must have a phone number available.
+            Please note that in order to create a new department, you must have a phone number available.
             To check your current phone numbers, click <Link href="">here</Link>.
           </Alert>
           <Grid

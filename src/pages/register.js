@@ -120,7 +120,10 @@ const Register = () => {
           alignItems: 'center',
           display: 'flex',
           flexGrow: 1,
-          minHeight: '100%'
+          minHeight: '100vh',
+          width: '100%',
+          pr: { xs: 4, sm: 6 },
+          pl: { xs: 4, sm: 6 },
         }}
       >
         <Container 
@@ -143,7 +146,8 @@ const Register = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              position: 'relative'
+              position: 'relative',
+              marginBottom: { xs: '32px', sm: '48px' },
             }}
           >       
             <form onSubmit={formik.handleSubmit}>
