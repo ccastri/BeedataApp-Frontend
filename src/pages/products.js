@@ -89,6 +89,21 @@ const Page = () => {
     };
   }) : baseProducts.map(baseProduct => ({bulkProducts: {...baseProduct, isActive: false}}));
 
+  const allBulkProducts = products.flatMap(product => product.bulkProducts);
+
+  const distinctBulkProducts = allBulkProducts.reduce((acc, bulkProduct) => {
+    const index = acc.findIndex(p => p.id === bulkProduct.id && !p.isActive);
+  
+    if (index !== -1 && bulkProduct.isActive) {
+      acc.splice(index, 1);
+      acc.push(bulkProduct);
+    } else if (index === -1) {
+      acc.push(bulkProduct);
+    }
+  
+    return acc;
+  }, []);
+
   return (
     <>
       <Head>
@@ -106,7 +121,7 @@ const Page = () => {
           <Grid container
 spacing={3}
 mt={3}>
-          {products.flatMap(product => product.bulkProducts).map((product) => {
+          {distinctBulkProducts.map((product) => {
             return (
               <Grid item
 xs={12}
