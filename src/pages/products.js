@@ -92,15 +92,19 @@ const Page = () => {
   const allBulkProducts = products.flatMap(product => product.bulkProducts);
 
   const distinctBulkProducts = allBulkProducts.reduce((acc, bulkProduct) => {
-    const index = acc.findIndex(p => p.id === bulkProduct.id && !p.isActive);
-  
-    if (index !== -1 && bulkProduct.isActive) {
-      acc.splice(index, 1);
-      acc.push(bulkProduct);
-    } else if (index === -1) {
+    const existingIndex = acc.findIndex(p => p.id === bulkProduct.id);
+    
+    if (existingIndex !== -1) {
+      const existingProduct = acc[existingIndex];
+      
+      if (!existingProduct.isActive && bulkProduct.isActive) {
+        acc.splice(existingIndex, 1);
+        acc.push(bulkProduct);
+      }
+    } else {
       acc.push(bulkProduct);
     }
-  
+    
     return acc;
   }, []);
 
