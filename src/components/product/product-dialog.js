@@ -136,6 +136,9 @@ export const ProductDialog = (props) => {
 
       if (response && response.data && response.data.purchase) {
         setResponseMessage(response.data.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
 
     } catch (error) {

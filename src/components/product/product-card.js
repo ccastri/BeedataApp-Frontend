@@ -98,7 +98,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         if (response && response.data && response.data.company) {
           const company = response.data.company;
 
-          // Check if access token field is not empty
           if (company.access_token) {
             setIsConfigured(true);
           }
