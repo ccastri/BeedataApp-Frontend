@@ -92,7 +92,7 @@ export const WpConfigAccountDialog = () => {
   const onSubmit = async (values) => {
     if (values.systemUserAccessToken !== '' && values.systemUserAccessToken !== formik.values.systemUserAccessToken) {
       try {
-        await api.post('/api/v1/companies/update-company', { accessToken: values.systemUserAccessToken, expiryAt: '' }, {
+        await api.put('/api/v1/companies/update-company', { accessToken: values.systemUserAccessToken, expiryAt: '' }, {
           headers: {
             Authorization: `Bearer ${token}`,
           }
@@ -150,7 +150,7 @@ export const WpConfigAccountDialog = () => {
 
           // Check if access token field is not empty
           if (company.access_token) {
-            formik.setFieldValue('systemUserAccessToken', company.access_token);
+            formik.setFieldValue('systemUserAccessToken', company.facebook_token);
           }
         }
       } catch (err) {

@@ -79,7 +79,7 @@ export const AccountProfileDetails = (props) => {
         billingAddress: formValues.billingAddress,
       };
 
-      await api.post('/api/v1/companies/update-company', billingFields, {
+      await api.put('/api/v1/companies/update-company', billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
