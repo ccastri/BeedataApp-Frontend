@@ -1,9 +1,8 @@
 import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/material';
 
 
-export const SocialAgents = (props) => (
-  <Card sx={{ maxWidth: '100%', height: '90%' }}
-{...props}>
+export const SocialAgents = () => (
+  <Card sx={{ maxWidth: '100%', height: '90%' }}>
     <CardContent>
       <Grid
         container
@@ -26,8 +25,8 @@ export const SocialAgents = (props) => (
           </Typography>
         </Grid>
         <Grid item
-xs={6}
-sx={{ textAlign: 'right' }}>
+          xs={6}
+          sx={{ textAlign: 'right' }}>
           <img
             src="/static/images/products/beet_social2.svg"
             alt="social"

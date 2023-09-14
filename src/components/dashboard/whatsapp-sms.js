@@ -1,59 +1,47 @@
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { useState, useEffect } from 'react';
+import { StatsCard } from './stats-cards';
+import api from '../../lib/axios';
 
-export const WhatsappSms = (props) => (
-  <Card sx={{ maxWidth: '100%', height: '90%' }}
-{...props}>
-    <CardContent>
-      <Grid container
-spacing={3}
-alignItems="flex-start">
-        <Grid item
-xs={6}>
-          <Typography
-            color="textSecondary"
-            gutterBottom
-            variant="overline"
-          >
-            Whatsapp SMS
-          </Typography>
-          <Typography color="textPrimary"
-variant="h4">
-            1,600
-          </Typography>
-        </Grid>
-        <Grid item
-xs={6}
-sx={{ textAlign: 'right' }}>
-          <img
-            src="/static/images/products/beet_whatsapp.svg"
-            alt="Whatsapp"
-            style={{ width: '80%' }}
-          />
-        </Grid>
-      </Grid>
-      <Box
-        sx={{
-          pt: 2,
-          display: 'flex',
-          alignItems: 'center'
-        }}
-      >
-        <ArrowDownwardIcon color="error" />
-        <Typography
-          color="error"
-          sx={{
-            mr: 1
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography color="textSecondary"
-variant="caption">
-          Since last month
-        </Typography>
-      </Box>
-    </CardContent>
-</Card>
-);
+
+export const WhatsappSms = () => {
+  const [msgCount, setMsgCount] = useState(0);
+  const [msgMetric, setMsgMetric] = useState(0);
+
+  const token = localStorage.getItem('jwt');
+
+  useEffect(() => {
+    const fetchPurchases = async () => {
+      try {
+        const response = await api.get('/api/v1/purchases/active', {
+          headers: { 
+            Authorization: `Bearer ${token}` 
+          },
+        });
+        if (response.data.success) {
+          const purchases = response.data.active;
+          const filteredPurchases = purchases.filter(purchase => purchase.msg_qty > 0);
+          const totalMsgCount = filteredPurchases.reduce((acc, purchase) => acc + purchase.msg_qty, 0);
+          setMsgCount(totalMsgCount);
+          return;
+        } else {
+          console.log(response.data.message);
+        }
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPurchases();
+  }, [token]);
+
+  return (
+    <StatsCard
+      title="Whatsapp SMS"
+      image="/static/images/products/beet_whatsapp.svg"
+      value={msgCount}
+      metric={msgMetric}
+      metricUp={false}
+    />
+  );
+};

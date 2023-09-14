@@ -40,7 +40,7 @@ const Login = () => {
         localStorage.setItem('jwt', token);
 
         if (typeof Router !== 'undefined') {
-          Router.push("/coming-soon").catch(console.error);
+          Router.push("/dashboard").catch(console.error);
         }
       }
     } catch (err) {
