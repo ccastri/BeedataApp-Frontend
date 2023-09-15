@@ -5,28 +5,54 @@ import api from '../../lib/axios';
 
 export const WhatsappSms = () => {
   const [msgCount, setMsgCount] = useState(0);
-  const [msgMetric, setMsgMetric] = useState(0);
+  const [msgLimit, setMsgLimit] = useState(0);
 
   const token = localStorage.getItem('jwt');
 
   useEffect(() => {
-    const fetchPurchases = async () => {
+    const fetchMsgLimit = async () => {
       try {
         const response = await api.get('/api/v1/purchases/active', {
-          headers: { 
-            Authorization: `Bearer ${token}` 
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         });
-        if (response.data.success) {
-          const purchases = response.data.active;
-          const filteredPurchases = purchases.filter(purchase => purchase.msg_qty > 0);
-          const totalMsgCount = filteredPurchases.reduce((acc, purchase) => acc + purchase.msg_qty, 0);
-          setMsgCount(totalMsgCount);
-          return;
+  
+        const { success, active } = response.data;
+  
+        if (success) {
+          const purchasesWithMsgs = active.filter(purchase => purchase.msg_qty > 0);
+  
+          if (purchasesWithMsgs.length > 0) {
+            const purchaseMsgLimit = purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0);
+            setMsgLimit(purchaseMsgLimit);
+          }
         } else {
           console.log(response.data.message);
         }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
+    fetchMsgLimit();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchPurchases = async () => {
+      try {
+        const response = await api.get('/api/v1/social/msg-count-by-date', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
+
+        if ( response.data.success ) {
+          console.log(response.data)
+          setMsgCount(response.data.departmentMsgCount[0]);
+        } else {
+          console.log(response.data.message);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -37,11 +63,16 @@ export const WhatsappSms = () => {
 
   return (
     <StatsCard
-      title="Whatsapp SMS"
+      title={
+        <>
+          Whatsapp Msg<br />
+          Consumed
+        </>
+      }
       image="/static/images/products/beet_whatsapp.svg"
       value={msgCount}
-      metric={msgMetric}
-      metricUp={false}
+      type="Messages"
+      totalAmount={msgLimit}
     />
   );
 };

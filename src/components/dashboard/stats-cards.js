@@ -21,6 +21,9 @@ export const StatsCard = (props) => (
                     <Typography
                         color="textPrimary"
                         variant="h4"
+                        sx={{
+                            mt: 2
+                        }}
                     >
                         {props.value}
                     </Typography>
@@ -43,20 +46,14 @@ export const StatsCard = (props) => (
                     mb: 2
                 }}
             >
-                {props.metricUp ? <ArrowUpwardIcon color="success" /> : <ArrowDownwardIcon color="error" />}
                 <Typography
                     variant="body2"
+                    color="textSecondary"
                     sx={{
                         mr: 1
                     }}
                 >
-                    {props.metric} %
-                </Typography>
-                <Typography
-                    color="textSecondary"
-                    variant="caption"
-                >
-                    Since last month
+                    {props.type} limit: {props.totalAmount}
                 </Typography>
             </Box>
         </CardContent>

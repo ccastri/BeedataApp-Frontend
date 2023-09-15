@@ -69,8 +69,10 @@ export function CredentialDialog(props) {
     router.push('/');
   };
 
-  const handleClose = () => {
-    onClose();
+  const handleClose = (event, reason) => {
+    if (reason === 'closeButton') {
+      onClose();
+    }
   };
 
   const avatar = (
