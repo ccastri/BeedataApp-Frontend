@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StatsCard } from './stats-cards';
+import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
 

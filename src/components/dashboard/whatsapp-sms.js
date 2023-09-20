@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StatsCard } from './stats-cards';
+import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
 
@@ -41,15 +41,18 @@ export const WhatsappSms = () => {
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
-        const response = await api.get('/api/v1/social/msg-count-by-date', {
+        const response = await api.post('/api/v1/social/messages', {
+          isRenewal: true,
+        }, {
           headers: {
             Authorization: `Bearer ${token}`
           },
         });
 
         if ( response.data.success ) {
-          console.log(response.data)
-          setMsgCount(response.data.departmentMsgCount[0]);
+          const totalMsgCount = response.data.msgsCount.reduce((prev, curr) => prev + curr.data.total.length, 0);
+          console.log(totalMsgCount)
+          setMsgCount(totalMsgCount);
         } else {
           console.log(response.data.message);
         }

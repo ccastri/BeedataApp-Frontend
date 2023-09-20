@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
 import { WhatsappSms } from '../components/dashboard/whatsapp-sms';
-// import { Sales } from '../components/dashboard/sales';
+import { MsgInsOuts } from '../components/dashboard/msg-ins-outs';
 import { SocialAgents } from '../components/dashboard/social-agents';
 import { LakeRows } from '../components/dashboard/lake-rows';
 import { DashboardLayout } from '../components/general/dashboard-layout';
@@ -46,12 +46,12 @@ const Page = () => (
             xl={4}>
             <SocialAgents />
           </Grid>
-          {/* <Grid item
+          <Grid item
             xs={12}
             lg={12}
             xl={12}>
-            <Sales />
-          </Grid> */}
+            <MsgInsOuts />
+          </Grid>
         </Grid>
       </Container>
     </Box>
