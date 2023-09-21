@@ -7,6 +7,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import SuccessSnackbar from '../settings/settings-success-msg';
 import api from '../../lib/axios';
@@ -25,6 +26,14 @@ export const AccountProfileDetails = (props) => {
     billingAddress: ''
   });
 
+  const idTypes = [
+    { value: 'CC', label: 'Cédula de ciudadanía' },
+    { value: 'CE', label: 'Cédula de extranjería' },
+    { value: 'PP', label: 'Pasaporte' },
+    { value: 'TI', label: 'Tarjeta de identidad' },
+    { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('jwt');
@@ -39,14 +48,14 @@ export const AccountProfileDetails = (props) => {
           Authorization: `Bearer ${token}`
         }
       });
-  
+
       if (userResponse.data && companyResponse.data) {
         const { name, identification_type, identification_number, role, email, phone, country, city } = userResponse.data.user;
         const { billing_email, billing_address } = companyResponse.data.company;
-  
+
         setFormValues({
           fullName: name || '',
-          identificationType: identification_type || '',
+          identificationType: identification_type.toUpperCase() || '',
           identificationNumber: identification_number || '',
           role: role || '',
           email: email || '',
@@ -58,10 +67,10 @@ export const AccountProfileDetails = (props) => {
         });
       }
     };
-  
+
     fetchData();
   }, []);
-  
+
   const handleChange = (event) => {
     setFormValues({
       ...formValues,
@@ -101,13 +110,13 @@ export const AccountProfileDetails = (props) => {
           Authorization: `Bearer ${token}`
         }
       });
-      
-      setResponseMessage(response.data.message); 
+
+      setResponseMessage(response.data.message);
     } catch (error) {
       console.error(error);
     }
   };
-  
+
 
   return (
     <form
@@ -123,17 +132,17 @@ export const AccountProfileDetails = (props) => {
         <Divider />
         <CardContent>
           <Grid container
-spacing={3}>
+            spacing={3}>
             <Grid item
-xs={12}>
+              xs={12}>
               <Typography variant="h6"
-gutterBottom>
+                gutterBottom>
                 User Information
               </Typography>
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 helperText="Please specify yur full name"
@@ -146,8 +155,8 @@ xs={12}>
               />
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 label="Identification Type"
@@ -156,11 +165,32 @@ xs={12}>
                 required
                 value={formValues.identificationType}
                 variant="outlined"
-              />
+                select={true}
+                SelectProps={
+                  {
+                    MenuProps: {
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "left"
+                      },
+                      transformOrigin: {
+                        vertical: "top",
+                        horizontal: "left"
+                      },
+                    }
+                  }
+                }
+              >
+                {idTypes.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                )) }
+              </TextField>
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 label="Identification Number"
@@ -172,8 +202,8 @@ xs={12}>
               />
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 label="Email Address"
@@ -185,8 +215,8 @@ xs={12}>
               />
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 label="Phone Number"
@@ -197,8 +227,8 @@ xs={12}>
               />
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 label="Country"
@@ -210,8 +240,8 @@ xs={12}>
               />
             </Grid>
             <Grid item
-md={6}
-xs={12}>
+              md={6}
+              xs={12}>
               <TextField
                 fullWidth
                 label="City"
@@ -225,44 +255,44 @@ xs={12}>
             {formValues.role === 'admin' && (
               <>
                 <Grid item
-  xs={12}>
-                <Divider />
-              </Grid>
-              <Grid item
-  xs={12}>
-                <Typography variant="h6"
-  gutterBottom>
-                  Company Information
-                </Typography>
-              </Grid>
-              <Grid item
-  md={6}
-  xs={12}>
-                <TextField
-                  fullWidth
-                  label="Billing Email"
-                  name="billingEmail"
-                  onChange={handleChange}
-                  required
-                  value={formValues.billingEmail}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item
-  md={6}
-  xs={12}>
-                <TextField
-                  fullWidth
-                  label="Billing Address"
-                  name="billingAddress"
-                  onChange={handleChange}
-                  required
-                  value={formValues.billingAddress}
-                  variant="outlined"
-                />
-              </Grid>
+                  xs={12}>
+                  <Divider />
+                </Grid>
+                <Grid item
+                  xs={12}>
+                  <Typography variant="h6"
+                    gutterBottom>
+                    Company Information
+                  </Typography>
+                </Grid>
+                <Grid item
+                  md={6}
+                  xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Billing Email"
+                    name="billingEmail"
+                    onChange={handleChange}
+                    required
+                    value={formValues.billingEmail}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item
+                  md={6}
+                  xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Billing Address"
+                    name="billingAddress"
+                    onChange={handleChange}
+                    required
+                    value={formValues.billingAddress}
+                    variant="outlined"
+                  />
+                </Grid>
               </>
-            ) 
+            )
             }
           </Grid>
         </CardContent>
@@ -272,7 +302,7 @@ xs={12}>
             color="primary"
             variant="contained"
             onClick={handleSaveDetails}
-            sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
+            sx={{ boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
           >
             Save details
           </Button>
@@ -284,4 +314,4 @@ xs={12}>
     </form>
   );
 };
-              
+

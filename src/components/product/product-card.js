@@ -209,7 +209,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         <Divider />
       )}
       <CardActions>
-        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
+        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
           <FbSignupFlow title={'Permissions'} />
         )}
         {/* {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (

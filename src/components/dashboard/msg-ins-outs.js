@@ -11,6 +11,7 @@ import ErrorSnackbar from '../settings/settings-error-msg';
 import dayjs from 'dayjs';
 import api from '../../lib/axios';
 
+
 const theme = createTheme({
     components: {
         MuiPickersBasePicker: {
@@ -28,6 +29,17 @@ const theme = createTheme({
     },
 });
 
+/**
+ * 
+ * MsgInsOuts component displays the number of messages sent by agents, visitors and chatbot.
+ * 
+ * Dependencies: useState, useEffect, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+ *               ResponsiveContainer, Box, TextField, Card, CardContent, CardHeader, Divider, Grid,
+ *               IconButton, createTheme, ThemeProvider, LocalizationProvider, AdapterDayjs, DatePicker,
+ *               FilterListIcon, ReplayIcon, ErrorSnackbar, dayjs, api
+ * Usage: Used to display the number of messages sent by agents, visitors and chatbot in a given time period.
+ * 
+ */
 export const MsgInsOuts = () => {
 
     const [tempStartDate, setTempStartDate] = useState(null);
@@ -44,38 +56,53 @@ export const MsgInsOuts = () => {
                 { startFilter: startDate, endFilter: endDate },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            console.log('startDate', startDate);
-            console.log('endDate', endDate);
+            
             if (response.data.success) {
-                let data = response.data.msgsCount;
-
-                let totalSum = data.reduce((sum, item) => sum + item.data.total.length, 0);
-;
-                let xaxisFormat = 'DD-MMM';
-                if (totalSum > 31) {
-                    // map all the date poins on the xaxis but only put labels on the last day of every month
-                }
+                console.log(response)
+                let data = response.data.messages;
+                let xaxisFormat;
 
                 console.log('data : ', data);
-                let groupBy = (array, key) => {
-                    return array.reduce((result, currentValue) => {
-                        let value = key.split('.').reduce((o, i, idx, array) => {
-                            if (array[idx] === "ts") {
-                                return o[i].split('T')[0];
-                            }
-                            return o ? o[i] : null;
-                        }, currentValue);
-                        (result[value] = result[value] || []).push(currentValue);
-                        return result;
+                const calcMonthsDiff = (startDate, endDate) =>
+                    startDate && endDate ? ((endDate.getFullYear() - startDate.getFullYear()) * 12)
+                        + endDate.getMonth() - startDate.getMonth()
+                        - (endDate.getDate() < startDate.getDate() ? 1 : 0) : 0;
+
+
+                const dateRangeDiff = calcMonthsDiff(new Date(startDate), new Date(endDate));
+
+                if (dateRangeDiff > 2) {
+                    xaxisFormat = 'MMM';
+                } else {
+                    xaxisFormat = 'DD-MMM';
+                }
+
+                const extractTimePeriod = (ts, startDate, endDate) =>
+                    (startDate && endDate && dateRangeDiff > 2)
+                        ? ts.split('T')[0].substring(0, 7)
+                        : ts.split('T')[0];
+
+
+                const groupBy = (arr, key, startDate, endDate) =>
+                    arr.reduce((r, v) => {
+                        let value = key.split('.').reduce((o, i) => (i === 'ts')
+                            ? extractTimePeriod(o[i], startDate, endDate)
+                            : (o ? o[i] : null), v);
+                        (r[value] = r[value] || []).push(v);
+                        return r;
                     }, {});
-                };
+
                 let transformedData = data.flatMap(item =>
-                    Object.entries(groupBy(item.data.total, 'ts')).map(([date, val]) => {
-                        let groupedByName = groupBy(val, 'u.name');
-                        return { ts: date, agent: (groupedByName['beettest_agent1008'] || []).length, visitor: (groupedByName['Manu-testing'] || []).length, chatbot: (groupedByName['chatbot'] || []).length }
-                    })
-                )
-                console.log('transformData : ', transformedData);
+                    Object.entries(groupBy(item.data.total, 'ts', startDate, endDate))
+                        .map(([date, val]) =>
+                        ({
+                            ts: date,
+                            agent: (groupBy(val, 'u.name', startDate, endDate)['agente'] || []).length,
+                            visitor: (groupBy(val, 'u.name', startDate, endDate)['visitor'] || []).length,
+                            chatbot: (groupBy(val, 'u.name', startDate, endDate)['chatbot'] || []).length
+                        })
+                        )
+                );
                 setData({ data: transformedData, xaxisFormat });
             }
         };

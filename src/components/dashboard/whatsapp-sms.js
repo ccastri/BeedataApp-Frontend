@@ -50,7 +50,7 @@ export const WhatsappSms = () => {
         });
 
         if ( response.data.success ) {
-          const totalMsgCount = response.data.msgsCount.reduce((prev, curr) => prev + curr.data.total.length, 0);
+          const totalMsgCount = response.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
           console.log(totalMsgCount)
           setMsgCount(totalMsgCount);
         } else {
