@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
-import { WhatsappSms } from '../components/dashboard/whatsapp-sms';
+import { WhatsappMsg } from '../components/dashboard/whatsapp-msg';
 import { MsgInsOuts } from '../components/dashboard/msg-ins-outs';
 import { SocialAgents } from '../components/dashboard/social-agents';
 import { LakeRows } from '../components/dashboard/lake-rows';
@@ -28,7 +28,7 @@ const Page = () => (
             md={4}
             lg={4}
             xl={4}>
-            <WhatsappSms />
+            <WhatsappMsg />
           </Grid>
           <Grid item
             xs={12}

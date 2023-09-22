@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { StatsCard } from '../general/stats-cards';
+import ErrorSnackbar from '../settings/settings-error-msg';
 import api from '../../lib/axios';
 
 
 export const LakeRows = () => {
   const [rowCount, setRowCount] = useState(0);
   const [rowLimit, setRowLimit] = useState(0);
+  const [errorMessages, setErrorMessages] = useState([]);
 
   const token = localStorage.getItem('jwt');
 
@@ -26,10 +28,10 @@ export const LakeRows = () => {
           if (purchasesWithRows.length > 0) {
             const purchaseRowLimit = purchasesWithRows.reduce((prev, curr) => prev + curr.db_rows_qty, 0);
             setRowLimit(purchaseRowLimit);
-            console.log('rowLimit', rowLimit);
           }
         } else {
           console.log(response.data.message);
+          setErrorMessages(response.data.message);
         }
       } catch (err) {
         console.error(err);
@@ -51,6 +53,7 @@ export const LakeRows = () => {
           setRowCount(response.data.rowCount);
         } else {
           console.log(response.data.message);
+          setErrorMessages(response.data.message);
         }
       } catch (err) {
         console.log(err);
@@ -60,17 +63,26 @@ export const LakeRows = () => {
   }, [token]);
 
   return (
-    <StatsCard
-      title={
-        <>
-          Lake Rows<br />
-          Consumed
-        </>
-      }
-      image="/static/images/products/beet_lake2.svg"
-      value={rowCount}
-      type="Rows"
-      totalAmount={rowLimit}
-    />
+    <>
+      <StatsCard
+        title={
+          <>
+            Lake Rows<br />
+            Consumed
+          </>
+        }
+        image="/static/images/products/beet_lake2.svg"
+        value={rowCount}
+        type="Rows"
+        totalAmount={rowLimit}
+      />
+      {errorMessages && (
+        <ErrorSnackbar
+          errors={errorMessages}
+          resetErrors={() => setErrorMessages([])}
+          container={'dialog'}
+        />
+      )}
+    </>
   );
 }

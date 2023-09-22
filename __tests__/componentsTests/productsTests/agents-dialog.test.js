@@ -40,7 +40,7 @@ describe('SocialAgentSelection', () => {
           Authorization: `Bearer null`,
         },
       });
-      expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
+      expect(api.get).toHaveBeenCalledWith('/api/v1/purchases/active', {
         headers: {
           Authorization: `Bearer null`,
         },

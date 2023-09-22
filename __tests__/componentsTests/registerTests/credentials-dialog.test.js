@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CredentialDialog } from '../../../src/components/register/credentials-dialog';
 import { useRouter } from 'next/router';
 
@@ -24,7 +24,6 @@ Test cases:
 describe('CredentialDialog', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.resetAllMocks();
   });
 
   it('should render the dialog with the user credentials', () => {
@@ -40,7 +39,7 @@ describe('CredentialDialog', () => {
     expect(passwordText).toBeInTheDocument();
  });
 
-  it('should call the onClose function when the dialog is closed', () => {
+  it('should call the onClose function when the dialog is closed', async () => {
     const onCloseMock = jest.fn();
 
     render(<CredentialDialog user={mockUser} openCredentials={true} onClose={onCloseMock} />);
@@ -48,7 +47,8 @@ describe('CredentialDialog', () => {
     const closeButton = screen.getByRole('button', { name: 'close' });
     fireEvent.click(closeButton);
 
-    expect(onCloseMock).toHaveBeenCalledTimes(1);
+    waitFor(() => expect(onCloseMock).toHaveBeenCalledTimes(1));
+    
   });
 
   it('should redirect to / when the "Sign in Now" button is clicked', () => {

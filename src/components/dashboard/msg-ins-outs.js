@@ -58,11 +58,9 @@ export const MsgInsOuts = () => {
             );
             
             if (response.data.success) {
-                console.log(response)
-                let data = response.data.messages;
+                const data = response.data.messages;
                 let xaxisFormat;
 
-                console.log('data : ', data);
                 const calcMonthsDiff = (startDate, endDate) =>
                     startDate && endDate ? ((endDate.getFullYear() - startDate.getFullYear()) * 12)
                         + endDate.getMonth() - startDate.getMonth()
@@ -104,6 +102,8 @@ export const MsgInsOuts = () => {
                         )
                 );
                 setData({ data: transformedData, xaxisFormat });
+            } else {
+                setErrorMsg(response.data.message);
             }
         };
         fetchMsgCount();
@@ -125,12 +125,11 @@ export const MsgInsOuts = () => {
         const end = new Date(tempEndDate);
         
         const errorMsg = checkDateValidity(start, end);
-        
-        setErrorMsg(errorMsg);
-    
         if(!errorMsg) {
             setStartDate(tempStartDate);
             setEndDate(tempEndDate);
+        } else {
+            setErrorMsg(errorMsg);
         }
     };
 
@@ -173,10 +172,16 @@ export const MsgInsOuts = () => {
                                 onChange={setTempEndDate}
                                 renderInput={(props) => <TextField {...props} />}
                             />
-                            <IconButton onClick={handleFilterClick}>
+                            <IconButton 
+                                onClick={handleFilterClick}
+                                aria-label="Filter"
+                            >
                                 <FilterListIcon />
                             </IconButton>
-                            <IconButton onClick={handleReloadClick}>
+                            <IconButton 
+                                onClick={handleReloadClick}
+                                aria-label='Reload'
+                            >
                                 <ReplayIcon />
                             </IconButton>
                         </LocalizationProvider>
@@ -212,7 +217,7 @@ export const MsgInsOuts = () => {
                         <ErrorSnackbar 
                             errorMessage={errorMsg}
                             container={'dialog'}
-                            anchorOrigin={{ vertical: 'top', horizontal: 'rigth' }}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                         />
                     )}
                 </Box>
