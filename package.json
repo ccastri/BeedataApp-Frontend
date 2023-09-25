@@ -8,7 +8,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "jest --watch",
+    "test": "jest --watchAll",
     "export": "next export",
     "lint": "next lint",
     "lint-fix": "next lint --fix"
@@ -67,6 +67,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jest-mock-axios": "^4.7.1",
     "jest-styled-components": "^7.1.1",
-    "resize-observer-polyfill": "^1.5.1"
+    "resize-observer-polyfill": "^1.5.1",
+    "typescript": "^5.2.2"
   }
 }
