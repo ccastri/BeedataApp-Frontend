@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { StatsCard } from '../general/stats-cards';
-import ErrorSnackbar from '../settings/settings-error-msg';
 import api from '../../lib/axios';
 
 
 export const LakeRows = () => {
   const [rowCount, setRowCount] = useState(0);
   const [rowLimit, setRowLimit] = useState(0);
-  const [errorMessages, setErrorMessages] = useState([]);
 
   const token = localStorage.getItem('jwt');
 
@@ -31,7 +29,6 @@ export const LakeRows = () => {
           }
         } else {
           console.log(response.data.message);
-          setErrorMessages(response.data.message);
         }
       } catch (err) {
         console.error(err);
@@ -63,7 +60,6 @@ export const LakeRows = () => {
   }, [token]);
 
   return (
-    <>
       <StatsCard
         title={
           <>
@@ -76,13 +72,5 @@ export const LakeRows = () => {
         type="Rows"
         totalAmount={rowLimit}
       />
-      {errorMessages && (
-        <ErrorSnackbar
-          errors={errorMessages}
-          resetErrors={() => setErrorMessages([])}
-          container={'dialog'}
-        />
-      )}
-    </>
   );
 }
