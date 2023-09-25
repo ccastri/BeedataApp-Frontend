@@ -139,13 +139,15 @@ export const SocialAgentSelection = () => {
   useEffect(() => {
     const fetchAgentsQty = async () => {
       try {
-        const response = await api.get('/api/v1/companies/company', {
+        const response = await api.get('/api/v1/purchases/active', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         if (response && response.data) {
-          setAgentsAllowed(response.data.company.social_agents_qty > agents.length);
+          const activePurchases = response.data.active.filter((purchase) => purchase.agents_qty > 0);
+          const agentsQty = activePurchases.length > 0 ? activePurchases.reduce((acc, curr) => acc + curr.agents_qty, 0) : 0;
+          setAgentsAllowed(agentsQty > agents.length);
         }
       } catch (err) {
         console.log(err);

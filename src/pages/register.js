@@ -104,7 +104,8 @@ const Register = () => {
       policy: false
     },
     validationSchema: RegisterSchema,
-    onSubmit
+    onSubmit,
+    handleSubmit
   });
 
   return (

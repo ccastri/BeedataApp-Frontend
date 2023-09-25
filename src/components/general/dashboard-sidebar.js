@@ -16,7 +16,7 @@ import api from '../../lib/axios';
 
 const items = [
   {
-    href: '/coming-soon',
+    href: '/dashboard',
     icon: (<TrendingDownIcon fontSize="small" />),
     target: '_self',
     title: 'Consumption'
@@ -131,7 +131,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink
-              href="/coming-soon"
+              href="/dashboard"
               passHref
             >
               <a>

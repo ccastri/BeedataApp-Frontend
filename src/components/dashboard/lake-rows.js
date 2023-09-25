@@ -1,63 +1,88 @@
-import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { useState, useEffect } from 'react';
+import { StatsCard } from '../general/stats-cards';
+import ErrorSnackbar from '../settings/settings-error-msg';
+import api from '../../lib/axios';
 
-export const LakeRows = (props) => (
-  <Card sx={{ maxWidth: '100%', height: '90%' }}
-{...props}>
-    <CardContent>
-      <Grid
-        container
-        spacing={3}
-        sx={{ justifyContent: 'space-between' }}
-      >
-        <Grid item>
-          <Typography
-            color="textSecondary"
-            gutterBottom
-            variant="overline"
-          >
-            LAKE ROWS
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h4"
-          >
-            1,6K
-          </Typography>
-        </Grid>
-        <Grid item
-xs={6}
-sx={{ textAlign: 'right' }}>
-          <img
-            src="/static/images/products/beet_lake2.svg"
-            alt="Whatsapp"
-            style={{ width: '80%' }}
-          />
-        </Grid>
-      </Grid>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          pt: 2
-        }}
-      >
-        <ArrowUpwardIcon color="success" />
-        <Typography
-          variant="body2"
-          sx={{
-            mr: 1
-          }}
-        >
-          16%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography>
-      </Box>
-    </CardContent>
-  </Card>
-);
+
+export const LakeRows = () => {
+  const [rowCount, setRowCount] = useState(0);
+  const [rowLimit, setRowLimit] = useState(0);
+  const [errorMessages, setErrorMessages] = useState([]);
+
+  const token = localStorage.getItem('jwt');
+
+  useEffect(() => {
+    const fetchRowLimit = async () => {
+      try {
+        const response = await api.get('/api/v1/purchases/active', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const { success, active } = response.data;
+  
+        if (success) {
+          const purchasesWithRows = active.filter(purchase => purchase.db_rows_qty > 0);
+  
+          if (purchasesWithRows.length > 0) {
+            const purchaseRowLimit = purchasesWithRows.reduce((prev, curr) => prev + curr.db_rows_qty, 0);
+            setRowLimit(purchaseRowLimit);
+          }
+        } else {
+          console.log(response.data.message);
+          setErrorMessages(response.data.message);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchRowLimit();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchRowCount = async () => {
+      try {
+        const response = await api.get('/api/v1/lake/row-count-by-date', {
+          headers: { 
+            Authorization: `Bearer ${token}` 
+          },
+        });
+        if (response.data.success) {
+          setRowCount(response.data.rowCount);
+        } else {
+          console.log(response.data.message);
+          setErrorMessages(response.data.message);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchRowCount();
+  }, [token]);
+
+  return (
+    <>
+      <StatsCard
+        title={
+          <>
+            Lake Rows<br />
+            Consumed
+          </>
+        }
+        image="/static/images/products/beet_lake2.svg"
+        value={rowCount}
+        type="Rows"
+        totalAmount={rowLimit}
+      />
+      {errorMessages && (
+        <ErrorSnackbar
+          errors={errorMessages}
+          resetErrors={() => setErrorMessages([])}
+          container={'dialog'}
+        />
+      )}
+    </>
+  );
+}

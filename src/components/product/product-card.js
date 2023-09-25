@@ -49,6 +49,11 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
  *              FbSignupFlow, SocialAgentSelection, ProductDialog, ProductActivation,
  *             PropTypes, Avatar, Box, Card, CardContent, CardActions, Divider,
  *            Typography, CircularProgress, api.
+ * 
+ * @param {Object} props Component props
+ * 
+ * @returns {JSX.Element} JSX.Element
+ * 
  * Usage: Used to display Beet's available products.
  */
 export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, ...rest }) => {
@@ -73,11 +78,9 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
     renewalString = `${renewalTime.toString().replace('.00', '')} ${renewalUnit}`;
   }
 
-  // Calculate expiration date
   const purchaseDate = purchaseDetails ? new Date(purchaseDetails.create_date) : null;
   const expirationDate = purchaseDate ? calculateExpirationDate(purchaseDate, expirationTime, renewalUnit) : '';
 
-  // Check if expiration date is equal or greater than the current date
   useEffect(() => {
     const currentDate = new Date();
     isActiveRef.current = (currentDate < expirationDate);
@@ -85,7 +88,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
 
   const token = localStorage.getItem('jwt');
 
-  // Get company info to check if whatsapp account is configured
+  // Get company info to check if messaging account (whatsapp or others) is configured
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,8 +101,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         if (response && response.data && response.data.company) {
           const company = response.data.company;
 
-          // Check if access token field is not empty
-          if (company.access_token) {
+          if (company.facebook_token) {
             setIsConfigured(true);
           }
         }
@@ -139,7 +141,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             display: 'flex',
             justifyContent: 'center',
             pb: 3,
-            filter: !isActiveRef.current ? 'grayscale(100%)' : 'none',
+            filter: (!isActiveRef.current && product.id != 1) ? 'grayscale(100%)' : 'none',
           }}
         >
           <Avatar
@@ -167,7 +169,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             color="textSecondary"
             variant="subtitle1"
           >
-            {isActiveRef.current ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : "Not available"}
+            {(isActiveRef.current && product.id != 1) ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : (!isActiveRef.current && product.id != 1) ? "Not available" : ''}
           </Typography>
         </Box>
         {isActiveRef.current && (
@@ -207,19 +209,19 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         <Divider />
       )}
       <CardActions>
-        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && !isConfigured && (
+        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && (
           <FbSignupFlow title={'Permissions'} />
         )}
-        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
+        {/* {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
           <WpConfigAccountDialog />
-        )}
+        )} */}
         {getUserRole() === 'admin' && !isActiveRef.current && product.id !== 1 && (
           <ProductDialog
             image={product.image}
             name={product.name}
           />
         )}
-        {getUserRole() === 'admin' && !isActiveRef.current && product.id === 1 && (
+        {getUserRole() === 'admin' && isConfigured && product.id === 1 && (
           <ProductActivation
             name={product.name}
             image={product.image}

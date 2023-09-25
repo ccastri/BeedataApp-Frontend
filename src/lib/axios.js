@@ -1,4 +1,5 @@
 import axios from 'axios';
+// import throttleAdapterEnhancer from 'axios-throttle';
 
 const backendServer = 'https://api.beet.digital';
 
