@@ -182,7 +182,8 @@ export const AccountProfileDetails = (props) => {
                 }
               >
                 {idTypes.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
+                  <MenuItem key={option.value}
+value={option.value}>
                     {option.label}
                   </MenuItem>
                 )) }

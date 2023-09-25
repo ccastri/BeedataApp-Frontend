@@ -80,7 +80,7 @@ export const ProductActivation = (props) => {
           },
         });
 
-        if (response.data.company.credit_msg_consumption === true) {
+        if (response.data.company.credit_msg_consumption) {
           setIsActive(true);
         }
       } catch (error) {
@@ -93,7 +93,8 @@ export const ProductActivation = (props) => {
 
   const updateCompanyConsumption = async (newStatus) => {
     try {
-      const updatedCompany = await api.put('/api/v1/companies/update-company', { creditMsgConsumption: newStatus }, {
+      const updateInfo = newStatus ? Date.now() : null;
+      const updatedCompany = await api.put('/api/v1/companies/update-company', { creditMsgConsumption: updateInfo }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
