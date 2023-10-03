@@ -147,7 +147,8 @@ export const SocialAgentSelection = () => {
         if (response && response.data) {
           const activePurchases = response.data.active.filter((purchase) => purchase.agents_qty > 0);
           const agentsQty = activePurchases.length > 0 ? activePurchases.reduce((acc, curr) => acc + curr.agents_qty, 0) : 0;
-          setAgentsAllowed(agentsQty > agents.length);
+          console.log('agentQty', agentsQty)
+          setAgentsAllowed(agentsQty >= agents.length);
         }
       } catch (err) {
         console.log(err);
