@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getUserRole } from '../../utils/get-user-role';
-import { WpConfigAccountDialog } from './config-account-dialog';
-import { FbSignupFlow } from './fb-signup-flow';
-import { SocialAgentSelection } from './agents-dialog';
-import { ProductDialog } from './product-dialog';
-import { ProductActivation } from './product-activation';
+import { SocialSettings } from './product-settings/social';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -141,7 +136,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             display: 'flex',
             justifyContent: 'center',
             pb: 3,
-            filter: (!isActiveRef.current && product.id != 1) ? 'grayscale(100%)' : 'none',
+            filter: 'none',
           }}
         >
           <Avatar
@@ -205,32 +200,9 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         )}
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
-      {product.id !== 4 && (
-        <Divider />
-      )}
+      <Divider />
       <CardActions>
-        {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && (
-          <FbSignupFlow title={'Permissions'} />
-        )}
-        {/* {getUserRole() === 'admin' && (product.id === 1 || product.id === 2) && isConfigured && (
-          <WpConfigAccountDialog />
-        )} */}
-        {getUserRole() === 'admin' && !isActiveRef.current && product.id !== 1 && (
-          <ProductDialog
-            image={product.image}
-            name={product.name}
-          />
-        )}
-        {getUserRole() === 'admin' && isConfigured && product.id === 1 && (
-          <ProductActivation
-            name={product.name}
-            image={product.image}
-            description={product.description}
-          />
-        )}
-        {getUserRole() === 'admin' && product.id === 5 && (
-          <SocialAgentSelection />
-        )}
+        <SocialSettings/>
       </CardActions>
     </Card>
   );
