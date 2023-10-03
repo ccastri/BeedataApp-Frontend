@@ -28,7 +28,7 @@ const items = [
     title: 'Beet Social'
   },
   {
-    href: 'https://lake.beedata.co/dashboard/#/signin',
+    href: 'https://lake.beet.digital/dashboard/#/signin',
     icon: (<StorageIcon fontSize="small" />),
     target: '_blank',
     title: 'Beet Lake'
