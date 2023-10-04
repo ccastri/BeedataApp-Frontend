@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, IconButton } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -11,23 +11,6 @@ import ErrorSnackbar from '../settings/settings-error-msg';
 import dayjs from 'dayjs';
 import api from '../../lib/axios';
 
-
-const theme = createTheme({
-    components: {
-        MuiPickersBasePicker: {
-            styleOverrides: {
-                container: { color: 'white' },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                textPrimary: {
-                    color: 'white'
-                }
-            },
-        }
-    },
-});
 
 /**
  * 
@@ -48,15 +31,16 @@ export const MsgInsOuts = () => {
     const [data, setData] = useState([]);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const theme = useTheme();
 
     useEffect(() => {
         const token = localStorage.getItem('jwt');
         const fetchMsgCount = async () => {
-            const response = await api.post('/api/v1/social/messages',
-                { startFilter: startDate, endFilter: endDate },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            
+            const response = await api.get('/api/v1/social/messages', {
+                headers: { Authorization: `Bearer ${token}` },
+                params: { startFilter: startDate, endFilter: endDate }
+            });
+
             if (response.data.success) {
                 const data = response.data.messages;
                 let xaxisFormat;

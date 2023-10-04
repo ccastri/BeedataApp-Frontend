@@ -1,5 +1,5 @@
 import React, { useState, forwardRef } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -57,9 +57,10 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     maxHeight: '64px',
 }));
 
-export const SettingsDialog = ({ tabs, response, error }) => {
+export const SettingsDialog = ({ tabs, response, error, clearMessages }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(0);
+    const theme = useTheme();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -67,6 +68,7 @@ export const SettingsDialog = ({ tabs, response, error }) => {
 
     const handleClose = () => {
         setOpen(false);
+        clearMessages();
     };
 
     const handleChange = (event, newValue) => {
@@ -114,22 +116,16 @@ export const SettingsDialog = ({ tabs, response, error }) => {
                         )}
                     </StyledToolbar>
                 </StyledAppBar>
-                <DialogContent dividers>
+                <DialogContent sx={{ backgroundColor: theme.palette.background.default }} dividers>
                     {tabs && tabs[value].content}
                 </DialogContent>
                 {response && (
-                    <SuccessSnackbar
-                        responseMessage={response}
-                        variant='filled'
-                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    />
+                    <SuccessSnackbar responseMessage={response}
+                        container={'dialog'} />
                 )}
                 {error && (
-                    <ErrorSnackbar
-                        errorMessage={error}
-                        variant='filled'
-                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    />
+                    <ErrorSnackbar errorMessage={error}
+                        container={'dialog'} />
                 )}
             </StyledDialog>
         </>

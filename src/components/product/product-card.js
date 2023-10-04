@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SocialSettings } from './product-settings/social';
+import { ProductDialog } from './product-dialog';  
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';

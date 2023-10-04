@@ -129,6 +129,18 @@ export const theme = createTheme({
           }
         }
       }
+    },
+    MuiPickersBasePicker: {
+      styleOverrides: {
+        container: { color: 'white' },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        textPrimary: {
+          color: 'white'
+        }
+      },
     }
   },
   palette: {
