@@ -27,9 +27,11 @@ export const GeneralContent = ({ users, agents, departments, departmentsAllowed,
             >
                 Assign company users as agents of a department.
             </Typography>
-            <Alert severity="info">
-                Please note that the amount of agents allowed is limited by the Beet Social plan you have purchased.
-            </Alert>
+            <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
+                <Alert severity="info" sx={{ width: '100%' }}>
+                    Please note that the amount of agents allowed is limited by the Beet Social plan you have purchased.
+                </Alert>
+            </Box>
             <Grid container spacing={1} justifyContent="center" alignItems="center" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Grid item xs={6}>
                     <TextFieldWrapper
@@ -66,10 +68,42 @@ export const GeneralContent = ({ users, agents, departments, departmentsAllowed,
             <Typography color="textSecondary" variant="body1" sx={{ ml: 1, mb: 2 }}>
                 Create a new department or delete any department that is no longer needed.
             </Typography>
-            <Alert severity="info" sx={{ ml: 1, mr: 2, mb: 2, mt: 2 }}>
-                Please note that in order to create a new department, you must have a phone number available.
-                To check your current phone numbers, click <Link href="">here</Link>.
-            </Alert>
+            <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
+                <Alert severity="info" sx={{ ml: 1, mr: 2, mt: 2, width: '100%' }}>
+                    Please note that in order to create a new department, you must have a phone number available.
+                    To check your current phone numbers, click <Link href="">here</Link>.
+                </Alert>
+            </Box >
+            <Grid container spacing={1} justifyContent="center" alignItems="center" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Grid item xs={6}>
+                    <TextFieldWrapper
+                        formik={formik}
+                        label="Department"
+                        name="departmentConnect"
+                        sx={{ width: '100%' }}
+                        selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextFieldWrapper
+                        formik={formik}
+                        label="Phone Number"
+                        name="departmentPhoneNumber"
+                        sx={{ width: '100%' }}
+                        selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
+                    />
+                </Grid>
+            </Grid>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2, mr: 0, ml: 'auto' }}>
+                <Button
+                    onClick={() => console.log('Button clicked!')}
+                    autoFocus variant="outlined"
+                    sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                    disabled={!departmentsAllowed}
+                >
+                    Connect
+                </Button>
+            </Box>
             <Grid container spacing={1} justifyContent="center" alignItems="center" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Grid item xs={6}>
                     <TextFieldWrapper
@@ -120,7 +154,9 @@ export const GeneralContent = ({ users, agents, departments, departmentsAllowed,
                 Once unassigned, an agent can be assigned to another department as needed.
             </Typography>
             {agents.length !== 0 ? (
-                <SimpleTable columns={columns} rows={agentRows} onDeleteRow={handleAgentsDelete} />
+                <Box sx={{ maxHeight: '400px', overflow: 'auto' }}>
+                    <SimpleTable columns={columns} rows={agentRows} onDeleteRow={handleAgentsDelete} />
+                </Box>
             ) : (
                 <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, textAlign: 'center', fontSize: '1.1rem' }} variant="body1" gutterBottom>
                     No agents assigned to departments.

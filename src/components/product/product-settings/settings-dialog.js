@@ -77,15 +77,12 @@ export const SettingsDialog = ({ tabs, response, error, clearMessages }) => {
 
     return (
         <>
-            <Button
-                variant="text"
-                width='80%'
+            <IconButton
                 onClick={handleClickOpen}
                 sx={{ ml: 4, mr: 4, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', color: '#111827', borderColor: '#111827' }}
-                endIcon={<SettingsIcon />}
             >
-                Settings
-            </Button>
+                <SettingsIcon />
+            </IconButton>
             <StyledDialog
                 fullScreen
                 open={open}
@@ -106,7 +103,7 @@ export const SettingsDialog = ({ tabs, response, error, clearMessages }) => {
                         {tabs ? (
                             <Tabs value={value} onChange={handleChange} textColor='secondary' indicatorColor='secondary'>
                                 {tabs.map((tab, index) => (
-                                    <Tab key={index} label={tab.label} sx={{ color: '#FFFFFF'}} />
+                                    <Tab key={index} label={tab.label} sx={{ color: '#FFFFFF' }} />
                                 ))}
                             </Tabs>
                         ) : (

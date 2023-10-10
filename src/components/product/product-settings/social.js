@@ -92,8 +92,31 @@ export const SocialSettings = () => {
     initialValues: {
       agent: '',
       department: '',
+      departmentConnect: '',
+      departmentPhoneNumber: '',
       newDepartment: '',
       departmentToDelete: ''
+    },
+    validate: (values) => {
+      const errors = {};
+    
+      if (values.agent && !values.department) {
+        errors.department = 'Department is required';
+      }
+    
+      if (values.newDepartment && !values.departmentPhoneNumber) {
+        errors.departmentPhoneNumber = 'Phone number is required';
+      }
+    
+      if (values.department && !values.agent) {
+        errors.agent = 'Agent is required';
+      }
+    
+      if (values.departmentPhoneNumber && !values.newDepartment) {
+        errors.newDepartment = 'Department is required';
+      }
+    
+      return errors;
     },
     onSubmit: async (values) => {
       if (values.agent !== '' && values.department !== '') {
@@ -122,6 +145,19 @@ export const SocialSettings = () => {
           console.log(err);
           setState(prevState => ({ ...prevState, errorMessage: 'An error occurred while processing the request' }));
         }
+      }
+      if (values.departmentConnect !== '' && values.departmentPhoneNumber !== '') {
+        try {
+          const response = await api.put('/api/v1/whatsapp/business-account', {
+            headers: { Authorization: `Bearer ${token}` },
+            data: { phoneNumberId: values.departmentPhoneNumber, departmentId: values.departmentConnect }
+          });
+
+        } catch (err) {
+          console.log(err);
+          setState(prevState => ({ ...prevState, errorMessage: 'An error occurred while processing the request' }));
+      }
+
       }
 
       if (values.newDepartment !== '') {
