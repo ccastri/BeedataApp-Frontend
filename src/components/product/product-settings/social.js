@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { SettingsDialog } from './settings-dialog';
-import { GeneralContent } from './social-tabs/general';
+import { SocialGeneralContent } from './social-tabs/general';
 import { MetricsContent } from './social-tabs/metrics';
 import api from '../../../lib/axios';
 
@@ -12,23 +11,24 @@ export const SocialSettings = () => {
     users: [],
     agents: [],
     departments: [],
+    availableDepartments: [],
+    availablePhoneNums: [],
     departmentsAllowed: false,
     agentsAllowed: false,
     responseMessage: '',
     errorMessage: ''
   });
 
-  const { users, agents, departments, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
+  const { users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
   const token = localStorage.getItem('jwt');
-
-
 
   useEffect(() => {
     const fetchData = async () => {
-      const [usersResponse, agentsResponse, departmentsResponse, phoneIdsResponse] = await Promise.all([
+      const [usersResponse, agentsResponse, departmentsResponse, availableDepartmentsResponse, phoneIdsResponse] = await Promise.all([
         api.get('/api/v1/users/users-group-by', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/social/agents', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/social/departments', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/api/v1/social/available-departments', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } })
       ]);
 
@@ -37,7 +37,9 @@ export const SocialSettings = () => {
         users: usersResponse.data.users,
         agents: agentsResponse.data.agents,
         departments: departmentsResponse.data.departments,
-        departmentsAllowed: phoneIdsResponse.data.phoneNumberIds.length > departmentsResponse.data.departments.length
+        availableDepartments: availableDepartmentsResponse.data.departments,
+        availablePhoneNums: phoneIdsResponse.data.availablePhoneNumbers,
+        departmentsAllowed: phoneIdsResponse.data.availablePhoneNumbers.length > 0
       }));
     };
 
@@ -92,33 +94,14 @@ export const SocialSettings = () => {
     initialValues: {
       agent: '',
       department: '',
-      departmentConnect: '',
+      availableDepartment: '',
       departmentPhoneNumber: '',
       newDepartment: '',
       departmentToDelete: ''
     },
-    validate: (values) => {
-      const errors = {};
-    
-      if (values.agent && !values.department) {
-        errors.department = 'Department is required';
-      }
-    
-      if (values.newDepartment && !values.departmentPhoneNumber) {
-        errors.departmentPhoneNumber = 'Phone number is required';
-      }
-    
-      if (values.department && !values.agent) {
-        errors.agent = 'Agent is required';
-      }
-    
-      if (values.departmentPhoneNumber && !values.newDepartment) {
-        errors.newDepartment = 'Department is required';
-      }
-    
-      return errors;
-    },
     onSubmit: async (values) => {
+      setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+      
       if (values.agent !== '' && values.department !== '') {
         try {
           const response = await api.post('/api/v1/social/agents', {
@@ -146,12 +129,21 @@ export const SocialSettings = () => {
           setState(prevState => ({ ...prevState, errorMessage: 'An error occurred while processing the request' }));
         }
       }
-      if (values.departmentConnect !== '' && values.departmentPhoneNumber !== '') {
+      if (values.availableDepartment !== '' && values.departmentPhoneNumber !== '') {
         try {
           const response = await api.put('/api/v1/whatsapp/business-account', {
             headers: { Authorization: `Bearer ${token}` },
-            data: { phoneNumberId: values.departmentPhoneNumber, departmentId: values.departmentConnect }
+            data: { phoneNumberId: values.departmentPhoneNumber, departmentId: values.availableDepartment }
           });
+
+          if (response.data.success) {
+            setState(prevState => ({
+              ...prevState,
+              responseMessage: response.data.message,
+              availableDepartments: prevState.availableDepartments.filter(department => department.department_id !== values.availableDepartment),
+              availablePhoneNums: prevState.availablePhoneNums.filter(phoneNum => phoneNum !== values.departmentPhoneNumber)
+            }));
+          }
 
         } catch (err) {
           console.log(err);
@@ -173,7 +165,11 @@ export const SocialSettings = () => {
               responseMessage: response.data.message,
               departments: [...prevState.departments, {
                 department_id: response.data.addedDepartment._id,
-                department_name: values.newDepartment
+                department_name: response.data.addedDepartment.name
+              }],
+              availableDepartments: [...prevState.availableDepartments, {
+                department_id: response.data.addedDepartment._id,
+                department_name: response.data.addedDepartment.name
               }]
             }));
           } else {
@@ -185,46 +181,59 @@ export const SocialSettings = () => {
         }
       }
 
+      if (values.departmentToDelete !== '') {
+        try {
+          const response = await api.delete('/api/v1/social/departments', {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { departmentId: formik.values.departmentToDelete }
+          });
+      
+          if (response.data.success) {
+            const newPhoneNum = response.data.availablePhoneNum;
+            const phoneNums = prevState.availablePhoneNums;
+            const phoneNumsSet = new Set(phoneNums);
+            if (!phoneNumsSet.has(newPhoneNum)) {
+              phoneNums.push(newPhoneNum);
+            }
+            setState(prevState => ({
+              ...prevState,
+              responseMessage: response.data.message,
+              departments: prevState.departments.filter(department => department.department_id !== formik.values.departmentToDelete),
+              availableDepartments: prevState.availableDepartments.filter(department => department.department_id !== formik.values.departmentToDelete),
+              availablePhoneNums: phoneNums
+            }));
+            formik.resetForm();
+          } else {
+            setState(prevState => ({ ...prevState, errorMessage: response.data.message }));
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
       formik.resetForm();
     }
   });
-
-  const handleDepartmentDelete = async () => {
-    try {
-      const response = await api.delete('/api/v1/social/departments', {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { departmentId: formik.values.departmentToDelete }
-      });
-
-      setState(prevState => ({
-        ...prevState,
-        responseMessage: response.data.message,
-        departments: prevState.departments.filter(department => department.department_id !== formik.values.departmentToDelete)
-      }));
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const clearMessages = () => {
     setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
   };
 
-  const generalContent = <GeneralContent
+  const generalContent = <SocialGeneralContent
     users={users}
     agents={agents}
     departments={departments}
+    availableDepartments={availableDepartments}
+    availablePhoneNums={availablePhoneNums}
     departmentsAllowed={departmentsAllowed}
     agentsAllowed={agentsAllowed}
     formik={formik}
     agentRows={agentRows}
     handleAgentsDelete={handleAgentsDelete}
-    handleDepartmentDelete={handleDepartmentDelete}
   />
 
   const metricsContent = <MetricsContent
     agents={agents}
-    departments={departments}
   />
 
   const tabs = [

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SocialSettings } from './product-settings/social';
-import { ProductDialog } from './product-dialog';  
+import { WhatsappSettings } from './product-settings/whatsapp';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -168,25 +168,24 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
             {(isActiveRef.current && product.id != 1) ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : (!isActiveRef.current && product.id != 1) ? "Not available" : ''}
           </Typography>
         </Box>
-        {isActiveRef.current && (
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
+      </CardContent>
+      <Box sx={{ flexGrow: 1 }} />
+      <Divider />
+      <CardActions>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          {(product.id === 5) && (<SocialSettings />)}
+          {(product.id === 2 || product.id === 1) && (<WhatsappSettings />)}
+          {isActiveRef.current && (
             <Box
               sx={{
-                mr: 2,
-                ml: 2,
-                mb: 0,
-                mt: 3,
+                display: 'flex',
+                alignItems: 'center',
                 borderRadius: '6px',
                 textAlign: 'center',
                 boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
                 backgroundColor: '#EFEFEF',
                 p: 2,
+                mr: 2,
               }}
             >
               <Typography
@@ -197,13 +196,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
                 Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
               </Typography>
             </Box>
-          </Box>
-        )}
-      </CardContent>
-      <Box sx={{ flexGrow: 1 }} />
-      <Divider />
-      <CardActions>
-        <SocialSettings/>
+          )}
+        </Box>
       </CardActions>
     </Card>
   );

@@ -6,31 +6,25 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-const data = [
-  { agent: 'Agent 1', conversations: '50%' },
-  { agent: 'Agent 2', conversations: '30%' },
-  { agent: 'Agent 3', conversations: '20%' },
-];
 
-export const MetricsTable = () => {
+export const MetricsTable = ({ data }) => {
   return (
     <Box sx={{ mt: 4, ml: 14, mr: 20}}>
-      <TableContainer sx={{ background: '#FFFFFF' }}>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Agents</TableCell>
-              <TableCell>% Conversations</TableCell>
+              <TableCell>Agent Name</TableCell>
+              <TableCell>% Rooms Served</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((row) => (
-              <TableRow key={row.agent}>
-                <TableCell component="th" scope="row">
-                  {row.agent}
-                </TableCell>
-                <TableCell>{row.conversations}</TableCell>
+              <TableRow key={row.agent_id}>
+                <TableCell>{row.agent_name}</TableCell>
+                <TableCell>{row.percentage_of_rooms}</TableCell>
               </TableRow>
             ))}
           </TableBody>

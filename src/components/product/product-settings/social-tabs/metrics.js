@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,10 +15,81 @@ import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import api from '../../../../lib/axios';
 
+function getBusiestDay(rooms) {
+    if (rooms.length === 0) {
+        return 0;
+    }
+
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const counts = [0, 0, 0, 0, 0, 0, 0];
+
+    rooms.forEach(room => {
+        const date = new Date(room.ts);
+        const dayOfWeek = date.getDay();
+        counts[dayOfWeek]++;
+    });
+
+    const maxCount = Math.max(...counts);
+    const busiestDayIndex = counts.indexOf(maxCount);
+    return daysOfWeek[busiestDayIndex];
+}
+
+function getAverageRoomsPerDay(rooms) {
+    const roomsByDate = {};
+
+    rooms.forEach(room => {
+        const date = new Date(room.ts).toLocaleDateString();
+        if (!roomsByDate[date]) {
+            roomsByDate[date] = [];
+        }
+        roomsByDate[date].push(room);
+    });
+
+
+    const dates = Object.keys(roomsByDate);
+    const totalRooms = dates.reduce((prev, date) => prev + roomsByDate[date].length, 0);
+    const averageRoomsPerDay = dates.length > 0 ? totalRooms / dates.length : 0;
+
+    return averageRoomsPerDay;
+}
+
+function getBusiestHour(messages) {
+    if (messages.length === 0) {
+        return 0;
+    }
+
+    const hours = new Array(24).fill(0);
+
+    messages.forEach((message) => {
+        message.data.total.forEach((msg) => {
+            const date = new Date(msg.ts);
+            const hour = date.getHours();
+            hours[hour]++;
+        });
+    });
+
+    const busiestHourIndex = hours.indexOf(Math.max(...hours));
+    const busiestHour = busiestHourIndex < 12 ? busiestHourIndex : busiestHourIndex - 12;
+    const amPm = busiestHourIndex < 12 ? 'a.m.' : 'p.m.';
+    const formattedBusiestHour = `${busiestHour === 0 ? 12 : busiestHour}:00 ${amPm}`;
+
+    return formattedBusiestHour;
+}
 
 export const MetricsContent = ({ agents }) => {
-    const [data, setData] = useState([]);
-    const [startDate, setStartDate] = useState(new Date());
+    const [state, setState] = useState({
+        messages: [],
+        rooms: [],
+    });
+    const data = [];
+
+    const { messages, rooms } = state;
+
+    const [startDate, setStartDate] = useState(() => {
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        return oneMonthAgo;
+    });
     const [endDate, setEndDate] = useState(new Date());
     const theme = useTheme();
 
@@ -26,18 +97,31 @@ export const MetricsContent = ({ agents }) => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('jwt');
-                const response = await api.get('/api/v1/social/messages', {
+                const messagesResponse = await api.get('/api/v1/social/messages', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                     params: {
-                        startDate: startDate,
-                        endDate: endDate,
+                        startFilter: startDate,
+                        endFilter: endDate,
                     },
                 });
 
-                if (response.data.success) {
-                    const data = response.data.messages
+                const roomsResponse = await api.get('/api/v1/social/rooms', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        startFilter: startDate,
+                        endFilter: endDate,
+                    },
+                });
+
+                if (messagesResponse.data.success && roomsResponse.data.success) {
+                    setState({
+                        messages: messagesResponse.data.messages,
+                        rooms: roomsResponse.data.rooms,
+                    });
                 }
             } catch (err) {
                 console.log(err);
@@ -54,77 +138,128 @@ export const MetricsContent = ({ agents }) => {
         setEndDate(date);
     };
 
+    const statsCards = [
+        {
+            title: 'Total Chat Rooms',
+            value: rooms.length,
+        },
+        {
+            title: 'Open Chat Rooms',
+            value: rooms.filter(room => room.open === true).length,
+        },
+        {
+            title: 'Total Messages',
+            value: messages.reduce((prev, curr) => prev + curr.data.total.length, 0),
+        },
+        {
+            title: 'Busiest Day',
+            value: getBusiestDay(rooms),
+        },
+        {
+            title: 'Average Chat Rooms Per Day',
+            value: getAverageRoomsPerDay(rooms),
+        },
+        {
+            title: 'Busiest Hour',
+            value: getBusiestHour(messages),
+        },
+    ];
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = startDate && endDate ? Math.round(Math.abs((startDate - endDate) / oneDay)) : 0;
+
+    if (diffDays > 1) {
+        const roomsByDate = {};
+
+        rooms.forEach(room => {
+            const date = new Date(room.ts).toLocaleDateString();
+            if (!roomsByDate[date]) {
+                roomsByDate[date] = [];
+            }
+            roomsByDate[date].push(room);
+        });
+
+        const dates = Object.keys(roomsByDate);
+        dates.sort((a, b) => new Date(a) - new Date(b));
+
+        dates.forEach(date => {
+            const roomsOnDate = roomsByDate[date];
+            const totalRoomsOnDate = roomsOnDate.length;
+            const formattedDate = date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$2/$3'); // format date as MM/DD
+            data.push({ name: formattedDate, rooms: totalRoomsOnDate });
+        });
+    } else {
+        const hours = new Array(24).fill(0);
+
+        rooms.forEach(room => {
+            const date = new Date(room.ts);
+            const hour = date.getHours();
+            hours[hour]++;
+        });
+
+        for (let i = 0; i < 24; i++) {
+            const hour = i < 12 ? i : i - 12;
+            const amPm = i < 12 ? 'AM' : 'PM';
+            const formattedHour = `${hour === 0 ? 12 : hour}${amPm}-${hour === 11 ? 12 : hour + 1}${amPm}`;
+            data.push({ name: formattedHour, rooms: hours[i] });
+        }
+    }
+
+    const agentData = agents.map((agent) => {
+        const roomsServedByAgent = rooms.filter((room) => room.servedBy._id === agent.agent_id);
+        const percentageOfRooms = ((roomsServedByAgent.length / rooms.length) * 100).toFixed(2);
+        return {
+            agent_id: agent.agent_id,
+            agent_name: agent.name,
+            percentage_of_rooms: percentageOfRooms,
+        };
+    });
+
     return (
         <Box sx={{ mt: 4 }}>
             <Grid container spacing={2}>
-                <Grid container
-                    justifyContent="flex-end">
-                    <ThemeProvider theme={theme}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                label="Start Date"
-                                value={startDate}
-                                onChange={handleStartDateChange}
-                                renderInput={(props) => <TextField {...props}
-                                    sx={{ marginRight: '8px' }} />}
-                            />
-                            <DatePicker
-                                label="End Date"
-                                value={endDate}
-                                onChange={handleEndDateChange}
-                                renderInput={(props) => <TextField {...props} />}
-                            />
-                        </LocalizationProvider>
-                    </ThemeProvider>
+                <Grid container justifyContent="flex-end" sx={{ ml: 2 }}>
+                        <Card sx={{ width: '100%' }}>
+                            <CardContent>
+                                <ThemeProvider theme={theme}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <Grid container spacing={2} justifyContent="flex-end">
+                                            <Grid item>
+                                                <DatePicker
+                                                    label="Start Date"
+                                                    value={startDate}
+                                                    onChange={handleStartDateChange}
+                                                    renderInput={(props) => <TextField {...props} sx={{ mr: 3 }} />}
+                                                />
+                                            </Grid>
+                                            <Grid item>
+                                                <DatePicker
+                                                    label="End Date"
+                                                    value={endDate}
+                                                    onChange={handleEndDateChange}
+                                                    renderInput={(props) => <TextField {...props} />}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </LocalizationProvider>
+                                </ThemeProvider>
+                            </CardContent>
+                        </Card>
                 </Grid>
-                <Grid item xs={4}>
-                    <StatsCard
-                        title="Total Tickets"
-                        value={0}
-                        type="Tickets"
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <StatsCard
-                        title="Open Tickets"
-                        value={0}
-                        type="Tickets"
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <StatsCard
-                        title="Closed Tickets"
-                        value={0}
-                        type="Tickets"
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <StatsCard
-                        title="Total Agents"
-                        value={0}
-                        type="Agents"
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <StatsCard
-                        title="Total Departments"
-                        value={0}
-                        type="Departments"
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <StatsCard
-                        title="Rooms unattended"
-                        value={0}
-                        type="Departments"
-                    />
-                </Grid>
+                {statsCards.map((card, index) => (
+                    <Grid item xs={4} key={index}>
+                        <StatsCard
+                            title={card.title}
+                            value={card.value}
+                        />
+                    </Grid>
+                ))}
             </Grid>
             <Box sx={{ mt: 4 }}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Card sx={{ mb: 4 }}>
-                            <CardHeader title="Line Chart" />
+                            <CardHeader title="Total Chat Rooms" />
                             <CardContent sx={{
                                 backgroundColor: 'neutral.900',
                                 color: '#FFFFFF',
@@ -133,18 +268,17 @@ export const MetricsContent = ({ agents }) => {
                                     <LineChart data={data} sx={{ background: '#FFFFFF' }}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="name" />
-                                        <YAxis />
+                                        <YAxis tickFormatter={(tick) => parseInt(tick)} />
                                         <Tooltip />
                                         <Legend />
-                                        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                                        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                                        <Line type="monotone" dataKey="rooms" stroke="#8884d8" activeDot={{ r: 8 }} />
                                     </LineChart>
                                 </ResponsiveContainer>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <MetricsTable />
+                        <MetricsTable data={agentData} />
                     </Grid>
                 </Grid>
             </Box>
