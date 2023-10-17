@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SocialSettings } from './product-settings/social';
 import { WhatsappSettings } from './product-settings/whatsapp';
+import { LakeSettings } from './product-settings/lake';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -175,6 +176,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           {(product.id === 5) && (<SocialSettings />)}
           {(product.id === 2 || product.id === 1) && (<WhatsappSettings />)}
+          {(product.id === 4) && (<LakeSettings />)}
           {isActiveRef.current && (
             <Box
               sx={{

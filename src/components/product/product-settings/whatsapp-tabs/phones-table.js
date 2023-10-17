@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,8 +12,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import SuccessSnackbar from '../../../settings/settings-success-msg';
 import ErrorSnackbar from '../../../settings/settings-error-msg';
 import api from '../../../../lib/axios';
@@ -41,23 +46,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export const PhonesTable = ({ columns, rows, updateRowStatus }) => {
     const [responseMessage, setResponseMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedButton, setSelectedButton] = useState(null);
+    const [open, setOpen] = useState(false);
 
-    const handlePopoverOpen = (event) => {
-        setAnchorEl(event.currentTarget);
+    const handleClickOpen = () => {
+        setOpen(true);
     };
 
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-        setSelectedButton(null);
+    const handleClose = () => {
+        setOpen(false);
     };
 
-    const open = Boolean(anchorEl);
-
-    const handleDisconnect = async (event, phoneId) => {
-        event.stopPropagation();
-        setSelectedButton(event.currentTarget);
+    const handleDisconnect = async (phoneId) => {
         try {
             const token = localStorage.getItem('jwt');
             const response = await api.put('/api/v1/whatsapp/business-account',
@@ -67,7 +66,8 @@ export const PhonesTable = ({ columns, rows, updateRowStatus }) => {
                 });
             if (response.data.success) {
                 setResponseMessage(response.data.message);
-                updateRowStatus(phoneId)
+                updateRowStatus(phoneId);
+                setOpen(false);
             } else {
                 setErrorMessage(response.data.message);
             }
@@ -98,35 +98,47 @@ export const PhonesTable = ({ columns, rows, updateRowStatus }) => {
                             <StyledTableCell>
                                 {row.status === 'Assigned' && (
                                     <IconButton aria-label="disconnect"
-                                        onMouseEnter={handlePopoverOpen}
-                                        onMouseLeave={handlePopoverClose}
-                                        onClick={(event) => handleDisconnect(event, row.phoneId)}
+                                        onClick={handleClickOpen}
                                     >
                                         <LinkOffIcon />
                                     </IconButton>
                                 )}
-                                <Popover
-                                    id="mouse-over-popover"
-                                    sx={{
-                                        pointerEvents: 'none',
-                                    }}
-                                    open={open && selectedButton === event.currentTarget}
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'left',
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'left',
-                                    }}
-                                    onClose={handlePopoverClose}
-                                    disableRestoreFocus
+                                <Dialog
+                                    open={open}
+                                    onClose={handleClose}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
                                 >
-                                    <Typography sx={{ p: 1 }}>
-                                        Disconnect
-                                    </Typography>
-                                </Popover>
+                                    <DialogTitle id="alert-dialog-title">
+                                        {"Are You Sure?"}
+                                    </DialogTitle>
+                                    <DialogContent>
+                                        <DialogContentText>
+                                            Disconnecting the chatbot from this phone number will temporarily disable messaging with the chatbot.
+                                            You can always reconnect by assigning another phone number to the chatbot Social department.
+                                        </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Box sx={{ mt: 2, mb: 2, mr: 2, display: "flex", justifyContent: "flex-end" }}>
+                                            <Button
+                                                onClick={handleClose}
+                                                variant="outlined"
+                                                sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() => handleDisconnect(row.phoneId)}
+                                                autoFocus
+                                                sx={{ mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                                            >
+                                                Disconnect
+                                            </Button>
+                                        </Box>
+                                    </DialogActions>
+                                </Dialog>
+
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}

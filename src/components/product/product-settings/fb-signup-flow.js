@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Button from '@mui/material/Button';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import api from '../../../lib/axios';
 
 /**
@@ -77,11 +78,11 @@ export const FbSignupFlow = ({title}) => {
 
   return (
     <Button
-      variant="outlined"
-      fullWidth
+      variant="contained"
       color="primary"
       onClick={launchWhatsAppSignup}
       sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+      endIcon={<FacebookIcon />}
     >
       { title }
     </Button>

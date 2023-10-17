@@ -54,10 +54,18 @@ export const WhatsappSettings = () => {
         });
     };
 
+    const deleteRow = (phoneId) => {
+        setState(prevState => {
+            const updatedWabas = prevState.wabas.filter(waba => waba.phone_id !== phoneId);
+            return { ...prevState, wabas: updatedWabas };
+        });
+    };
+
     const generalContent = <WpGeneralContent
         accessToken={accessToken}
         wabas={phoneRows}
         updateRowStatus={updateRowStatus}
+        deleteRow={deleteRow}
     />;
 
     const tabs = [
