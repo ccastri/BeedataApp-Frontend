@@ -14,8 +14,8 @@ echo 'npm run build' >> /home/ubuntu/deploy.log
 npm run build >> /home/ubuntu/deploy.log
 
 # Check for Jest errors and log to file.
-echo 'npm run test' >> /home/ubuntu/deploy.log 
-test_output=$(npm run test 2>&1)
+echo 'npm run test -- --watchAll=false' >> /home/ubuntu/deploy.log 
+test_output=$(npm run test -- --watchAll=false 2>&1)
 echo "$test_output" >> /home/ubuntu/deploy.log
 
 # Check for Jest errors and exit with status code 1 if there are any.

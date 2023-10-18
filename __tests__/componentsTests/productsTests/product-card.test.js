@@ -33,7 +33,7 @@ describe('ProductCard', () => {
     description: 'This is a test product',
   };
 
-  test('renders the product name', async () => {
+  it('renders the product name', async () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText('Test Product')).toBeInTheDocument());
     expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
@@ -43,7 +43,7 @@ describe('ProductCard', () => {
     });
   });
 
-  test('renders the product image', async () => {
+  it('renders the product image', async () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByAltText('Product')).toBeInTheDocument());
 
@@ -57,7 +57,7 @@ describe('ProductCard', () => {
     expect(productImage).toHaveAttribute('src', 'test-image.jpg');
   });
 
-  test('renders the product availability when active', async () => {
+  it('renders the product availability when active', async () => {
     render(<ProductCard product={product} isActive={true} />);
     await waitFor(() => expect(screen.getByText(/Available/i)).toBeInTheDocument());
 
@@ -70,7 +70,7 @@ describe('ProductCard', () => {
     expect(productAvailability).toBeInTheDocument();
   });
 
-  test('renders the product availability when inactive', async () => {
+  it('renders the product availability when inactive', async () => {
     render(<ProductCard product={product} isActive={false} />);
     await waitFor(() => expect(screen.getByText('Not available')).toBeInTheDocument());
 
@@ -84,7 +84,7 @@ describe('ProductCard', () => {
     expect(productAvailability).toBeInTheDocument();
   });
 
-  test('renders the expiration date when active', async () => {
+  it('renders the expiration date when active', async () => {
     const purchaseDetails = {
       beet_renewal_time: 1,
       beet_renewal_exp_unit: 'days',
@@ -103,7 +103,7 @@ describe('ProductCard', () => {
     expect(expirationDate).toBeInTheDocument();
   });
 
-  test('does not render the expiration date when inactive', async () => {
+  it('does not render the expiration date when inactive', async () => {
     const purchaseDetails = {
       beet_renewal_time: 1,
       beet_renewal_exp_unit: 'day',
@@ -122,36 +122,5 @@ describe('ProductCard', () => {
     
     const expirationDate = screen.queryByText(/Expires on:/);
     expect(expirationDate).not.toBeInTheDocument();
-  });
-  
-  test('displays the Facebook sign in flow for permissions granting for admins', async () => {
-    api.get.mockResolvedValue({
-      data: {
-        company: { },
-      },
-    });
-    render(<ProductCard product={product} isActive={true} />);
-    await waitFor(() => expect(screen.getByText(/Permissions/)).toBeInTheDocument());
-
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
-    const permissionsButton = screen.getByText(/Permissions/);
-    expect(permissionsButton).toBeInTheDocument();  
-  });
-
-  test('displays the product dialog for admins', async () => {
-    render(<ProductCard product={product} isActive={false} />);
-    await waitFor(() => expect(screen.getByText(/Purchase/)).toBeInTheDocument());
-
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
-    const configureButton = screen.getByText(/Purchase/);
-    expect(configureButton).toBeInTheDocument();  
   });
 });

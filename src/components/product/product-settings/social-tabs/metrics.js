@@ -216,20 +216,27 @@ export const MetricsContent = ({ agents }) => {
     });
 
     return (
-        <Box sx={{ mt: 4 }}>
-            <Grid container spacing={2}>
-                <Grid container justifyContent="flex-end" sx={{ ml: 2 }}>
+        <Box sx={{ mt: 4 }}
+data-testid='metrics'>
+            <Grid container
+spacing={2}>
+                <Grid container
+justifyContent="flex-end"
+sx={{ ml: 2 }}>
                         <Card sx={{ width: '100%' }}>
                             <CardContent>
                                 <ThemeProvider theme={theme}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <Grid container spacing={2} justifyContent="flex-end">
+                                        <Grid container
+spacing={2}
+justifyContent="flex-end">
                                             <Grid item>
                                                 <DatePicker
                                                     label="Start Date"
                                                     value={startDate}
                                                     onChange={handleStartDateChange}
-                                                    renderInput={(props) => <TextField {...props} sx={{ mr: 3 }} />}
+                                                    renderInput={(props) => <TextField {...props}
+sx={{ mr: 3 }} />}
                                                 />
                                             </Grid>
                                             <Grid item>
@@ -247,7 +254,9 @@ export const MetricsContent = ({ agents }) => {
                         </Card>
                 </Grid>
                 {statsCards.map((card, index) => (
-                    <Grid item xs={4} key={index}>
+                    <Grid item
+xs={4}
+key={index}>
                         <StatsCard
                             title={card.title}
                             value={card.value}
@@ -255,29 +264,41 @@ export const MetricsContent = ({ agents }) => {
                     </Grid>
                 ))}
             </Grid>
-            <Box sx={{ mt: 4 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+            <Box sx={{ mt: 4 }} >
+                <Grid container
+spacing={2}>
+                    <Grid item
+xs={12}
+md={6}
+data-testid='rooms-chart'>
                         <Card sx={{ mb: 4 }}>
                             <CardHeader title="Total Chat Rooms" />
                             <CardContent sx={{
                                 backgroundColor: 'neutral.900',
                                 color: '#FFFFFF',
                             }}>
-                                <ResponsiveContainer width="100%" height={400}>
-                                    <LineChart data={data} sx={{ background: '#FFFFFF' }}>
+                                <ResponsiveContainer width="100%"
+height={400}>
+                                    <LineChart data={data}
+sx={{ background: '#FFFFFF' }}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="name" />
                                         <YAxis tickFormatter={(tick) => parseInt(tick)} />
                                         <Tooltip />
                                         <Legend />
-                                        <Line type="monotone" dataKey="rooms" stroke="#8884d8" activeDot={{ r: 8 }} />
+                                        <Line type="monotone"
+dataKey="rooms"
+stroke="#8884d8"
+activeDot={{ r: 8 }} />
                                     </LineChart>
                                 </ResponsiveContainer>
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item
+xs={12}
+md={6}
+data-testid='agents-rooms-table'>
                         <MetricsTable data={agentData} />
                     </Grid>
                 </Grid>

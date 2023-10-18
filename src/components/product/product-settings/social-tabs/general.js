@@ -32,19 +32,28 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
         <>
             <Card>
                 <CardContent>
-                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }} variant="subtitle2">
+                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
+variant="subtitle2"
+data-testid='agents-config'>
                         Agents
                     </Typography>
-                    <Typography color="textSecondary" variant="body1" sx={{ ml: 1, mb: 3 }}>
+                    <Typography color="textSecondary"
+variant="body1"
+sx={{ ml: 1, mb: 3 }}>
                         Assign company users as agents of a department.
                     </Typography>
                     <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
-                        <Alert severity="info" sx={{ width: '100%' }}>
+                        <Alert severity="info"
+sx={{ width: '100%' }}>
                             Please note that the amount of agents allowed is limited by the Beet Social plan you have purchased.
                         </Alert>
                     </Box>
-                    <Grid container spacing={1} alignItems="center" justifyContent="space-between">
-                        <Grid item xs={5}>
+                    <Grid container
+spacing={1}
+alignItems="center"
+justifyContent="space-between">
+                        <Grid item
+xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Agent"
@@ -53,7 +62,8 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                                 selectOptions={users.map((user) => ({ value: user.id, label: user.name }))}
                             />
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item
+xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Department"
@@ -62,7 +72,9 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                                 selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
                             />
                         </Grid>
-                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Grid item
+xs={2}
+sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button
                                 onClick={formik.handleSubmit}
                                 autoFocus
@@ -74,19 +86,27 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                             </Button>
                         </Grid>
                     </Grid>
-                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }} variant="subtitle2">
+                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
+variant="subtitle2"
+data-testid='current-agents'>
                         Current Agents
                     </Typography>
-                    <Typography color="textSecondary" variant="body1" sx={{ ml: 1, mb: 3 }}>
+                    <Typography color="textSecondary"
+variant="body1"
+sx={{ ml: 1, mb: 3 }}>
                         Check the current agents assigned to company departments.
                         Each agent can be unassigned at any time by clicking the delete button,
                         but their information won&apos;t be erased.
                         Once unassigned, an agent can be assigned to another department as needed.
                     </Typography>
                     {agents.length !== 0 ? (
-                        <AgentsTable columns={columns} rows={agentRows} onDeleteRow={handleAgentsDelete} />
+                        <AgentsTable columns={columns}
+rows={agentRows}
+onDeleteRow={handleAgentsDelete} />
                     ) : (
-                        <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, textAlign: 'center', fontSize: '1.1rem' }} variant="body1" gutterBottom>
+                        <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, textAlign: 'center', fontSize: '1.1rem' }}
+variant="body1"
+gutterBottom>
                             No agents assigned to departments.
                         </Typography>
                     )}
@@ -94,20 +114,30 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
             </Card>
             <Card sx={{ mt: 3, maxHeight: '400px', overflow: 'auto' }}>
                 <CardContent>
-                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }} variant="subtitle2">
+                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
+variant="subtitle2"
+data-testid='department-config'>
                         Department
                     </Typography>
-                    <Typography color="textSecondary" variant="body1" sx={{ ml: 1, mb: 2 }}>
+                    <Typography color="textSecondary"
+variant="body1"
+sx={{ ml: 1, mb: 2 }}>
                         Create a new department, delete any department that is no longer needed or connect a phone number to a department.
                     </Typography>
                     <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
-                        <Alert severity="info" sx={{ ml: 1, mr: 2, mt: 2, width: '100%' }}>
+                        <Alert severity="info"
+sx={{ ml: 1, mr: 2, mt: 2, width: '100%' }}>
                             Please note that in order to create a new department, you must have a phone number available.
                             To check your current phone numbers, click <Link href="">here</Link>.
                         </Alert>
                     </Box >
-                    <Grid container spacing={1} justifyContent="center" alignItems="center" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Grid item xs={5}>
+                    <Grid container
+spacing={1}
+justifyContent="center"
+alignItems="center"
+sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Grid item
+xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Department"
@@ -116,7 +146,8 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                                 selectOptions={availDeptSelectOpts}
                             />
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item
+xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Phone Number"
@@ -125,7 +156,9 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                                 selectOptions={availPhonesSelectOpts}
                             />
                         </Grid>
-                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Grid item
+xs={2}
+sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button
                                 onClick={formik.handleSubmit}
                                 autoFocus
@@ -141,8 +174,13 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
             </Card>
             <Card sx={{ mt: 3, mb: 8, maxHeight: '400px', overflow: 'auto' }}>
                 <CardContent>
-                    <Grid container spacing={1} justifyContent="center" alignItems="center" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Grid item xs={6}>
+                    <Grid container
+spacing={1}
+justifyContent="center"
+alignItems="center"
+sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Grid item
+xs={6}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="New Department"
@@ -150,11 +188,13 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                                 sx={{ width: '100%' }}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item
+xs={3}>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mr: 0, ml: 'auto' }}>
                                 <Button
                                     onClick={formik.handleSubmit}
-                                    autoFocus variant="outlined"
+                                    autoFocus
+variant="outlined"
                                     sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', width: '23%' }}
                                     disabled={!departmentsAllowed}
                                 >
@@ -163,8 +203,13 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                             </Box>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={1} justifyContent="center" alignItems="center" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Grid item xs={6}>
+                    <Grid container
+spacing={1}
+justifyContent="center"
+alignItems="center"
+sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Grid item
+xs={6}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Choose a Department"
@@ -173,9 +218,13 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
                                 selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item
+xs={3}>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mr: 0, ml: 'auto' }}>
-                                <Button onClick={formik.handleSubmit} autoFocus variant="outlined" sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', width: '23%' }}>
+                                <Button onClick={formik.handleSubmit}
+autoFocus
+variant="outlined"
+sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', width: '23%' }}>
                                     Delete
                                 </Button>
                             </Box>

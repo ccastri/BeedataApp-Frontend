@@ -119,10 +119,12 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                 maxWidth='md'
             >
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <DialogTitle id="scroll-dialog-title" sx={{ mb: 2 }}>
+                    <DialogTitle id="scroll-dialog-title"
+sx={{ mb: 2 }}>
                         Manage Permissions
                     </DialogTitle>
-                    <DialogContent dividers={scroll === 'paper'} sx={{ padding: '20px', textAlign: 'center' }}>
+                    <DialogContent dividers={scroll === 'paper'}
+sx={{ padding: '20px', textAlign: 'center' }}>
                         <DialogContentText
                             ref={descriptionElementRef}
                             tabIndex={-1}
@@ -132,7 +134,8 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                             This is not required, but it is recommended if you no longer want Beet
                             to have access to certain information or resources.
                         </DialogContentText>
-                        <TableContainer component={Paper} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <TableContainer component={Paper}
+sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Table sx={{ minWidth: 400, mb: 2 }}>
                                 <TableHead>
                                     <TableRow>
@@ -151,8 +154,9 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                                             <StyledTableCell>
                                                 <IconButton
                                                     onClick={() => handleDelete(row)}
+                                                    data-testid={`delete-button-${row.id}`}
                                                 >
-                                                    <DeleteForeverIcon />
+                                                    <DeleteForeverIcon/>
                                                 </IconButton>
                                             </StyledTableCell>
                                         </StyledTableRow>
@@ -177,7 +181,7 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                         >
                             If you want to reset
                             the META permission, you can follow the Facebook flow by clicking the
-                            "Permissions" button below and going through the signup process again.
+                            &ldquo;Permissions&rdquo; button below and going through the signup process again.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions sx={{ mt: 2 }}>

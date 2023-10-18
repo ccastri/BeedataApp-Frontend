@@ -16,7 +16,9 @@ import SuccessSnackbar from '../../settings/settings-success-msg';
 import ErrorSnackbar from '../../settings/settings-error-msg';
 
 const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="up"
+ref={ref}
+{...props} />;
 });
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -80,6 +82,7 @@ export const SettingsDialog = ({ tabs, response, error, clearMessages }) => {
             <IconButton
                 onClick={handleClickOpen}
                 sx={{ ml: 4, mr: 4, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', color: '#111827', borderColor: '#111827' }}
+                data-testid="settings-button"
             >
                 <SettingsIcon />
             </IconButton>
@@ -101,19 +104,27 @@ export const SettingsDialog = ({ tabs, response, error, clearMessages }) => {
                             <CloseIcon />
                         </IconButton>
                         {tabs ? (
-                            <Tabs value={value} onChange={handleChange} textColor='secondary' indicatorColor='secondary'>
+                            <Tabs value={value}
+onChange={handleChange}
+textColor='secondary'
+indicatorColor='secondary'>
                                 {tabs.map((tab, index) => (
-                                    <Tab key={index} label={tab.label} sx={{ color: '#FFFFFF' }} />
+                                    <Tab key={index}
+label={tab.label}
+sx={{ color: '#FFFFFF' }} />
                                 ))}
                             </Tabs>
                         ) : (
-                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                            <Typography sx={{ ml: 2, flex: 1 }}
+variant="h6"
+component="div">
                                 Settings
                             </Typography>
                         )}
                     </StyledToolbar>
                 </StyledAppBar>
-                <DialogContent sx={{ backgroundColor: theme.palette.background.default }} dividers>
+                <DialogContent sx={{ backgroundColor: theme.palette.background.default }}
+dividers>
                     {tabs && tabs[value].content}
                 </DialogContent>
                 {response && (

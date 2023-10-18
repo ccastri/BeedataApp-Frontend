@@ -82,6 +82,7 @@ export const FbSignupFlow = ({title}) => {
       color="primary"
       onClick={launchWhatsAppSignup}
       sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+      data-testid='facebook-flow'
       endIcon={<FacebookIcon />}
     >
       { title }

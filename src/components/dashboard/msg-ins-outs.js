@@ -5,7 +5,6 @@ import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import ReplayIcon from '@mui/icons-material/Replay';
 import ErrorSnackbar from '../settings/settings-error-msg';
 import dayjs from 'dayjs';
 import api from '../../lib/axios';
