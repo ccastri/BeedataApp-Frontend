@@ -1,33 +1,14 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, IconButton } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid} from '@mui/material';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import ReplayIcon from '@mui/icons-material/Replay';
 import ErrorSnackbar from '../settings/settings-error-msg';
 import dayjs from 'dayjs';
 import api from '../../lib/axios';
 
-
-const theme = createTheme({
-    components: {
-        MuiPickersBasePicker: {
-            styleOverrides: {
-                container: { color: 'white' },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                textPrimary: {
-                    color: 'white'
-                }
-            },
-        }
-    },
-});
 
 /**
  * 
@@ -35,28 +16,44 @@ const theme = createTheme({
  * 
  * Dependencies: useState, useEffect, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
  *               ResponsiveContainer, Box, TextField, Card, CardContent, CardHeader, Divider, Grid,
- *               IconButton, createTheme, ThemeProvider, LocalizationProvider, AdapterDayjs, DatePicker,
- *               FilterListIcon, ReplayIcon, ErrorSnackbar, dayjs, api
+ *               createTheme, ThemeProvider, LocalizationProvider, AdapterDayjs, DatePicker,
+ *               ReplayIcon, ErrorSnackbar, dayjs, api
  * Usage: Used to display the number of messages sent by agents, visitors and chatbot in a given time period.
  * 
  */
 export const MsgInsOuts = () => {
 
-    const [tempStartDate, setTempStartDate] = useState(null);
-    const [tempEndDate, setTempEndDate] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [data, setData] = useState([]);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    const [startDate, setStartDate] = useState(() => {
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        return oneMonthAgo;
+    });
+    const [endDate, setEndDate] = useState(new Date());
+    const theme = useTheme();
 
     useEffect(() => {
         const token = localStorage.getItem('jwt');
         const fetchMsgCount = async () => {
-            const response = await api.post('/api/v1/social/messages',
-                { startFilter: startDate, endFilter: endDate },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            
+            if (!startDate || !endDate) {
+                return;
+            }
+
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            const errorMsg = checkDateValidity(start, end);
+            if (errorMsg) {
+                setErrorMsg(errorMsg);
+                return;
+            }
+
+            const response = await api.get('/api/v1/social/messages', {
+                headers: { Authorization: `Bearer ${token}` },
+                params: { startFilter: startDate, endFilter: endDate }
+            });
+
             if (response.data.success) {
                 const data = response.data.messages;
                 let xaxisFormat;
@@ -108,84 +105,58 @@ export const MsgInsOuts = () => {
         };
         fetchMsgCount();
     }, [startDate, endDate]);
-    
+
     const checkDateValidity = (start, end) => {
-        if(end <= start) return "End date must be greater than Start date";
-    
+        if (end <= start) return "End date must be greater than Start date";
+
         let fourMonthsLater = new Date(start.setMonth(start.getMonth() + 4));
-        if(end > fourMonthsLater) return "Data view allowed only up to 4 months";
-    
+        if (end > fourMonthsLater) return "Data view allowed only up to 4 months";
+
         return null;
     }
-    
-    const handleFilterClick = () => {
-        if(!tempStartDate || !tempEndDate) return;
-    
-        const start = new Date(tempStartDate);
-        const end = new Date(tempEndDate);
-        
-        const errorMsg = checkDateValidity(start, end);
-        if(!errorMsg) {
-            setStartDate(tempStartDate);
-            setEndDate(tempEndDate);
-        } else {
-            setErrorMsg(errorMsg);
-        }
+
+    const handleStartDateChange = (date) => {
+        setStartDate(date);
     };
 
-    const handleReloadClick = () => {
-        setTempStartDate(null);
-        setTempEndDate(null);
-        setStartDate(null);
-        setEndDate(null);
+    const handleEndDateChange = (date) => {
+        setEndDate(date);
     };
 
     return (
         <Card>
-            <Box 
+            <Box
                 display="flex"
                 alignItems="center"
-                sx={{ 
+                sx={{
                     padding: '16px',
                     justifyContent: 'space-between',
 
                 }}
             >
-                <CardHeader 
+                <CardHeader
                     title="WHATSAPP IN & OUTS"
                     sx={{
                         whiteSpace: 'nowrap',
                     }}
                 />
                 <Grid container
-justifyContent="flex-end">
+                    justifyContent="flex-end">
                     <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Start Date"
-                                value={tempStartDate}
-                                onChange={setTempStartDate}
+                                value={startDate}
+                                onChange={handleStartDateChange}
                                 renderInput={(props) => <TextField {...props}
-sx={{ marginRight: '8px' }} />}
+                                    sx={{ marginRight: '8px' }} />}
                             />
                             <DatePicker
                                 label="End Date"
-                                value={tempEndDate}
-                                onChange={setTempEndDate}
+                                value={endDate}
+                                onChange={handleEndDateChange}
                                 renderInput={(props) => <TextField {...props} />}
                             />
-                            <IconButton 
-                                onClick={handleFilterClick}
-                                aria-label="Filter"
-                            >
-                                <FilterListIcon />
-                            </IconButton>
-                            <IconButton 
-                                onClick={handleReloadClick}
-                                aria-label='Reload'
-                            >
-                                <ReplayIcon />
-                            </IconButton>
                         </LocalizationProvider>
                     </ThemeProvider>
                 </Grid>
@@ -204,33 +175,33 @@ sx={{ marginRight: '8px' }} />}
                     }}
                 >
                     <ResponsiveContainer width="100%"
-height="100%">
+                        height="100%">
                         <LineChart data={data.data}>
                             <Line type="monotone"
-dataKey="agent"
-stroke="#8884d8"
-strokeWidth={2} />
+                                dataKey="agent"
+                                stroke="#8884d8"
+                                strokeWidth={2} />
                             <Line type="monotone"
-dataKey="visitor"
-stroke="#82ca9d"
-strokeWidth={2} />
+                                dataKey="visitor"
+                                stroke="#82ca9d"
+                                strokeWidth={2} />
                             <Line type="monotone"
-dataKey="chatbot"
-stroke="#ffc658"
-strokeWidth={2} />
+                                dataKey="chatbot"
+                                stroke="#ffc658"
+                                strokeWidth={2} />
                             <CartesianGrid stroke="#FFFFFF"
-strokeDasharray="5 5" />
+                                strokeDasharray="5 5" />
                             <XAxis dataKey="ts"
-stroke="#FFFFFF"
-tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
+                                stroke="#FFFFFF"
+                                tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
                             <YAxis stroke="#FFFFFF"
-allowDecimals={false} />
+                                allowDecimals={false} />
                             <Tooltip />
                             <Legend />
                         </LineChart>
                     </ResponsiveContainer>
                     {errorMsg && (
-                        <ErrorSnackbar 
+                        <ErrorSnackbar
                             errorMessage={errorMsg}
                             container={'dialog'}
                             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -241,4 +212,4 @@ allowDecimals={false} />
             <Divider />
         </Card>
     );
-}; 
+};

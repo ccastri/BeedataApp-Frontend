@@ -28,7 +28,7 @@ export const StatsCard = (props) => (
                         {props.value}
                     </Typography>
                 </Grid>
-                <Grid item
+                {props.image && (<Grid item
                     xs={6}
                     sx={{ textAlign: 'right' }}>
                     <img
@@ -36,7 +36,7 @@ export const StatsCard = (props) => (
                         alt="Whatsapp"
                         style={{ width: '80%' }}
                     />
-                </Grid>
+                </Grid>)}
             </Grid>
             <Box
                 sx={{
@@ -46,7 +46,7 @@ export const StatsCard = (props) => (
                     mb: 2
                 }}
             >
-                <Typography
+                {props.totalAmount && (<Typography
                     variant="body2"
                     color="textSecondary"
                     sx={{
@@ -54,7 +54,7 @@ export const StatsCard = (props) => (
                     }}
                 >
                     {props.type} limit: {props.totalAmount}
-                </Typography>
+                </Typography>)}
             </Box>
         </CardContent>
     </Card>

@@ -22,7 +22,7 @@ export const ProductWarnings = (props) => (
         sx={{ m: 1 }}
         variant="h4"
       >
-        Products
+        Tools
       </Typography>
     </Box>
     <Box sx={{ mt: 3 }}>
@@ -32,8 +32,8 @@ export const ProductWarnings = (props) => (
             <Stack sx={{ width: '100%' }}
 spacing={2}>
               <Alert severity="info">
-                Before using our <b>bots</b>, please make sure to configure your business WhatsApp account.
-                This will ensure that you can receive messages from our bots and get the most out of our services.
+                Before using our <b>characters</b> (chatbots), please make sure to configure your business WhatsApp account.
+                This will ensure that you can receive messages from our chatbots and get the most out of our services.
               </Alert>
               <Alert severity="warning">
                 Please note that in order to purchase any product, you must have sufficient credit on your account.

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -31,7 +32,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export const SimpleTable = ({ columns, rows, onDeleteRow }) => {
+export const AgentsTable = ({ columns, rows, onDeleteRow }) => {
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 400, mb: 3 }}
@@ -64,4 +65,10 @@ onClick={() => onDeleteRow(row)}>
             </Table>
         </TableContainer>
     );
-}
+};
+
+AgentsTable.propTypes = {
+    columns: PropTypes.array.isRequired,
+    rows: PropTypes.array.isRequired,
+    onDeleteRow: PropTypes.func.isRequired,
+};
