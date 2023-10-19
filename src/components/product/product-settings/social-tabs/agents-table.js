@@ -19,6 +19,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.body}`]: {
         fontSize: 15,
     },
+    width: '33.33%',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -32,7 +33,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export const AgentsTable = ({ columns, rows, onDeleteRow }) => {
+export const AgentsTable = ({ rows, onDeleteRow }) => {
+    const columns = [
+        { field: 'name', headerName: 'Name', width: 200 },
+        { field: 'role', headerName: 'Role', width: 50 },
+        { field: 'department', headerName: 'Department', width: 100 },
+        { field: 'delete', headerName: 'Actions', width: 5 },
+    ];
+    
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 400, mb: 3 }}
@@ -68,7 +76,6 @@ onClick={() => onDeleteRow(row)}>
 };
 
 AgentsTable.propTypes = {
-    columns: PropTypes.array.isRequired,
     rows: PropTypes.array.isRequired,
     onDeleteRow: PropTypes.func.isRequired,
 };

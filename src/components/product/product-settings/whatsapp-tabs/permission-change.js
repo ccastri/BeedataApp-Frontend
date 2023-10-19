@@ -18,6 +18,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SuccessSnackbar from '../../../settings/settings-success-msg';
 import ErrorSnackbar from '../../../settings/settings-error-msg';
@@ -118,24 +119,39 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                 scroll='paper'
                 maxWidth='md'
             >
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <DialogTitle id="scroll-dialog-title"
-sx={{ mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <DialogTitle
+                        id="scroll-dialog-title"
+                        sx={{ mb: 1, mt: 2, textAlign: 'left' }}
+                    >
                         Manage Permissions
                     </DialogTitle>
-                    <DialogContent dividers={scroll === 'paper'}
-sx={{ padding: '20px', textAlign: 'center' }}>
-                        <DialogContentText
-                            ref={descriptionElementRef}
-                            tabIndex={-1}
-                            sx={{ mb: 4, textAlign: 'left' }}
-                        >
-                            You can delete granted permissions to Beet at any time.
-                            This is not required, but it is recommended if you no longer want Beet
-                            to have access to certain information or resources.
-                        </DialogContentText>
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleClose}
+                        sx={{
+                            position: 'absolute',
+                            right: 6,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+                <DialogContent dividers={scroll === 'paper'}
+                    sx={{ padding: '15px', textAlign: 'center' }}>
+                    <DialogContentText
+                        ref={descriptionElementRef}
+                        tabIndex={-1}
+                        sx={{ mb: 4, textAlign: 'left' }}
+                    >
+                        You can delete granted permissions to Beet at any time.
+                        This is not required, but it is recommended if you no longer want Beet
+                        to have access to certain information or resources.
+                    </DialogContentText>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <TableContainer component={Paper}
-sx={{ display: 'flex', justifyContent: 'center' }}>
+                            sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Table sx={{ minWidth: 400, mb: 2 }}>
                                 <TableHead>
                                     <TableRow>
@@ -156,7 +172,7 @@ sx={{ display: 'flex', justifyContent: 'center' }}>
                                                     onClick={() => handleDelete(row)}
                                                     data-testid={`delete-button-${row.id}`}
                                                 >
-                                                    <DeleteForeverIcon/>
+                                                    <DeleteForeverIcon />
                                                 </IconButton>
                                             </StyledTableCell>
                                         </StyledTableRow>
@@ -171,9 +187,11 @@ sx={{ display: 'flex', justifyContent: 'center' }}>
                             <ErrorSnackbar errorMessage={errorMessage}
                                 container={'dialog'} />
                         )}
-                        <DialogTitle sx={{ mt: 6 }}>
-                            Change META Permissions
-                        </DialogTitle>
+                    </Box>
+                    <DialogTitle sx={{ ml: -2, mb: 1, mt: 2, textAlign: 'left' }}>
+                        Change META Permissions
+                    </DialogTitle>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <DialogContentText
                             ref={descriptionElementRef}
                             tabIndex={-1}
@@ -183,7 +201,9 @@ sx={{ display: 'flex', justifyContent: 'center' }}>
                             the META permission, you can follow the Facebook flow by clicking the
                             &ldquo;Permissions&rdquo; button below and going through the signup process again.
                         </DialogContentText>
-                    </DialogContent>
+                    </Box>
+                </DialogContent>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <DialogActions sx={{ mt: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
                             <FbSignupFlow title={'Permissions'} />
@@ -203,6 +223,6 @@ sx={{ display: 'flex', justifyContent: 'center' }}>
 };
 
 PermissionChange.propTypes = {
-    columns: PropTypes.array.isRequired,
     rows: PropTypes.array.isRequired,
+    deleteRow: PropTypes.func.isRequired,
 };

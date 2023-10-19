@@ -11,6 +11,7 @@ export const SocialSettings = () => {
     users: [],
     agents: [],
     departments: [],
+    wabas: [],
     availableDepartments: [],
     availablePhoneNums: [],
     departmentsAllowed: false,
@@ -19,7 +20,7 @@ export const SocialSettings = () => {
     errorMessage: ''
   });
 
-  const { users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
+  const { users, agents, departments, wabas, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
   const token = localStorage.getItem('jwt');
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export const SocialSettings = () => {
         users: usersResponse.data.users,
         agents: agentsResponse.data.agents,
         departments: departmentsResponse.data.departments,
+        wabas: phoneIdsResponse.data.wabas,
         availableDepartments: availableDepartmentsResponse.data.departments,
         availablePhoneNums: phoneIdsResponse.data.availablePhoneNumbers,
         departmentsAllowed: phoneIdsResponse.data.availablePhoneNumbers.length > 0
@@ -81,6 +83,46 @@ export const SocialSettings = () => {
     }
   }, [token]);
 
+  const handleDisconnect = useCallback(async (phoneId, phoneNumber, department, departmentId) => {
+    try {
+      const response = await api.put('/api/v1/whatsapp/business-account', {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { phoneNumberId: phoneId, departmentId: null }
+      });
+
+      if (response.data.success) {
+        setState(prevState => {
+          const updatedWabas = prevState.wabas.map(waba => {
+            if (waba.phone_id === phoneId) {
+              return { ...waba, department_id: null };
+            }
+            return waba;
+          });
+          return {
+            ...prevState,
+            responseMessage: response.data.message,
+            wabas: updatedWabas,
+            availableDepartments: [...prevState.availableDepartments, {
+              department_id: departmentId,
+              department_name: department
+            }],
+            availablePhoneNums: [...prevState.availablePhoneNums, {
+              phone_id: phoneId,
+              phone_number: phoneNumber
+            }]
+          };
+        });
+      } else {
+        setState(prevState => ({
+          ...prevState,
+          errorMessage: response.data.message
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [token]);
+
   const agentRows = useMemo(() => agents.map((agent, index) => ({
     id: index,
     agent_id: agent.agent_id,
@@ -89,6 +131,18 @@ export const SocialSettings = () => {
     department: agent.department_name,
     department_id: agent.department_id
   })), [agents]);
+
+  const departmentRows = useMemo(() => {
+    const filteredWabas = wabas.filter(waba => waba.department_id !== null && waba.department_id !== '');
+    return filteredWabas.map((waba, index) => ({
+      id: index,
+      departmentId: waba.department_id,
+      department: departments.find(department => department.department_id === waba.department_id).department_name,
+      phone: waba.phone_number,
+      phoneId: waba.phone_id,
+      status: 'Connected',
+    }));
+  }, [wabas, departments]);
 
   const formik = useFormik({
     initialValues: {
@@ -101,7 +155,7 @@ export const SocialSettings = () => {
     },
     onSubmit: async (values) => {
       setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
-      
+
       if (values.agent !== '' && values.department !== '') {
         try {
           const response = await api.post('/api/v1/social/agents', {
@@ -137,18 +191,27 @@ export const SocialSettings = () => {
           });
 
           if (response.data.success) {
-            setState(prevState => ({
-              ...prevState,
-              responseMessage: response.data.message,
-              availableDepartments: prevState.availableDepartments.filter(department => department.department_id !== values.availableDepartment),
-              availablePhoneNums: prevState.availablePhoneNums.filter(phoneNum => phoneNum !== values.departmentPhoneNumber)
-            }));
+            setState(prevState => {
+              const updatedWabas = prevState.wabas.map(waba => {
+                if (waba.phone_id === values.departmentPhoneNumber) {
+                  return { ...waba, department_id: values.availableDepartment };
+                }
+                return waba;
+              });
+              return {
+                ...prevState,
+                responseMessage: response.data.message,
+                wabas: updatedWabas,
+                availableDepartments: prevState.availableDepartments.filter(department => department.department_id !== values.availableDepartment),
+                availablePhoneNums: prevState.availablePhoneNums.filter(phoneNum => phoneNum !== values.departmentPhoneNumber),
+              };
+            });
           }
 
         } catch (err) {
           console.log(err);
           setState(prevState => ({ ...prevState, errorMessage: 'An error occurred while processing the request' }));
-      }
+        }
 
       }
 
@@ -187,7 +250,7 @@ export const SocialSettings = () => {
             headers: { Authorization: `Bearer ${token}` },
             params: { departmentId: formik.values.departmentToDelete }
           });
-      
+
           if (response.data.success) {
             const newPhoneNum = response.data.availablePhoneNum;
             const phoneNums = prevState.availablePhoneNums;
@@ -229,7 +292,9 @@ export const SocialSettings = () => {
     agentsAllowed={agentsAllowed}
     formik={formik}
     agentRows={agentRows}
+    departmentRows={departmentRows}
     handleAgentsDelete={handleAgentsDelete}
+    handleDisconnect={handleDisconnect}
   />
 
   const metricsContent = <MetricsContent
