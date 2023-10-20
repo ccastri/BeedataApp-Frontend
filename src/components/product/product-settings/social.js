@@ -6,12 +6,11 @@ import { MetricsContent } from './social-tabs/metrics';
 import api from '../../../lib/axios';
 
 
-export const SocialSettings = () => {
+export const SocialSettings = ({ wabas, updatedWabas }) => {
   const [state, setState] = useState({
     users: [],
     agents: [],
     departments: [],
-    wabas: [],
     availableDepartments: [],
     availablePhoneNums: [],
     departmentsAllowed: false,
@@ -20,7 +19,7 @@ export const SocialSettings = () => {
     errorMessage: ''
   });
 
-  const { users, agents, departments, wabas, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
+  const { users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
   const token = localStorage.getItem('jwt');
 
   useEffect(() => {
@@ -33,20 +32,20 @@ export const SocialSettings = () => {
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } })
       ]);
 
+      const phoneNumbers = phoneIdsResponse.data.availablePhoneNumbers; // Calculate once
+
       setState(prevState => ({
         ...prevState,
         users: usersResponse.data.users,
         agents: agentsResponse.data.agents,
         departments: departmentsResponse.data.departments,
-        wabas: phoneIdsResponse.data.wabas,
         availableDepartments: availableDepartmentsResponse.data.departments,
-        availablePhoneNums: phoneIdsResponse.data.availablePhoneNumbers,
-        departmentsAllowed: phoneIdsResponse.data.availablePhoneNumbers.length > 0
+        availablePhoneNums: phoneNumbers, // Set the calculated value
+        departmentsAllowed: phoneNumbers.length > 0 // Update based on the calculated value
       }));
     };
-
     fetchData();
-  }, [token]);
+  }, [token]); 
 
   useEffect(() => {
     const fetchAgentsQty = async () => {
@@ -85,33 +84,26 @@ export const SocialSettings = () => {
 
   const handleDisconnect = useCallback(async (phoneId, phoneNumber, department, departmentId) => {
     try {
+      console.log(phoneId, phoneNumber, department, departmentId);
       const response = await api.put('/api/v1/whatsapp/business-account', {
         headers: { Authorization: `Bearer ${token}` },
         data: { phoneNumberId: phoneId, departmentId: null }
       });
 
       if (response.data.success) {
-        setState(prevState => {
-          const updatedWabas = prevState.wabas.map(waba => {
-            if (waba.phone_id === phoneId) {
-              return { ...waba, department_id: null };
-            }
-            return waba;
-          });
-          return {
-            ...prevState,
-            responseMessage: response.data.message,
-            wabas: updatedWabas,
-            availableDepartments: [...prevState.availableDepartments, {
-              department_id: departmentId,
-              department_name: department
-            }],
-            availablePhoneNums: [...prevState.availablePhoneNums, {
-              phone_id: phoneId,
-              phone_number: phoneNumber
-            }]
-          };
-        });
+        updatedWabas(phoneId);
+        setState(prevState => ({
+          ...prevState,
+          responseMessage: response.data.message,
+          availableDepartments: [...prevState.availableDepartments, {
+            department_id: departmentId,
+            department_name: department
+          }],
+          availablePhoneNums: [...prevState.availablePhoneNums, {
+            phone_id: phoneId,
+            phone_number: phoneNumber
+          }]
+        }));
       } else {
         setState(prevState => ({
           ...prevState,
@@ -137,7 +129,7 @@ export const SocialSettings = () => {
     return filteredWabas.map((waba, index) => ({
       id: index,
       departmentId: waba.department_id,
-      department: departments.find(department => department.department_id === waba.department_id).department_name,
+      department: departments.length > 0 ? departments.find(department => department.department_id === waba.department_id).department_name : '',
       phone: waba.phone_number,
       phoneId: waba.phone_id,
       status: 'Connected',
@@ -191,22 +183,14 @@ export const SocialSettings = () => {
           });
 
           if (response.data.success) {
-            setState(prevState => {
-              const updatedWabas = prevState.wabas.map(waba => {
-                if (waba.phone_id === values.departmentPhoneNumber) {
-                  return { ...waba, department_id: values.availableDepartment };
-                }
-                return waba;
-              });
-              return {
-                ...prevState,
-                responseMessage: response.data.message,
-                wabas: updatedWabas,
-                availableDepartments: prevState.availableDepartments.filter(department => department.department_id !== values.availableDepartment),
-                availablePhoneNums: prevState.availablePhoneNums.filter(phoneNum => phoneNum !== values.departmentPhoneNumber),
-              };
-            });
-          }
+            updatedWabas(values.departmentPhoneNumber, values.availableDepartment);
+            setState(prevState => ({
+              ...prevState,
+              responseMessage: response.data.message,
+              availableDepartments: prevState.availableDepartments.filter(department => department.department_id !== values.availableDepartment),
+              availablePhoneNums: prevState.availablePhoneNums.filter(phoneNum => phoneNum.phone_id !== values.departmentPhoneNumber),
+            }));
+          };
 
         } catch (err) {
           console.log(err);

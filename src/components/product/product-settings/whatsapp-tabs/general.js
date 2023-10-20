@@ -138,6 +138,5 @@ sx={{ ml: 1, mb: 1 }}>
 
 WpGeneralContent.propTypes = {
     accessToken: PropTypes.bool.isRequired,
-    wabas: PropTypes.array.isRequired,
-    updateRowStatus: PropTypes.func.isRequired,
+    wabas: PropTypes.array.isRequired
 };

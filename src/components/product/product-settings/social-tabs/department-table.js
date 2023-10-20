@@ -85,8 +85,8 @@ export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {departmentRows.map((row) => (
-                        <StyledTableRow key={row.id}>
+                    {departmentRows.map((row, index) => (
+                        <StyledTableRow key={`${row.id}-${index}`}>
                             <StyledTableCell>{row.department}</StyledTableCell>
                             <StyledTableCell>{row.phone}</StyledTableCell>
                             <StyledTableCell>{row.status}</StyledTableCell>
@@ -147,7 +147,7 @@ export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
                                                     <Button
                                                         variant="contained"
                                                         data-testid={`disconnect-button-${row.id}`}
-                                                        onClick={() => handleDisconnect(row.phoneId, row.phoneNumber, row.department, row.departmentId)}
+                                                        onClick={() => handleDisconnect(row.phoneId, row.phone, row.department, row.departmentId)}
                                                         autoFocus
                                                         sx={{ mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                                                     >

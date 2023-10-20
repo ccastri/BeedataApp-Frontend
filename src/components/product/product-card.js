@@ -53,7 +53,7 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
  * 
  * Usage: Used to display Beet's available products.
  */
-export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, ...rest }) => {
+export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, wabasResponse, updateWabas, deleteRow, ...rest }) => {
   const [isConfigured, setIsConfigured] = useState(false);
   const [loading, setLoading] = useState(true);
   const isActiveRef = useRef(isActive);
@@ -174,8 +174,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, .
       <Divider />
       <CardActions>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          {(product.id === 5) && (<SocialSettings />)}
-          {(product.id === 2 || product.id === 1) && (<WhatsappSettings />)}
+          {(product.id === 5) && (<SocialSettings wabas={wabas} updatedWabas={updateWabas} />)}
+          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas} deleteRow={deleteRow}/>)}
           {(product.id === 4) && (<LakeSettings />)}
           {isActiveRef.current && (
             <Box

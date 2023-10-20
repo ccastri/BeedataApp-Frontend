@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -21,29 +21,51 @@ Usage: Used to display user purchased products base on Beet's base products.
 
 const Page = () => {
   const [loading, setLoading] = useState(true);
-  const [pack, setPack] = useState([]);
+  const [state, setState] = useState({
+    pack: [],
+    wabas: [],
+  });
+
+  const { pack, wabas } = state;
 
   useEffect(() => {
+    const token = localStorage.getItem('jwt');
     const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/v1/products/company-all-products', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        if (response && response.data && response.data.products) {
-          setPack(response.data.products);
-        }
-        
-      } catch (error) {
-        console.error(error);
-      }
+      const [packResponse, wabasResponse] = await Promise.all([
+        api.get('/api/v1/products/company-all-products', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+
+      setState(prevState => ({
+        ...prevState,
+        pack: packResponse.data.products,
+        wabas: wabasResponse.data.wabas,
+      }));
+
       setLoading(false);
-    }
+    };
+
     fetchData();
   }, []);
+
+  const updateWabas = useCallback((phoneId, departmentId = null) => {
+    setState(prevState => {
+      const updatedWabas = prevState.wabas.map(waba => {
+        if (waba.phone_id === phoneId) {
+          return { ...waba, department_id: departmentId };
+        }
+        return waba;
+      });
+      return { ...prevState, wabas: updatedWabas };
+    });
+  }, []);
+
+  const deleteRow = (phoneId) => {
+    setState(prevState => {
+      const updatedWabas = prevState.wabas.filter(waba => waba.phone_id !== phoneId);
+      return { ...prevState, wabas: updatedWabas };
+    });
+  };
 
 
   if (loading) {
@@ -83,20 +105,20 @@ const Page = () => {
         };
       }
     });
-  
+
     return {
       bulkProducts,
     };
-  }) : baseProducts.map(baseProduct => ({bulkProducts: {...baseProduct, isActive: false}}));
+  }) : baseProducts.map(baseProduct => ({ bulkProducts: { ...baseProduct, isActive: false } }));
 
   const allBulkProducts = products.flatMap(product => product.bulkProducts);
 
   const distinctBulkProducts = allBulkProducts.reduce((acc, bulkProduct) => {
     const existingIndex = acc.findIndex(p => p.id === bulkProduct.id);
-    
+
     if (existingIndex !== -1) {
       const existingProduct = acc[existingIndex];
-      
+
       if (!existingProduct.isActive && bulkProduct.isActive) {
         acc.splice(existingIndex, 1);
         acc.push(bulkProduct);
@@ -104,7 +126,7 @@ const Page = () => {
     } else {
       acc.push(bulkProduct);
     }
-    
+
     return acc;
   }, []);
 
@@ -123,25 +145,28 @@ const Page = () => {
         <Container maxWidth={false}>
           <ProductWarnings />
           <Grid container
-spacing={3}
-mt={3}>
-          {distinctBulkProducts.map((product) => {
-            return (
-              <Grid item
-xs={12}
-sm={6}
-md={4}
-lg={3}
-key={product.id}>
-                <ProductCard
-                  product={product}
-                  purchaseDetails={product.details}
-                  beetDetails={product.beet_app_product}
-                  isActive={product.isActive}
-                />
-              </Grid>
-            );
-          })}
+            spacing={3}
+            mt={3}>
+            {distinctBulkProducts.map((product) => {
+              return (
+                <Grid item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  key={product.id}>
+                  <ProductCard
+                    product={product}
+                    purchaseDetails={product.details}
+                    beetDetails={product.beet_app_product}
+                    isActive={product.isActive}
+                    wabas={wabas}
+                    updateWabas={updateWabas}
+                    deleteRow={deleteRow}
+                  />
+                </Grid>
+              );
+            })}
           </Grid>
         </Container>
       </Box>
