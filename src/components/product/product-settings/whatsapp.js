@@ -4,27 +4,24 @@ import { SettingsDialog } from './settings-dialog';
 import api from '../../../lib/axios';
 
 
-export const WhatsappSettings = () => {
+export const WhatsappSettings = ({ wabas, deleteRow }) => {
     const [state, setState] = useState({
         accessToken: false,
-        wabas: [],
         responseMessage: '',
         errorMessage: ''
     });
 
-    const { accessToken, wabas, responseMessage, errorMessage } = state;
+    const { accessToken, responseMessage, errorMessage } = state;
     const token = localStorage.getItem('jwt');
 
     useEffect(() => {
         const fetchData = async () => {
-            const [companyResponse, wabasResponse] = await Promise.all([
+            const [companyResponse] = await Promise.all([
                 api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
-                api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } })
             ]);
             setState(prevState => ({
                 ...prevState,
                 accessToken: companyResponse.data.company.facebook_token ? true : false,
-                wabas: wabasResponse.data.wabas,
             }));
         };
         fetchData();
@@ -42,29 +39,9 @@ export const WhatsappSettings = () => {
         setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
     };
 
-    const updateRowStatus = (phoneId) => {
-        setState(prevState => {
-            const updatedWabas = prevState.wabas.map(waba => {
-                if (waba.phone_id === phoneId) {
-                    return { ...waba, department_id: null };
-                }
-                return waba;
-            });
-            return { ...prevState, wabas: updatedWabas };
-        });
-    };
-
-    const deleteRow = (phoneId) => {
-        setState(prevState => {
-            const updatedWabas = prevState.wabas.filter(waba => waba.phone_id !== phoneId);
-            return { ...prevState, wabas: updatedWabas };
-        });
-    };
-
     const generalContent = <WpGeneralContent
         accessToken={accessToken}
         wabas={phoneRows}
-        updateRowStatus={updateRowStatus}
         deleteRow={deleteRow}
     />;
 

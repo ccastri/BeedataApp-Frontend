@@ -10,16 +10,10 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import TextFieldWrapper from '../../../general/textfield-wrapper';
 import { AgentsTable } from './agents-table';
+import { DepartmentsTable } from './department-table';
 
 
-export const SocialGeneralContent = ({ users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, formik, handleAgentsDelete, agentRows }) => {
-    const columns = [
-        { field: 'name', headerName: 'Name', width: 200 },
-        { field: 'role', headerName: 'Role', width: 50 },
-        { field: 'department', headerName: 'Department', width: 100 },
-        { field: 'delete', headerName: 'Actions', width: 5 },
-    ];
-
+export const SocialGeneralContent = ({ users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, formik, handleAgentsDelete, agentRows, departmentRows, handleDisconnect }) => {
     const availDeptSelectOpts = availableDepartments.length === 0
         ? [{ value: "", label: "No available departments" }]
         : availableDepartments.map((department) => ({ value: department.department_id, label: department.department_name }));
@@ -100,8 +94,7 @@ sx={{ ml: 1, mb: 3 }}>
                         Once unassigned, an agent can be assigned to another department as needed.
                     </Typography>
                     {agents.length !== 0 ? (
-                        <AgentsTable columns={columns}
-rows={agentRows}
+                        <AgentsTable rows={agentRows}
 onDeleteRow={handleAgentsDelete} />
                     ) : (
                         <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, textAlign: 'center', fontSize: '1.1rem' }}
@@ -112,7 +105,7 @@ gutterBottom>
                     )}
                 </CardContent>
             </Card>
-            <Card sx={{ mt: 3, maxHeight: '400px', overflow: 'auto' }}>
+            <Card sx={{ mt: 3, maxHeight: '800px', overflow: 'auto' }}>
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
 variant="subtitle2"
@@ -122,7 +115,7 @@ data-testid='department-config'>
                     <Typography color="textSecondary"
 variant="body1"
 sx={{ ml: 1, mb: 2 }}>
-                        Create a new department, delete any department that is no longer needed or connect a phone number to a department.
+                        Connect a phone number to a department, create a new department or delete any department that is no longer needed.
                     </Typography>
                     <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
                         <Alert severity="info"
@@ -170,6 +163,20 @@ sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             </Button>
                         </Grid>
                     </Grid>
+                    <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
+variant="subtitle2"
+data-testid='current-departments'>
+                        Current Connected Departments
+                    </Typography>
+                    <Typography color="textSecondary"
+variant="body1"
+sx={{ ml: 1, mb: 3 }}>
+                        Check the current departments connected to phone numbers.
+                        Each department can be disconnected at any time by clicking the disconnect button,
+                        but their information won&apos;t be erased.
+                    </Typography>
+                    <DepartmentsTable departmentRows={departmentRows}
+handleDisconnect={handleDisconnect} />
                 </CardContent>
             </Card>
             <Card sx={{ mt: 3, mb: 8, maxHeight: '400px', overflow: 'auto' }}>

@@ -17,14 +17,8 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 
-export const WpGeneralContent = ({ accessToken, wabas, updateRowStatus, deleteRow }) => {
+export const WpGeneralContent = ({ accessToken, wabas, deleteRow }) => {
 
-    const columns = [
-        { field: 'waba', headerName: 'Whatsapp Bussiness ID' },
-        { field: 'phone', headerName: 'Phone Number' },
-        { field: 'status', headerName: 'Status' },
-        { field: 'actions', headerName: 'Actions' },
-    ];
     return (
         <>
             <Card sx={{ mt: 3, maxHeight: '600px', overflow: 'auto' }}>
@@ -135,9 +129,7 @@ sx={{ ml: 1, mb: 1 }}>
                             <strong>Important:</strong> You can disconnect a phone number from a chatbot by clicking on the disconnect button action.
                         </Typography>
                     </Alert>
-                    <PhonesTable columns={columns}
-rows={wabas}
-updateRowStatus={updateRowStatus} />
+                    <PhonesTable rows={wabas} />
                 </CardContent>
             </Card>
         </>
@@ -146,6 +138,5 @@ updateRowStatus={updateRowStatus} />
 
 WpGeneralContent.propTypes = {
     accessToken: PropTypes.bool.isRequired,
-    wabas: PropTypes.array.isRequired,
-    updateRowStatus: PropTypes.func.isRequired,
+    wabas: PropTypes.array.isRequired
 };

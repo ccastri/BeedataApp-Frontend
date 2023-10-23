@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import throttleAdapterEnhancer from 'axios-throttle';
 
-const backendServer = 'https://api.beet.digital';
+const backendServer = 'http://localhost:3002';
 
 const api = axios.create({
     baseURL: backendServer,
