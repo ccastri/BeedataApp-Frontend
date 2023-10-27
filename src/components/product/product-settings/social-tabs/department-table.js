@@ -10,6 +10,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Tooltip from '@mui/material/Tooltip';
 import Paper from '@mui/material/Paper';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import Dialog from '@mui/material/Dialog';
@@ -17,8 +18,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,9 +42,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
-    const [popoverOpen, setPopoverOpen] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
 
     const columns = [
         { field: 'department', headerName: 'Department' },
@@ -53,15 +50,6 @@ export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
         { field: 'status', headerName: 'Status' },
         { field: 'disconnect', headerName: 'Actions' },
     ];
-
-    const handlePopoverOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-        setPopoverOpen(true);
-    };
-
-    const handlePopoverClose = () => {
-        setPopoverOpen(false);
-    };
 
     const handleClickOpen = () => {
         setDialogOpen(true);
@@ -93,33 +81,13 @@ export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
                             <StyledTableCell>
                                 {row.status === 'Connected' && (
                                     <>
-                                        <IconButton aria-label={`disconnect-button-${row.id}`}
-                                            onClick={handleClickOpen}
-                                            onMouseEnter={handlePopoverOpen}
-                                            onMouseLeave={handlePopoverClose}
-                                        >
-                                            <LinkOffIcon />
-                                        </IconButton>
-                                        <Popover
-                                            id="mouse-over-popover"
-                                            sx={{
-                                                pointerEvents: 'none',
-                                            }}
-                                            open={popoverOpen}
-                                            anchorEl={anchorEl}
-                                            anchorOrigin={{
-                                                vertical: 'center',
-                                                horizontal: 'center',
-                                            }}
-                                            transformOrigin={{
-                                                vertical: 'center',
-                                                horizontal: 'center',
-                                            }}
-                                            onClose={handlePopoverClose}
-                                            disableRestoreFocus
-                                        >
-                                            <Typography sx={{ p: 1 }}>Disconnect</Typography>
-                                        </Popover>
+                                        <Tooltip title="Disconnect">
+                                            <IconButton aria-label={`disconnect-button-${row.id}`}
+                                                onClick={handleClickOpen}
+                                            >
+                                                <LinkOffIcon />
+                                            </IconButton>
+                                        </Tooltip>
                                         <Dialog
                                             open={dialogOpen}
                                             onClose={handleClose}

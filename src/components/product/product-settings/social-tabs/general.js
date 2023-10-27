@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import TextFieldWrapper from '../../../general/textfield-wrapper';
@@ -13,7 +12,7 @@ import { AgentsTable } from './agents-table';
 import { DepartmentsTable } from './department-table';
 
 
-export const SocialGeneralContent = ({ users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, formik, handleAgentsDelete, agentRows, departmentRows, handleDisconnect }) => {
+export const SocialGeneralContent = ({ users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, formik, handleAgentsDelete, agentRows, departmentRows, handleDisconnect, handleAddAgent, handleAddDepartment, handleConnectDepartment, handleDeleteDepartment}) => {
     const availDeptSelectOpts = availableDepartments.length === 0
         ? [{ value: "", label: "No available departments" }]
         : availableDepartments.map((department) => ({ value: department.department_id, label: department.department_name }));
@@ -24,30 +23,32 @@ export const SocialGeneralContent = ({ users, agents, departments, availableDepa
 
     return (
         <>
-            <Card>
+            <Card sx={{ mt: 3, maxHeight: '800px', overflow: 'auto' }}>
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
-variant="subtitle2"
-data-testid='agents-config'>
+                        variant="subtitle2"
+                        data-testid='agents-config'>
                         Agents
                     </Typography>
                     <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                        variant="body1"
+                        sx={{ ml: 1, mb: 3 }}>
                         Assign company users as agents of a department.
                     </Typography>
                     <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
                         <Alert severity="info"
-sx={{ width: '100%' }}>
+                            sx={{ width: '100%' }}>
                             Please note that the amount of agents allowed is limited by the Beet Social plan you have purchased.
                         </Alert>
                     </Box>
                     <Grid container
-spacing={1}
-alignItems="center"
-justifyContent="space-between">
+                        spacing={3}
+                        alignItems="center"
+                        justifyContent="flex-start"
+                    >
                         <Grid item
-xs={5}>
+                            xs={5}
+                        >
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Agent"
@@ -57,7 +58,7 @@ xs={5}>
                             />
                         </Grid>
                         <Grid item
-xs={5}>
+                            xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Department"
@@ -66,28 +67,26 @@ xs={5}>
                                 selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
                             />
                         </Grid>
-                        <Grid item
-xs={2}
-sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <Button
-                                onClick={formik.handleSubmit}
-                                autoFocus
-                                variant="outlined"
-                                sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
-                                disabled={!agentsAllowed}
-                            >
-                                Assign
-                            </Button>
-                        </Grid>
                     </Grid>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1, mr: 0, ml: 'auto' }}>
+                        <Button
+                            onClick={handleAddAgent}
+                            autoFocus
+                            variant="contained"
+                            sx={{ ml: 1, mb: 4, mt: 4, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                            disabled={!agentsAllowed}
+                        >
+                            Assign
+                        </Button>
+                    </Box>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
-variant="subtitle2"
-data-testid='current-agents'>
+                        variant="subtitle2"
+                        data-testid='current-agents'>
                         Current Agents
                     </Typography>
                     <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                        variant="body1"
+                        sx={{ ml: 1, mb: 3 }}>
                         Check the current agents assigned to company departments.
                         Each agent can be unassigned at any time by clicking the delete button,
                         but their information won&apos;t be erased.
@@ -95,11 +94,11 @@ sx={{ ml: 1, mb: 3 }}>
                     </Typography>
                     {agents.length !== 0 ? (
                         <AgentsTable rows={agentRows}
-onDeleteRow={handleAgentsDelete} />
+                            onDeleteRow={handleAgentsDelete} />
                     ) : (
                         <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, textAlign: 'center', fontSize: '1.1rem' }}
-variant="body1"
-gutterBottom>
+                            variant="body1"
+                            gutterBottom>
                             No agents assigned to departments.
                         </Typography>
                     )}
@@ -108,29 +107,22 @@ gutterBottom>
             <Card sx={{ mt: 3, maxHeight: '800px', overflow: 'auto' }}>
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
-variant="subtitle2"
-data-testid='department-config'>
+                        variant="subtitle2"
+                        data-testid='department-config'>
                         Department
                     </Typography>
                     <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 2 }}>
+                        variant="body1"
+                        sx={{ ml: 1, mb: 2 }}>
                         Connect a phone number to a department, create a new department or delete any department that is no longer needed.
                     </Typography>
-                    <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
-                        <Alert severity="info"
-sx={{ ml: 1, mr: 2, mt: 2, width: '100%' }}>
-                            Please note that in order to create a new department, you must have a phone number available.
-                            To check your current phone numbers, click <Link href="">here</Link>.
-                        </Alert>
-                    </Box >
                     <Grid container
-spacing={1}
-justifyContent="center"
-alignItems="center"
-sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        spacing={3}
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                         <Grid item
-xs={5}>
+                            xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Department"
@@ -140,7 +132,7 @@ xs={5}>
                             />
                         </Grid>
                         <Grid item
-xs={5}>
+                            xs={5}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Phone Number"
@@ -149,45 +141,55 @@ xs={5}>
                                 selectOptions={availPhonesSelectOpts}
                             />
                         </Grid>
-                        <Grid item
-xs={2}
-sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <Button
-                                onClick={formik.handleSubmit}
-                                autoFocus
-                                variant="outlined"
-                                sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
-                                disabled={availDeptSelectOpts.length === 0 || availPhonesSelectOpts.length === 0}
-                            >
-                                Connect
-                            </Button>
-                        </Grid>
                     </Grid>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1, mr: 0, ml: 'auto' }}>
+                        <Button
+                            onClick={handleConnectDepartment}
+                            autoFocus
+                            variant="contained"
+                            sx={{ ml: 1, mb: 4, mt: 4, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                            disabled={availDeptSelectOpts.length === 0 || availPhonesSelectOpts.length === 0}
+                        >
+                            Connect
+                        </Button>
+                    </Box>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
-variant="subtitle2"
-data-testid='current-departments'>
+                        variant="subtitle2"
+                        data-testid='current-departments'>
                         Current Connected Departments
                     </Typography>
                     <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                        variant="body1"
+                        sx={{ ml: 1, mb: 3 }}>
                         Check the current departments connected to phone numbers.
                         Each department can be disconnected at any time by clicking the disconnect button,
                         but their information won&apos;t be erased.
                     </Typography>
                     <DepartmentsTable departmentRows={departmentRows}
-handleDisconnect={handleDisconnect} />
+                        handleDisconnect={handleDisconnect} />
                 </CardContent>
             </Card>
-            <Card sx={{ mt: 3, mb: 8, maxHeight: '400px', overflow: 'auto' }}>
+            <Card sx={{ mt: 3, mb: 8, maxHeight: '600px', overflow: 'auto' }}>
                 <CardContent>
+                    <Typography sx={{ ml: 1, mr: 2, mt: 2, fontSize: '1.2rem' }}
+                        variant="subtitle2"
+                        data-testid='agents-config'>
+                        Create & Delete
+                    </Typography>
+                    <Box sx={{ maxHeight: '100px', overflow: 'auto' }}>
+                        <Alert severity="info"
+                            sx={{ mr: 2, mt: 2, width: '100%' }}>
+                            Please note that in order to create a new department, you must have a phone number available.
+                            To check your current phone numbers, please go to Whatsapp product settings.
+                        </Alert>
+                    </Box >
                     <Grid container
-spacing={1}
-justifyContent="center"
-alignItems="center"
-sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        spacing={1}
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Grid item
-xs={6}>
+                            xs={6}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="New Department"
@@ -195,28 +197,25 @@ xs={6}>
                                 sx={{ width: '100%' }}
                             />
                         </Grid>
-                        <Grid item
-xs={3}>
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mr: 0, ml: 'auto' }}>
-                                <Button
-                                    onClick={formik.handleSubmit}
-                                    autoFocus
-variant="outlined"
-                                    sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', width: '23%' }}
-                                    disabled={!departmentsAllowed}
-                                >
-                                    Add
-                                </Button>
-                            </Box>
-                        </Grid>
                     </Grid>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1, mr: 0, ml: 'auto' }}>
+                        <Button
+                            onClick={handleAddDepartment}
+                            autoFocus
+                            variant="contained"
+                            sx={{ ml: 1, mb: 4, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                            disabled={!departmentsAllowed}
+                        >
+                            Add
+                        </Button>
+                    </Box>
                     <Grid container
-spacing={1}
-justifyContent="center"
-alignItems="center"
-sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        spacing={1}
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                         <Grid item
-xs={6}>
+                            xs={6}>
                             <TextFieldWrapper
                                 formik={formik}
                                 label="Choose a Department"
@@ -225,18 +224,17 @@ xs={6}>
                                 selectOptions={departments.map((department) => ({ value: department.department_id, label: department.department_name }))}
                             />
                         </Grid>
-                        <Grid item
-xs={3}>
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mr: 0, ml: 'auto' }}>
-                                <Button onClick={formik.handleSubmit}
-autoFocus
-variant="outlined"
-sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)', width: '23%' }}>
-                                    Delete
-                                </Button>
-                            </Box>
-                        </Grid>
                     </Grid>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1, mr: 0, ml: 'auto' }}>
+                        <Button
+                            onClick={handleDeleteDepartment}
+                            autoFocus
+                            variant="contained"
+                            sx={{ ml: 1, mb: 4, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                        >
+                            Delete
+                        </Button>
+                    </Box>
                 </CardContent>
             </Card>
         </>

@@ -13,7 +13,7 @@ describe('WhatsappSettings', () => {
     });
     
     it('renders the component without errors', () => {
-        render(<WhatsappSettings />);
+        render(<WhatsappSettings wabas={[]} />);
         act(() => {
             fireEvent.click(screen.getByTestId('settings-button'));
         });
@@ -21,7 +21,7 @@ describe('WhatsappSettings', () => {
     });
 
     it('displays the correct tab label', () => {
-        render(<WhatsappSettings />);
+        render(<WhatsappSettings wabas={[]} />);
         act(() => {
             fireEvent.click(screen.getByTestId('settings-button'));
         });
@@ -31,7 +31,7 @@ describe('WhatsappSettings', () => {
     it('calls the API to fetch company and wabas data', async () => {
         api.get.mockResolvedValueOnce({ data: { company: { facebook_token: 'token' } } });
         api.get.mockResolvedValueOnce({ data: { wabas: [] } });
-        render(<WhatsappSettings />);
+        render(<WhatsappSettings wabas={[]} />);
         act(() => {
             fireEvent.click(screen.getByTestId('settings-button'));
         });
@@ -55,7 +55,7 @@ describe('WhatsappSettings', () => {
         ];
         api.get.mockResolvedValueOnce({ data: { company: { facebook_token: 'token' } } });
         api.get.mockResolvedValueOnce({ data: { wabas } });
-        render(<WhatsappSettings />);
+        render(<WhatsappSettings wabas={wabas} />);
         act(() => {
             fireEvent.click(screen.getByTestId('settings-button'));
         });

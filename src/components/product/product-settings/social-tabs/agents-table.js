@@ -9,6 +9,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Tooltip from '@mui/material/Tooltip';
 import Paper from '@mui/material/Paper';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,16 +41,16 @@ export const AgentsTable = ({ rows, onDeleteRow }) => {
         { field: 'department', headerName: 'Department', width: 100 },
         { field: 'delete', headerName: 'Actions', width: 5 },
     ];
-    
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 400, mb: 3 }}
-aria-label="customized table">
+                aria-label="customized table">
                 <TableHead>
                     <TableRow>
                         {columns.map((column) => (
                             <StyledTableCell key={column.field}
-width={column.width}>
+                                width={column.width}>
                                 {column.headerName}
                             </StyledTableCell>
                         ))}
@@ -62,15 +63,17 @@ width={column.width}>
                             <StyledTableCell>{row.role}</StyledTableCell>
                             <StyledTableCell>{row.department}</StyledTableCell>
                             <StyledTableCell>
-                                <IconButton aria-label="delete"
-onClick={() => onDeleteRow(row)}>
-                                    <DeleteIcon />
-                                </IconButton>
+                                <Tooltip title="Delete">
+                                    <IconButton aria-label="delete"
+                                        onClick={() => onDeleteRow(row)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>
-            </Table>
+            </Table> 
         </TableContainer>
     );
 };

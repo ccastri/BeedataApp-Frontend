@@ -2,10 +2,12 @@ import React from 'react';
 import { FbSignupFlow } from '../fb-signup-flow';
 import { PermissionChange } from './permission-change';
 import { PhonesTable } from './phones-table';
+import { ProductActivation } from './product-activation';
 import PropTypes from 'prop-types';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -17,35 +19,62 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 
-export const WpGeneralContent = ({ accessToken, wabas, deleteRow }) => {
+export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption, credit, updateCompanyConsumption, purchaseConsumptionProduct, productId }) => {
 
     return (
         <>
+            {productId === 1 && (
+                <Card sx={{ mt: 3, maxHeight: '600px', overflow: 'auto' }}>
+                    <CardContent>
+                        <Typography
+                            sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
+                            variant="subtitle2"
+                            data-testid='product-activation'
+                        >
+                            Credit Consumption Activation
+                        </Typography>
+                        <Typography color="textSecondary"
+                            variant="body1" sx={{ ml: 1, mb: 3 }}>
+                            To activate the credit consumption on Beet, click on the button below.
+                        </Typography>
+                        <Alert severity="info"
+                            sx={{ ml: 2, mb: 2 }}>
+                            <Typography variant="body1"
+                                sx={{ ml: 1, mb: 1 }}>
+                                <strong>Important:</strong> You need to have credit to be availble to activate the message consumption.
+                            </Typography>
+                        </Alert>
+                        <CardActions sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                            <ProductActivation isConsumption={isConsumption} credit={credit} updateCompanyConsumption={updateCompanyConsumption} purchaseConsumptionProduct={purchaseConsumptionProduct} />
+                        </CardActions>
+                    </CardContent>
+                </Card>
+            )}
             <Card sx={{ mt: 3, maxHeight: '600px', overflow: 'auto' }}>
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
-variant="subtitle2"
-data-testid='permissions-title' >
+                        variant="subtitle2"
+                        data-testid='permissions-title' >
                         Permissions
                     </Typography>
                     {accessToken ? (
                         <>
                             <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                                variant="body1"
+                                sx={{ ml: 1, mb: 3 }}>
                                 To change Meta permissions granted to Beet, click on the button below.
                             </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}
-data-testid='permissions-change'>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 3 }}
+                                data-testid='permissions-change'>
                                 <PermissionChange rows={wabas}
-deleteRow={deleteRow} />
+                                    deleteRow={deleteRow} />
                             </Box>
                         </>
                     ) : (
                         <>
                             <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                                variant="body1"
+                                sx={{ ml: 1, mb: 3 }}>
                                 To use Beet&apos;s characters (chatbot), you need to grant Meta permission to Beet.
                                 To do this, you need to have:
                             </Typography>
@@ -60,7 +89,7 @@ sx={{ ml: 1, mb: 3 }}>
                                             sx={{ '& .MuiTypography-body1': { color: 'text.secondary', fontWeight: 'bold' } }}
                                         />
                                         <IconButton sx={{ ml: 4 }}
-onClick={() => window.open('https://business.facebook.com/')}>
+                                            onClick={() => window.open('https://business.facebook.com/')}>
                                             <OpenInNewIcon />
                                         </IconButton>
                                     </Box>
@@ -75,7 +104,7 @@ onClick={() => window.open('https://business.facebook.com/')}>
                                             sx={{ '& .MuiTypography-body1': { color: 'text.secondary', fontWeight: 'bold' } }}
                                         />
                                         <IconButton sx={{ ml: 4 }}
-onClick={() => window.open('https://www.facebook.com/business/help/456220311516626?id=2129163877102343&ref=search_new_0')}>
+                                            onClick={() => window.open('https://www.facebook.com/business/help/456220311516626?id=2129163877102343&ref=search_new_0')}>
                                             <OpenInNewIcon />
                                         </IconButton>
                                     </Box>
@@ -90,45 +119,38 @@ onClick={() => window.open('https://www.facebook.com/business/help/4562203115166
                                             sx={{ '& .MuiTypography-body1': { color: 'text.secondary', fontWeight: 'bold' } }}
                                         />
                                         <IconButton sx={{ ml: 4 }}
-onClick={() => window.open('https://business.facebook.com/billing_hub/payment_methods?business_id=1915364938801277&placement=standalone')}>
+                                            onClick={() => window.open('https://business.facebook.com/billing_hub/payment_methods?business_id=1915364938801277&placement=standalone')}>
                                             <OpenInNewIcon />
                                         </IconButton>
                                     </Box>
                                 </ListItem>
                             </List>
                             <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                                variant="body1"
+                                sx={{ ml: 1, mb: 3 }}>
                                 Once you have these requirements, you can grant permission to Beet by clicking on the button below.
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                                <FbSignupFlow title={'Permissions'}/>
+                                <FbSignupFlow title={'Permissions'} />
                             </Box>
                         </>
                     )}
                 </CardContent>
             </Card>
             <Card sx={{ mt: 3, maxHeight: '700px', overflow: 'auto' }}
-data-testid='phones-data'>
+                data-testid='phones-data'>
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
-variant="subtitle2">
+                        variant="subtitle2">
                         Current Granted Permissions and Phone Number Lines in Use
                     </Typography>
                     <Typography color="textSecondary"
-variant="body1"
-sx={{ ml: 1, mb: 3 }}>
+                        variant="body1"
+                        sx={{ ml: 1, mb: 3 }}>
                         The following table displays current granted permissions and phone number lines
                         currently being used on Beet characters (chatbots). You can disconnect a phone number
                         from a chatbot by clicking on the disconnect button action.
                     </Typography>
-                    <Alert severity="info"
-sx={{ ml: 2, mb: 2 }}>
-                        <Typography variant="body1"
-sx={{ ml: 1, mb: 1 }}>
-                            <strong>Important:</strong> You can disconnect a phone number from a chatbot by clicking on the disconnect button action.
-                        </Typography>
-                    </Alert>
                     <PhonesTable rows={wabas} />
                 </CardContent>
             </Card>
