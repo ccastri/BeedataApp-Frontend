@@ -50,7 +50,7 @@ function getAverageRoomsPerDay(rooms) {
     const totalRooms = dates.reduce((prev, date) => prev + roomsByDate[date].length, 0);
     const averageRoomsPerDay = dates.length > 0 ? totalRooms / dates.length : 0;
 
-    return averageRoomsPerDay;
+    return parseFloat(averageRoomsPerDay.toFixed(2));
 }
 
 function getBusiestHour(messages) {
