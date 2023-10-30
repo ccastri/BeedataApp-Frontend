@@ -85,11 +85,14 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                         This is not required, but it is recommended if you no longer want Beet
                         to have access to certain information or resources.
                     </DialogContentText>
-                    <Stack direction="column" sx={{ width: '100%', mb: 2 }}>
-                        <Alert severity="info" sx={{ width: '100%', mb: 2 }}>
+                    <Stack direction="column"
+sx={{ width: '100%', mb: 2 }}>
+                        <Alert severity="info"
+sx={{ width: '100%', mb: 2 }}>
                             <strong>Important:</strong> Assigned phone numbers will not be deleted.
                         </Alert>
-                        <PhoneDeleteTable rows={rows} deleteRow={deleteRow} />
+                        <PhoneDeleteTable rows={rows}
+deleteRow={deleteRow} />
                     </Stack>
                     <DialogTitle sx={{ ml: -2, mb: 1, mt: 2, textAlign: 'left' }}>
                         Change META Permissions

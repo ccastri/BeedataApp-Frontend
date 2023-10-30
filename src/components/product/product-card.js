@@ -95,6 +95,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
           }}
         >
           <Avatar
+            data-testid="product-avatar"
             alt="Product"
             src={product.image}
             sx={{ height: 100, width: 100 }}
@@ -127,8 +128,11 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
       <Divider />
       <CardActions>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          {(product.id === 5) && (<SocialSettings wabas={wabas} updatedWabas={updateWabas} />)}
-          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas} deleteRow={deleteRow} productId={product.id} />)}
+          {(product.id === 5) && (<SocialSettings wabas={wabas}
+updatedWabas={updateWabas} />)}
+          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
+deleteRow={deleteRow}
+productId={product.id} />)}
           {(product.id === 4) && (<LakeSettings />)}
           {isActiveRef.current && (
             <Box

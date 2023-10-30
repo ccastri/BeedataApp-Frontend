@@ -83,7 +83,6 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
   const handleDisconnect = useCallback(async (phoneId, phoneNumber, department, departmentId) => {
     try {
-      console.log(phoneId, phoneNumber, department, departmentId);
       const response = await api.put('/api/v1/whatsapp/business-account', {
         headers: { Authorization: `Bearer ${token}` },
         data: { phoneNumberId: phoneId, departmentId: null }
@@ -112,7 +111,7 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
     } catch (error) {
       console.log(error);
     }
-  }, [token]);
+  }, [token, updatedWabas]);
 
   const agentRows = useMemo(() => agents.map((agent, index) => ({
     id: index,

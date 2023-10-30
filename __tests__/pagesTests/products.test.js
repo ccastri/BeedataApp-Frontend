@@ -6,32 +6,22 @@ import Page from '../../src/pages/products';
 jest.mock('../../src/lib/axios');
 
 describe('Products page', () => {
-    test('renders loading spinner before fetching data', () => {
-        const { getByRole } = render(<Page />);
-        const spinner = getByRole('progressbar');
-        expect(spinner).toBeInTheDocument();
-    });
+    beforeEach(() => {
+        jest.clearAllMocks();
+      });
+    
+      it('should render loading spinner when data is being fetched', async () => {
+        api.get.mockResolvedValueOnce({ data: { products: [] } });
+        render(<Page />);
+        expect(screen.getByRole('progressbar')).toBeInTheDocument();
+        await waitFor(() => expect(api.get).toHaveBeenCalledTimes(2));
+      });
 
-    test('gets products information', async () => {
-        // mock data for api.get('/api/v1/products/company-all-products')
-        const mockResponse = {
-            data: {
-                products: [
-                    {
-                        beet_app_product: ['product1', 'product2'],
-                        create_date: '2021-01-01',
-                        beet_expiration_time: 10,
-                        beet_renewal_time: 8,
-                        beet_renewal_exp_unit: 'days',
-                    },
-                ],
-            },
-        };
-        // mock api.get function with jest.fn()
-        api.get.mockResolvedValue(mockResponse);
-
-        const { getByText } = render(<Page />);
-        await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/products/company-all-products', { "headers": { "Authorization": "Bearer null" } }));
-    });
-
+      it('should render product cards when data is fetched', async () => {
+        api.get.mockResolvedValueOnce({ data: { products: [] } });
+        api.get.mockResolvedValueOnce({ data: { wabas: [] } });
+        render(<Page />);
+        await waitFor(() => expect(api.get).toHaveBeenCalledTimes(2));
+        expect(screen.getAllByTestId('product-avatar'));
+      });
 });

@@ -34,7 +34,8 @@ export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption,
                             Credit Consumption Activation
                         </Typography>
                         <Typography color="textSecondary"
-                            variant="body1" sx={{ ml: 1, mb: 3 }}>
+                            variant="body1"
+sx={{ ml: 1, mb: 3 }}>
                             To activate the credit consumption on Beet, click on the button below.
                         </Typography>
                         <Alert severity="info"
@@ -45,7 +46,10 @@ export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption,
                             </Typography>
                         </Alert>
                         <CardActions sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-                            <ProductActivation isConsumption={isConsumption} credit={credit} updateCompanyConsumption={updateCompanyConsumption} purchaseConsumptionProduct={purchaseConsumptionProduct} />
+                            <ProductActivation isConsumption={isConsumption}
+credit={credit}
+updateCompanyConsumption={updateCompanyConsumption}
+purchaseConsumptionProduct={purchaseConsumptionProduct} />
                         </CardActions>
                     </CardContent>
                 </Card>
@@ -160,5 +164,11 @@ export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption,
 
 WpGeneralContent.propTypes = {
     accessToken: PropTypes.bool.isRequired,
-    wabas: PropTypes.array.isRequired
+    wabas: PropTypes.array.isRequired,
+    deleteRow: PropTypes.func.isRequired,
+    isConsumption: PropTypes.bool.isRequired,
+    credit: PropTypes.number.isRequired,
+    updateCompanyConsumption: PropTypes.func.isRequired,
+    purchaseConsumptionProduct: PropTypes.func.isRequired,
+    productId: PropTypes.number.isRequired,
 };

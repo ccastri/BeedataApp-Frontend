@@ -75,7 +75,8 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
         <DialogContent sx={{ mb: -2 }}>
           <DialogContentText>
             {isConsumption ? 'Deactivating this product will disable all chatbot messaging.' : 'Activating this product will enable chatbot messaging by consuming '}
-            {!isConsumption && <Typography component="span" fontWeight="bold">CREDIT.</Typography>}
+            {!isConsumption && <Typography component="span"
+fontWeight="bold">CREDIT.</Typography>}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

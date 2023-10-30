@@ -104,7 +104,8 @@ function EnhancedTableHead(props) {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
+                <Box component="span"
+sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
@@ -248,13 +249,14 @@ export const PhoneDeleteTable = ({rows, deleteRow}) => {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage, rows],
   );
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} handleDelete={handleDelete} />
+        <EnhancedTableToolbar numSelected={selected.length}
+handleDelete={handleDelete} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

@@ -1,21 +1,21 @@
-// import React from 'react';
-// import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-// import { ProductDialog } from '../../../src/components/product/product-dialog'; 
-// import api from '../../../src/lib/axios';
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { ProductDialog } from '../../../src/components/product/product-dialog'; 
+import api from '../../../src/lib/axios';
 
-// jest.mock('../../../src/lib/axios');
+jest.mock('../../../src/lib/axios');
 
-// describe('ProductDialog', () => {
-//     afterEach(() => {
-//         jest.restoreAllMocks();
-//     });
+describe('ProductDialog', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
     
-//   it('renders dialog', () => {
-//     render(<ProductDialog name="Product 1" description="Description of Product 1" image="path/to/image.png" />);
-//     const purchaseButton = screen.getByText('Purchase');
-//     fireEvent.click(purchaseButton);
-//     expect(screen.getByRole('dialog')).toBeInTheDocument();
-//   });
+  it('renders dialog', () => {
+    render(<ProductDialog name="Product 1" description="Description of Product 1" image="path/to/image.png" />);
+    const purchaseButton = screen.getByText('Purchase');
+    fireEvent.click(purchaseButton);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
     
 //   it('fetches product options on mount', async () => {
 //     const mockProductOptions = [{
@@ -43,4 +43,4 @@
 //   });
 
   
-// });
+});
