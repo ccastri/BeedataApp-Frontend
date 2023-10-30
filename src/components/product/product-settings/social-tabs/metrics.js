@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
@@ -80,6 +81,7 @@ export const MetricsContent = ({ agents }) => {
     const [state, setState] = useState({
         messages: [],
         rooms: [],
+        loading: true,
     });
     const data = [];
 
@@ -121,6 +123,7 @@ export const MetricsContent = ({ agents }) => {
                     setState({
                         messages: messagesResponse.data.messages,
                         rooms: roomsResponse.data.rooms,
+                        loading: false,
                     });
                 }
             } catch (err) {
@@ -215,48 +218,65 @@ export const MetricsContent = ({ agents }) => {
         };
     });
 
+    if (state.loading) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress
+                    data-testid='loading'
+                />
+            </Box>
+        );
+    }
+
     return (
         <Box sx={{ mt: 4 }}
-data-testid='metrics'>
+            data-testid='metrics'>
             <Grid container
-spacing={2}>
+                spacing={2}>
                 <Grid container
-justifyContent="flex-end"
-sx={{ ml: 2 }}>
-                        <Card sx={{ width: '100%' }}>
-                            <CardContent>
-                                <ThemeProvider theme={theme}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <Grid container
-spacing={2}
-justifyContent="flex-end">
-                                            <Grid item>
-                                                <DatePicker
-                                                    label="Start Date"
-                                                    value={startDate}
-                                                    onChange={handleStartDateChange}
-                                                    renderInput={(props) => <TextField {...props}
-sx={{ mr: 3 }} />}
-                                                />
-                                            </Grid>
-                                            <Grid item>
-                                                <DatePicker
-                                                    label="End Date"
-                                                    value={endDate}
-                                                    onChange={handleEndDateChange}
-                                                    renderInput={(props) => <TextField {...props} />}
-                                                />
-                                            </Grid>
+                    justifyContent="flex-end"
+                    sx={{ ml: 2 }}>
+                    <Card sx={{ width: '100%' }}>
+                        <CardContent>
+                            <ThemeProvider theme={theme}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <Grid container
+                                        spacing={2}
+                                        justifyContent="flex-end">
+                                        <Grid item>
+                                            <DatePicker
+                                                label="Start Date"
+                                                value={startDate}
+                                                onChange={handleStartDateChange}
+                                                renderInput={(props) => <TextField {...props}
+                                                    sx={{ mr: 3 }} />}
+                                            />
                                         </Grid>
-                                    </LocalizationProvider>
-                                </ThemeProvider>
-                            </CardContent>
-                        </Card>
+                                        <Grid item>
+                                            <DatePicker
+                                                label="End Date"
+                                                value={endDate}
+                                                onChange={handleEndDateChange}
+                                                renderInput={(props) => <TextField {...props} />}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </LocalizationProvider>
+                            </ThemeProvider>
+                        </CardContent>
+                    </Card>
                 </Grid>
                 {statsCards.map((card, index) => (
                     <Grid item
-xs={4}
-key={index}>
+                        xs={4}
+                        key={index}>
                         <StatsCard
                             title={card.title}
                             value={card.value}
@@ -266,11 +286,11 @@ key={index}>
             </Grid>
             <Box sx={{ mt: 4 }} >
                 <Grid container
-spacing={2}>
+                    spacing={2}>
                     <Grid item
-xs={12}
-md={6}
-data-testid='rooms-chart'>
+                        xs={12}
+                        md={6}
+                        data-testid='rooms-chart'>
                         <Card sx={{ mb: 4 }}>
                             <CardHeader title="Total Chat Rooms" />
                             <CardContent sx={{
@@ -278,27 +298,27 @@ data-testid='rooms-chart'>
                                 color: '#FFFFFF',
                             }}>
                                 <ResponsiveContainer width="100%"
-height={400}>
+                                    height={400}>
                                     <LineChart data={data}
-sx={{ background: '#FFFFFF' }}>
+                                        sx={{ background: '#FFFFFF' }}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="name" />
                                         <YAxis tickFormatter={(tick) => parseInt(tick)} />
                                         <Tooltip />
                                         <Legend />
                                         <Line type="monotone"
-dataKey="rooms"
-stroke="#8884d8"
-activeDot={{ r: 8 }} />
+                                            dataKey="rooms"
+                                            stroke="#8884d8"
+                                            activeDot={{ r: 8 }} />
                                     </LineChart>
                                 </ResponsiveContainer>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item
-xs={12}
-md={6}
-data-testid='agents-rooms-table'>
+                        xs={12}
+                        md={6}
+                        data-testid='agents-rooms-table'>
                         <MetricsTable data={agentData} />
                     </Grid>
                 </Grid>
