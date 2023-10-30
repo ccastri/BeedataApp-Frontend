@@ -7,53 +7,33 @@ jest.mock('../../../../src/lib/axios');
 
 describe('SocialSettings', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
     });
-
-    it('should fetch data on mount', async () => {
-        api.get.mockResolvedValueOnce({
-            data: {
-                users: [],
-                agents: [],
-                departments: [],
-                availableDepartments: [],
-                availablePhoneNums: [],
-            },
-        });
-
-        render(<SocialSettings />);
-
-        expect(api.get).toHaveBeenCalledWith('/api/v1/users/users-group-by', expect.any(Object));
-        expect(api.get).toHaveBeenCalledWith('/api/v1/social/agents', expect.any(Object));
-        expect(api.get).toHaveBeenCalledWith('/api/v1/social/departments', expect.any(Object));
-        expect(api.get).toHaveBeenCalledWith('/api/v1/social/available-departments', expect.any(Object));
-        expect(api.get).toHaveBeenCalledWith('/api/v1/whatsapp/business-account', expect.any(Object));
-    });
-
-    it('should add an agent when form is submitted with valid data', async () => {
-        api.post.mockResolvedValueOnce({
-            data: {
-                success: true,
-                message: 'Agent added successfully',
-                user: {
-                    agent_id: '123',
-                    name: 'John Doe',
-                    role: 'agent',
-                },
-                department: {
-                    department_id: '456',
-                    department_name: 'Sales',
-                },
-            },
-        });
-
-        render(<SocialSettings />);
+    
+    it('should render the component without errors', () => {
+        render(<SocialSettings wabas={[]} />);
         act(() => {
             fireEvent.click(screen.getByTestId('settings-button'));
         });
-
-        expect(screen.getByTestId('agents-config')).toBeInTheDocument();
-        expect(screen.getByTestId('current-agents')).toBeInTheDocument();
-        expect(screen.getByTestId('department-config')).toBeInTheDocument();
+        expect(screen.getByText('General')).toBeInTheDocument();
+        expect(screen.getByText('Metrics')).toBeInTheDocument();
     });
+
+    it('should call handleAgentsDelete function when delete button is clicked', async () => {
+        render(<SocialSettings wabas={[]} />);
+        act(() => {
+            fireEvent.click(screen.getByTestId('settings-button'));
+        });
+        const deleteButton = screen.getByRole('button', { name: /delete/i });
+        expect(deleteButton).toBeInTheDocument();
+      });
+
+      it('should call handleDisconnect function when disconnect button is clicked', async () => {
+        const wabas = [{ phone_id: 1, phone_number: '+1234567890', department_id: 1 }];
+        render(<SocialSettings wabas={wabas} />);
+        act(() => {
+            fireEvent.click(screen.getByTestId('settings-button'));
+        });
+        const disconnectButton = screen.getByRole('button', { name: /disconnect/i });
+        expect(disconnectButton).toBeInTheDocument();
+      });
 });

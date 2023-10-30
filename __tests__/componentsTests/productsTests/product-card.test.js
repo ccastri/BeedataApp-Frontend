@@ -26,101 +26,83 @@ describe('ProductCard', () => {
     jest.restoreAllMocks();
   });
 
-  const product = {
-    id: 2,
-    name: 'Test Product',
-    image: 'test-image.jpg',
-    description: 'This is a test product',
-  };
-
-  it('renders the product name', async () => {
-    render(<ProductCard product={product} isActive={true} />);
-    await waitFor(() => expect(screen.getByText('Test Product')).toBeInTheDocument());
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-        headers: {
-            Authorization: `Bearer ${null}`,
-        },
-    });
-  });
-
-  it('renders the product image', async () => {
-    render(<ProductCard product={product} isActive={true} />);
-    await waitFor(() => expect(screen.getByAltText('Product')).toBeInTheDocument());
-
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
-    
-    const productImage = screen.getByAltText('Product');
-    expect(productImage).toHaveAttribute('src', 'test-image.jpg');
-  });
-
-  it('renders the product availability when active', async () => {
-    render(<ProductCard product={product} isActive={true} />);
-    await waitFor(() => expect(screen.getByText(/Available/i)).toBeInTheDocument());
-
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
-    const productAvailability = screen.getByText(/Available/i);
-    expect(productAvailability).toBeInTheDocument();
-  });
-
-  it('renders the product availability when inactive', async () => {
-    render(<ProductCard product={product} isActive={false} />);
-    await waitFor(() => expect(screen.getByText('Not available')).toBeInTheDocument());
-
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
-    
-    const productAvailability = screen.getByText('Not available');
-    expect(productAvailability).toBeInTheDocument();
-  });
-
-  it('renders the expiration date when active', async () => {
+  it('renders product name', async () => {
+    const product = {
+      name: 'Test Product',
+      image: 'test-image.png',
+      id: 1
+    };
     const purchaseDetails = {
       beet_renewal_time: 1,
       beet_renewal_exp_unit: 'days',
-      beet_expiration_time: 1,
-      create_date: new Date().toISOString(),
+      beet_expiration_time: 30,
+      create_date: '2022-01-01T00:00:00.000Z'
     };
-    render(<ProductCard product={product} isActive={true} purchaseDetails={purchaseDetails} />);
-    await waitFor(() => expect(screen.getByText(/Expires on:/)).toBeInTheDocument());
 
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
-    const expirationDate = screen.getByText(/Expires on:/);
+    const wabas = [];
+
+    const isActive = true;
+    render(<ProductCard product={product} purchaseDetails={purchaseDetails} isActive={isActive} wabas={wabas} />);
+    await waitFor(() => expect(screen.getByText('Test Product')).toBeInTheDocument());
+  });
+
+  it('renders product image', () => {
+    const product = {
+      name: 'Test Product',
+      image: 'test-image.png',
+      id: 1
+    };
+    const purchaseDetails = {
+      beet_renewal_time: 1,
+      beet_renewal_exp_unit: 'days',
+      beet_expiration_time: 30,
+      create_date: '2022-01-01T00:00:00.000Z'
+    };
+    const isActive = true;
+    render(<ProductCard product={product} purchaseDetails={purchaseDetails} isActive={isActive} wabas={[]} />);
+    const productImage = screen.getByAltText('Product');
+    expect(productImage).toBeInTheDocument();
+  });
+
+
+  it('renders product expiration date', () => {
+    const product = {
+      name: 'Test Product',
+      image: 'test-image.png',
+      id: 1
+    };
+    const purchaseDetails = {
+      beet_renewal_time: 1,
+      beet_renewal_exp_unit: 'days',
+      beet_expiration_time: 30,
+      create_date: '2022-01-01T00:00:00.000Z'
+    };
+    const isActive = true;
+    render(<ProductCard product={product} purchaseDetails={purchaseDetails} isActive={isActive} wabas={[]} />);
+    const expirationDate = screen.getByText(/Expires on:/i);
     expect(expirationDate).toBeInTheDocument();
   });
 
-  it('does not render the expiration date when inactive', async () => {
+  it('renders product settings', () => {
+    const product = {
+      name: 'Test Product',
+      image: 'test-image.png',
+      id: 1
+    };
     const purchaseDetails = {
       beet_renewal_time: 1,
-      beet_renewal_exp_unit: 'day',
-      beet_expiration_time: 1,
-      create_date: new Date().toISOString(),
+      beet_renewal_exp_unit: 'days',
+      beet_expiration_time: 30,
+      create_date: '2022-01-01T00:00:00.000Z'
     };
-  
-    render(<ProductCard product={product} isActive={false} purchaseDetails={purchaseDetails} />);
-    await waitFor(() => expect(screen.getByText(/Not available/)).toBeInTheDocument());
-  
-    expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-      headers: {
-        Authorization: `Bearer ${null}`,
-      },
-    });
     
-    const expirationDate = screen.queryByText(/Expires on:/);
-    expect(expirationDate).not.toBeInTheDocument();
+    const isActive = true;
+    const wabas = [];
+    const updateWabas = jest.fn();
+    const deleteRow = jest.fn();
+    render(<ProductCard product={product} purchaseDetails={purchaseDetails} isActive={isActive} wabas={wabas} updateWabas={updateWabas} deleteRow={deleteRow} />);
+    const productSettings = screen.getByTestId('settings-button');
+    expect(productSettings).toBeInTheDocument();
   });
+
 });

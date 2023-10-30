@@ -11,7 +11,6 @@ import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import api from '../../lib/axios';
 
 
 const cardStyle = {
@@ -53,9 +52,7 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
  * 
  * Usage: Used to display Beet's available products.
  */
-export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, wabasResponse, updateWabas, deleteRow, ...rest }) => {
-  const [isConfigured, setIsConfigured] = useState(false);
-  const [loading, setLoading] = useState(true);
+export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, updateWabas, deleteRow, ...rest }) => {
   const isActiveRef = useRef(isActive);
 
   const beetDetailsT = beetDetails ? beetDetails.replace(/^{"|"}$/g, '').replace(/\\"/g, '"') : '';
@@ -83,50 +80,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
     isActiveRef.current = (currentDate < expirationDate);
   }, [expirationDate]);
 
-  const token = localStorage.getItem('jwt');
-
-  // Get company info to check if messaging account (whatsapp or others) is configured
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get('/api/v1/companies/company', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response && response.data && response.data.company) {
-          const company = response.data.company;
-
-          if (company.facebook_token) {
-            setIsConfigured(true);
-          }
-        }
-
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    }
-    fetchData();
-  }, [token]);
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          pb: 3
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <Card
       sx={cardStyle}
@@ -142,6 +95,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
           }}
         >
           <Avatar
+            data-testid="product-avatar"
             alt="Product"
             src={product.image}
             sx={{ height: 100, width: 100 }}
@@ -174,8 +128,11 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
       <Divider />
       <CardActions>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          {(product.id === 5) && (<SocialSettings wabas={wabas} updatedWabas={updateWabas} />)}
-          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas} deleteRow={deleteRow}/>)}
+          {(product.id === 5) && (<SocialSettings wabas={wabas}
+updatedWabas={updateWabas} />)}
+          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
+deleteRow={deleteRow}
+productId={product.id} />)}
           {(product.id === 4) && (<LakeSettings />)}
           {isActiveRef.current && (
             <Box
@@ -209,4 +166,9 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
 ProductCard.propTypes = {
   product: PropTypes.object.isRequired,
   isActive: PropTypes.bool.isRequired,
+  purchaseDetails: PropTypes.object,
+  beetDetails: PropTypes.string,
+  wabas: PropTypes.array,
+  updateWabas: PropTypes.func,
+  deleteRow: PropTypes.func,
 };

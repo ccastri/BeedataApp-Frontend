@@ -77,11 +77,12 @@ export const ProductDialog = (props) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await api.post('/api/v1/products/beet-products', {
-          beetProduct: name,
-        }, {
+        const response = await api.get('/api/v1/products/beet-products', {
           headers: {
             Authorization: `Bearer ${token}`,
+          },
+          params: {
+            beetProduct: name,
           },
         });
         if (response && response.data && response.data.productSelection) {
@@ -106,14 +107,12 @@ export const ProductDialog = (props) => {
     try {
       const token = localStorage.getItem('jwt');
 
-      // Get Company credit
       const creditResponse = await api.get('/api/v1/companies/company', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // Check if credit is enough to purchase product
       if (creditResponse && creditResponse.data && creditResponse.data.company) {
         const companyCredit = Number(creditResponse.data.company.credit);
         if (companyCredit < productPrice) {

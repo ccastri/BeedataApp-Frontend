@@ -50,11 +50,13 @@ const Register = () => {
       if (data.success) {
         const registrationProductCheck = {
           productId: 50,
-          companyId: data.user.company_id,
+          registerCompanyId: data.user.company_id,
           productQuantity: 10,
         };
 
-        const productCheck = await api.post('/api/v1/products/company-product', registrationProductCheck);
+        const productCheck = await api.get('/api/v1/products/company-product', {
+          params: registrationProductCheck
+        });
 
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
