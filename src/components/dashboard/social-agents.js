@@ -67,7 +67,7 @@ export const SocialAgents = () => {
       image="/static/images/products/beet_social2.svg"
       value={socialAgents}
       type="Agents"
-      totalAmount={totalSocialAgents}
+      totalAmount={totalSocialAgents > 0 ? totalSocialAgents : 'Not Available'}
     />
   )
 }

@@ -141,14 +141,16 @@ export const MetricsContent = ({ agents }) => {
         setEndDate(date);
     };
 
+    const servedByRooms = rooms.filter(room => room.servedBy);
+
     const statsCards = [
         {
             title: 'Total Chat Rooms',
-            value: rooms.length,
+            value: servedByRooms.length,
         },
         {
             title: 'Open Chat Rooms',
-            value: rooms.filter(room => room.open === true).length,
+            value: servedByRooms.filter(room => room.open === true).length,
         },
         {
             title: 'Total Messages',
@@ -156,11 +158,11 @@ export const MetricsContent = ({ agents }) => {
         },
         {
             title: 'Busiest Day',
-            value: getBusiestDay(rooms),
+            value: getBusiestDay(servedByRooms),
         },
         {
             title: 'Average Chat Rooms Per Day',
-            value: getAverageRoomsPerDay(rooms),
+            value: getAverageRoomsPerDay(servedByRooms),
         },
         {
             title: 'Busiest Hour',
@@ -174,7 +176,7 @@ export const MetricsContent = ({ agents }) => {
     if (diffDays > 1) {
         const roomsByDate = {};
 
-        rooms.forEach(room => {
+        servedByRooms.forEach(room => {
             const date = new Date(room.ts).toLocaleDateString();
             if (!roomsByDate[date]) {
                 roomsByDate[date] = [];
@@ -194,7 +196,7 @@ export const MetricsContent = ({ agents }) => {
     } else {
         const hours = new Array(24).fill(0);
 
-        rooms.forEach(room => {
+        servedByRooms.forEach(room => {
             const date = new Date(room.ts);
             const hour = date.getHours();
             hours[hour]++;
@@ -209,8 +211,8 @@ export const MetricsContent = ({ agents }) => {
     }
 
     const agentData = agents.map((agent) => {
-        const roomsServedByAgent = rooms.filter((room) => room.servedBy._id === agent.agent_id);
-        const percentageOfRooms = ((roomsServedByAgent.length / rooms.length) * 100).toFixed(2);
+        const roomsServedByAgent = servedByRooms.filter((room) => room.servedBy._id === agent.agent_id);
+        const percentageOfRooms = ((roomsServedByAgent.length / servedByRooms.length) * 100).toFixed(2);
         return {
             agent_id: agent.agent_id,
             agent_name: agent.name,

@@ -36,6 +36,7 @@ const Page = () => {
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
+      console.log('products: ', packResponse.data.products);
       setState(prevState => ({
         ...prevState,
         pack: packResponse.data.products,
@@ -85,6 +86,7 @@ const Page = () => {
 
   const products = pack.length > 0 ? pack.map(product => {
     const bulkProducts = baseProducts.map(baseProduct => {
+      console.log('product: ', product);
       if (product.beet_app_product && product.beet_app_product.includes(baseProduct.name)) {
         return {
           ...baseProduct,

@@ -17,6 +17,8 @@ export const LakeRows = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        console.log('activepurchases: ', response.data);
   
         const { success, active } = response.data;
   
@@ -70,7 +72,7 @@ export const LakeRows = () => {
         image="/static/images/products/beet_lake2.svg"
         value={rowCount}
         type="Rows"
-        totalAmount={rowLimit}
+        totalAmount={rowLimit > 0 ? rowLimit : 'Not Available'}
       />
   );
 }

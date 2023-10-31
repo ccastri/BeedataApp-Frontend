@@ -6,8 +6,8 @@ import api from '../../../lib/axios';
 const useSettingsState = (token) => {
   const [state, setState] = useState({
     accessToken: false,
-    isConsumption: '',
-    credit: false,
+    isConsumption: false,
+    credit: 0,
     responseMessage: '',
     errorMessage: ''
   });
@@ -23,7 +23,7 @@ const useSettingsState = (token) => {
         ...prevState,
         accessToken: companyResponse.data.company.facebook_token ? true : false,
         isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
-        credit: companyResponse.data.company.credit,
+        credit: parseFloat(companyResponse.data.company.credit),
       }));
     };
     fetchData();

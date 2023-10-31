@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid} from '@mui/material';
+import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -24,7 +24,7 @@ import api from '../../lib/axios';
 export const MsgInsOuts = () => {
 
     const [errorMsg, setErrorMsg] = useState(null);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({});
     const [startDate, setStartDate] = useState(() => {
         const oneMonthAgo = new Date();
         oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -54,7 +54,7 @@ export const MsgInsOuts = () => {
                 params: { startFilter: startDate, endFilter: endDate }
             });
 
-            if (response.data.success) {
+            if (response.data.success && response.data.messages.length > 0) {
                 const data = response.data.messages;
                 let xaxisFormat;
 
@@ -171,35 +171,43 @@ export const MsgInsOuts = () => {
                 <Box
                     sx={{
                         height: 400,
-                        position: 'relative'
+                        position: 'relative',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                     }}
                 >
-                    <ResponsiveContainer width="100%"
-                        height="100%">
-                        <LineChart data={data.data}>
-                            <Line type="monotone"
-                                dataKey="agent"
-                                stroke="#8884d8"
-                                strokeWidth={2} />
-                            <Line type="monotone"
-                                dataKey="visitor"
-                                stroke="#82ca9d"
-                                strokeWidth={2} />
-                            <Line type="monotone"
-                                dataKey="chatbot"
-                                stroke="#ffc658"
-                                strokeWidth={2} />
-                            <CartesianGrid stroke="#FFFFFF"
-                                strokeDasharray="5 5" />
-                            <XAxis dataKey="ts"
-                                stroke="#FFFFFF"
-                                tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
-                            <YAxis stroke="#FFFFFF"
-                                allowDecimals={false} />
-                            <Tooltip />
-                            <Legend />
-                        </LineChart>
-                    </ResponsiveContainer>
+                    {data.data ? (
+                        <ResponsiveContainer width="100%"
+                            height="100%">
+                            <LineChart data={data.data}>
+                                <Line type="monotone"
+                                    dataKey="agent"
+                                    stroke="#8884d8"
+                                    strokeWidth={2} />
+                                <Line type="monotone"
+                                    dataKey="visitor"
+                                    stroke="#82ca9d"
+                                    strokeWidth={2} />
+                                <Line type="monotone"
+                                    dataKey="chatbot"
+                                    stroke="#ffc658"
+                                    strokeWidth={2} />
+                                <CartesianGrid stroke="#FFFFFF"
+                                    strokeDasharray="5 5" />
+                                <XAxis dataKey="ts"
+                                    stroke="#FFFFFF"
+                                    tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
+                                <YAxis stroke="#FFFFFF"
+                                    allowDecimals={false} />
+                                <Tooltip />
+                                <Legend />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <Typography variant="h6"
+align="center"><br />No data to display</Typography>
+                    )}
                     {errorMsg && (
                         <ErrorSnackbar
                             errorMessage={errorMsg}

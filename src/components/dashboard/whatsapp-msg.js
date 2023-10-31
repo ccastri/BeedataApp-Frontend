@@ -30,10 +30,10 @@ export const WhatsappMsg = () => {
               Authorization: `Bearer ${token}`,
             },
             params: {
-              isRenewal: state.isConsumable === null ? true : undefined,
+              isRenewal: state.isConsumable === null ? true : null,
               isConsumable: state.isConsumable,
             },
-          }),
+          })
         ]);
 
         if (companyResponse.data.success) {
