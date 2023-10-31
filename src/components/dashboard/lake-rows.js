@@ -17,8 +17,6 @@ export const LakeRows = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log('activepurchases: ', response.data);
   
         const { success, active } = response.data;
   
