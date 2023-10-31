@@ -46,8 +46,12 @@ export const LakeRows = () => {
             Authorization: `Bearer ${token}` 
           },
         });
+        console.log(response);
         if (response.data.success) {
           setRowCount(response.data.rowCount);
+        } else if (response.status === 404) {
+          console.log(response.data.message);
+          setRowCount(0);
         } else {
           console.log(response.data.message);
           setErrorMessages(response.data.message);
