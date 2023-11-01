@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { LakeRows } from '../../../src/components/dashboard/lake-rows';
 import api from '../../../src/lib/axios';
 
@@ -10,51 +10,31 @@ describe('LakeRows', () => {
     jest.restoreAllMocks();
   });
 
-
   it('should render the component', async () => {
-    render(<LakeRows />);
+    api.get.mockResolvedValueOnce({ data: { success: true, rowCount: 100 } });
+    await act(async () => {
+      render(<LakeRows isConsumable={'2023-11-01T20:28:39.179Z'} rowLimit={500}/>);
+    });
     const lakeRows = screen.getByText(/Lake Rows/i);
     expect(lakeRows).toBeInTheDocument();
   });
 
-  it('should fetch the row count from the API', async () => {
-    const mockResponse = {
-      data: {
-        success: true,
-        rowCount: 10,
-      },
-    };
-    api.get.mockResolvedValue(mockResponse);
-    render(<LakeRows />);
-    await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/purchases/active', {
-        headers: {
-            Authorization: `Bearer ${null}`,
-        },
-    }));
-    expect(screen.getByText('10')).toBeInTheDocument();
+  it('should display the row count', async () => {
+    api.get.mockResolvedValueOnce({ data: { success: true, rowCount: 100 } });
+    await act(async () => {
+      render(<LakeRows isConsumable={'2023-11-01T20:28:39.179Z'} rowLimit={500} />);
+    });
+    await waitFor(() => screen.getByText(/100/i));
+    expect(screen.getByText(/500/i)).toBeInTheDocument();
   });
 
-  it('should fetch the row limit from the API', async () => {
-    const mockResponse = {
-      data: {
-        success: true,
-        active: [
-          {
-            db_rows_qty: 5,
-          },
-          {
-            db_rows_qty: 10,
-          },
-        ],
-      },
-    };
-    api.get.mockResolvedValue(mockResponse);
-    render(<LakeRows />);
-    await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/purchases/active', {
-        headers: {
-            Authorization: `Bearer ${null}`,
-        },
-    }));
-    expect(screen.getByText(/15/i)).toBeInTheDocument();
+  it('should display the total amount when rowLimit is greater than 0', async () => {
+    api.get.mockResolvedValueOnce({ data: { success: true, rowCount: 100 } });
+    await act(async () => {
+      render(<LakeRows rowLimit={500} />);
+    });
+    await waitFor(() => screen.getByText(/500/i));
+    expect(screen.getByText(/500/i)).toBeInTheDocument();
   });
+
 });

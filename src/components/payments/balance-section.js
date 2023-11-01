@@ -25,7 +25,7 @@ export const BalanceSection = ({ title }) => {
           },
         });
         if (response && response.data && response.data.company) {
-          setBalance(response.data.company.credit);          
+          setBalance(parseFloat(response.data.company.credit).toFixed(2));          
         } else {
           console.error('Invalid response:', response);
         }

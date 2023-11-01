@@ -7,6 +7,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import api from '../../../../lib/axios';
 
 /** 
  * 
@@ -32,17 +34,34 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
     setOpen(false);
   };
 
+  const setPurchaseExpired = async () => {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() - 1);
+    try {
+      const token = localStorage.getItem('jwt');
+      const updatedCompanyResponse = await api.put('/api/v1/purchases/active', { expirationDate: expirationDate, isConsumption: isConsumption }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(updatedCompanyResponse);
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
+
 
   const onSubmit = async () => {
     try {
-      if (credit > 0) {
-        if (isConsumption) {
-          updateCompanyConsumption(false);
-        } else {
-          updateCompanyConsumption(true);
-          purchaseConsumptionProduct();
-        }
-      };
+      if (isConsumption) {
+        setPurchaseExpired();
+        updateCompanyConsumption(false);
+      } else if (credit > 0 && !isConsumption){
+        updateCompanyConsumption(true);
+        purchaseConsumptionProduct();
+      }
 
     } catch (error) {
       console.log(error);
@@ -102,4 +121,11 @@ fontWeight="bold">CREDIT.</Typography>}
       </Dialog>
     </>
   );
+};
+
+ProductActivation.propTypes = {
+  isConsumption: PropTypes.bool.isRequired,
+  credit: PropTypes.number.isRequired,
+  updateCompanyConsumption: PropTypes.func.isRequired,
+  purchaseConsumptionProduct: PropTypes.func.isRequired,
 };

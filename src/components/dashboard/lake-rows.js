@@ -1,52 +1,21 @@
 import { useState, useEffect } from 'react';
 import { StatsCard } from '../general/stats-cards';
+import PropTypes from 'prop-types';
 import api from '../../lib/axios';
 
 
-export const LakeRows = () => {
+export const LakeRows = ({ isConsumable, rowLimit }) => {
   const [rowCount, setRowCount] = useState(0);
-  const [rowLimit, setRowLimit] = useState(0);
-
-  const token = localStorage.getItem('jwt');
 
   useEffect(() => {
-    const fetchRowLimit = async () => {
-      try {
-        const response = await api.get('/api/v1/purchases/active', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        const { success, active } = response.data;
-  
-        if (success) {
-          const purchasesWithRows = active.filter(purchase => purchase.db_rows_qty > 0);
-  
-          if (purchasesWithRows.length > 0) {
-            const purchaseRowLimit = purchasesWithRows.reduce((prev, curr) => prev + curr.db_rows_qty, 0);
-            setRowLimit(purchaseRowLimit);
-          }
-        } else {
-          console.log(response.data.message);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-  
-    fetchRowLimit();
-  }, [token]);
-
-  useEffect(() => {
+    const token = localStorage.getItem('jwt');
     const fetchRowCount = async () => {
       try {
         const response = await api.get('/api/v1/lake/row-count-by-date', {
-          headers: { 
-            Authorization: `Bearer ${token}` 
-          },
+          headers: { Authorization: `Bearer ${token}` },
+          params: { isConsumable: isConsumable }
         });
-        console.log(response);
+        
         if (response.data.success) {
           setRowCount(response.data.rowCount);
         } else if (response.status === 404) {
@@ -61,7 +30,7 @@ export const LakeRows = () => {
       }
     };
     fetchRowCount();
-  }, [token]);
+  }, []);
 
   return (
       <StatsCard
@@ -78,3 +47,7 @@ export const LakeRows = () => {
       />
   );
 }
+
+LakeRows.propTypes = {
+  rowLimit: PropTypes.number.isRequired
+};
