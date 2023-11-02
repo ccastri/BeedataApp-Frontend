@@ -88,6 +88,10 @@ export const FbSignupFlow = ({title}) => {
 
               window.location.reload();
 
+              FB.logout(function(response) {
+                console.log('User logged out');
+              });
+
             } catch (err) {
               console.log(err);
             }
@@ -97,7 +101,6 @@ export const FbSignupFlow = ({title}) => {
           }
         }, {
           config_id: '244953425243988',
-          // scope: 'business_management, whatsapp_business_management, whatsapp_business_messaging',
           response_type: 'code',
           override_default_response_type: true,
         });
