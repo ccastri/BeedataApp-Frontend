@@ -38,7 +38,7 @@ export const WhatsappMsg = ({ isConsumable, msgLimit }) => {
       image="/static/images/products/beet_whatsapp.svg"
       value={msgCount}
       type="Messages"
-      totalAmount={isConsumable ? 'Unlimited' : msgLimit > 0 ? msgLimit  : 'Not Available'}
+      totalAmount={isConsumable ? 'Credit Dependent' : msgLimit > 0 ? msgLimit  : 'Not Available'}
     />
   );
 };

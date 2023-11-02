@@ -20,7 +20,7 @@ export const FbSignupFlow = ({title}) => {
           appId: '931235137882480',
           cookie: true,
           xfbml: true,
-          version: 'v17.0'
+          version: 'v18.0'
         });
 
         FB.AppEvents.logPageView();
@@ -69,8 +69,10 @@ export const FbSignupFlow = ({title}) => {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          scope: 'business_management, whatsapp_business_management, whatsapp_business_messaging',
-          response_type: 'code' 
+          config_id: '244953425243988',
+          // scope: 'business_management, whatsapp_business_management, whatsapp_business_messaging',
+          response_type: 'code',
+          override_default_response_type: true,
         });
       }
     }
