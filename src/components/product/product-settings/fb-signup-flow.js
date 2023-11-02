@@ -49,7 +49,7 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             console.log(response.authResponse);
-            const code = response.authResponse.code;
+            const code = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
               await api.get('/api/v1/facebook/callback', {
