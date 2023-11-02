@@ -48,6 +48,7 @@ export const FbSignupFlow = ({title}) => {
       if (typeof FB !== 'undefined') {
         FB.login(async function (response) {
           if (response.authResponse) {
+            console.log(response.authResponse);
             const signedRequest = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
