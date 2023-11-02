@@ -39,6 +39,32 @@ export const FbSignupFlow = ({title}) => {
           document.head.appendChild(js);
         }
       })(document, 'script', 'facebook-jssdk');
+
+      const sessionInfoListener = (event) => {
+        if (event.origin !== "https://www.facebook.com") return;
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'WA_EMBEDDED_SIGNUP') {
+            // if user finishes the Embedded Signup flow
+            if (data.event === 'FINISH') {
+              const {phone_number_id, waba_id} = data.data;
+            }
+            // if user cancels the Embedded Signup flow
+            else {
+             const{current_step} = data.data;
+            }
+          }
+        } catch {
+          // Don’t parse info that’s not a JSON
+          console.log('Non JSON Response', event.data);
+        }
+      };
+
+      window.addEventListener('message', sessionInfoListener);
+
+      return () => {
+        window.removeEventListener('message', sessionInfoListener);
+      };
     }
   }, []);
 
@@ -49,13 +75,13 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             console.log(response.authResponse);
-            const signedRequest = response.authResponse.signedRequest;
+            const code = response.authResponse.code;
             const token = localStorage.getItem('jwt');
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {
                   Authorization: `Bearer ${token}`,
-                  'x-access-token': signedRequest,
+                  'x-access-token': code,
                 },
                 mode: 'cors'
               });
