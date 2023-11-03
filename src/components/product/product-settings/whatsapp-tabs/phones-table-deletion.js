@@ -183,7 +183,7 @@ export const PhoneDeleteTable = ({rows, deleteRow}) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.phoneId);
+      const newSelected = visibleRows.map((n) => n.phoneId);
       setSelected(newSelected);
       return;
     }

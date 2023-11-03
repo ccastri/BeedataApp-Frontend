@@ -87,11 +87,6 @@ export const FbSignupFlow = ({title}) => {
               });
 
               window.location.reload();
-
-              FB.logout(function(response) {
-                console.log('User logged out');
-              });
-
             } catch (err) {
               console.log(err);
             }
