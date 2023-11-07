@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SocialSettings } from './product-settings/social';
 import { WhatsappSettings } from './product-settings/whatsapp';
 import { LakeSettings } from './product-settings/lake';
+import { ProductDialog } from './product-dialog';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -122,18 +123,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
           >
             {(isActiveRef.current && product.id != 1) ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : (!isActiveRef.current && product.id != 1) ? "Not available" : ''}
           </Typography>
-        </Box>
-      </CardContent>
-      <Box sx={{ flexGrow: 1 }} />
-      <Divider />
-      <CardActions>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          {(product.id === 5) && (<SocialSettings wabas={wabas}
-updatedWabas={updateWabas} />)}
-          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
-deleteRow={deleteRow}
-productId={product.id} />)}
-          {(product.id === 4) && (<LakeSettings />)}
           {isActiveRef.current && (
             <Box
               sx={{
@@ -156,6 +145,19 @@ productId={product.id} />)}
               </Typography>
             </Box>
           )}
+        </Box>
+      </CardContent>
+      <Box sx={{ flexGrow: 1 }} />
+      <Divider />
+      <CardActions>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          {(product.id === 5) && (<SocialSettings wabas={wabas}
+updatedWabas={updateWabas} />)}
+          {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
+deleteRow={deleteRow}
+productId={product.id} />)}
+          {(product.id === 4) && (<LakeSettings />)}
+          {(product.id !== 1) && (<ProductDialog name={product.name} image={product.image}/>)}
         </Box>
       </CardActions>
     </Card>

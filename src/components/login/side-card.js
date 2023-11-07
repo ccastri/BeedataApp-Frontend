@@ -89,8 +89,6 @@ const Content = styled(CardContent)(({ theme }) => ({
  * 
  */
 export const BeeCard = React.memo(function BeeCard() {
-  const theme = useTheme();
-    
   return (
     <RootCard>
       <Media
