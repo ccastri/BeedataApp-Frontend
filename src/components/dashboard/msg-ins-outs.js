@@ -56,52 +56,57 @@ export const MsgInsOuts = () => {
                 params: { startFilter: startDate, endFilter: endDate }
             });
 
-            if (response.data.success && response.data.messages.length > 0) {
-                const data = response.data.messages;
-                let xaxisFormat;
-
-                const calcMonthsDiff = (startDate, endDate) =>
-                    startDate && endDate ? ((endDate.getFullYear() - startDate.getFullYear()) * 12)
-                        + endDate.getMonth() - startDate.getMonth()
-                        - (endDate.getDate() < startDate.getDate() ? 1 : 0) : 0;
-
-
-                const dateRangeDiff = calcMonthsDiff(new Date(startDate), new Date(endDate));
-
-                if (dateRangeDiff > 2) {
-                    xaxisFormat = 'MMM';
+            if (response.data.success) {
+                if (response.data.messages.length > 0) {
+                    const data = response.data.messages;
+                    let xaxisFormat;
+    
+                    const calcMonthsDiff = (startDate, endDate) =>
+                        startDate && endDate ? ((endDate.getFullYear() - startDate.getFullYear()) * 12)
+                            + endDate.getMonth() - startDate.getMonth()
+                            - (endDate.getDate() < startDate.getDate() ? 1 : 0) : 0;
+    
+    
+                    const dateRangeDiff = calcMonthsDiff(new Date(startDate), new Date(endDate));
+    
+                    if (dateRangeDiff > 2) {
+                        xaxisFormat = 'MMM';
+                    } else {
+                        xaxisFormat = 'DD-MMM';
+                    }
+    
+                    const extractTimePeriod = (ts, startDate, endDate) =>
+                        (startDate && endDate && dateRangeDiff > 2)
+                            ? ts.split('T')[0].substring(0, 7)
+                            : ts.split('T')[0];
+    
+    
+                    const groupBy = (arr, key, startDate, endDate) =>
+                        arr.reduce((r, v) => {
+                            let value = key.split('.').reduce((o, i) => (i === 'ts')
+                                ? extractTimePeriod(o[i], startDate, endDate)
+                                : (o ? o[i] : null), v);
+                            (r[value] = r[value] || []).push(v);
+                            return r;
+                        }, {});
+    
+                    let transformedData = data.flatMap(item =>
+                        Object.entries(groupBy(item.data.total, 'ts', startDate, endDate))
+                            .map(([date, val]) =>
+                            ({
+                                ts: date,
+                                agent: (groupBy(val, 'u.name', startDate, endDate)['agente'] || []).length,
+                                visitor: (groupBy(val, 'u.name', startDate, endDate)['visitor'] || []).length,
+                                chatbot: (groupBy(val, 'u.name', startDate, endDate)['chatbot'] || []).length
+                            })
+                            )
+                    );
+                    setData({ data: transformedData, xaxisFormat });
+                    setLoading(false);
                 } else {
-                    xaxisFormat = 'DD-MMM';
-                }
+                    setLoading(false);
+                };
 
-                const extractTimePeriod = (ts, startDate, endDate) =>
-                    (startDate && endDate && dateRangeDiff > 2)
-                        ? ts.split('T')[0].substring(0, 7)
-                        : ts.split('T')[0];
-
-
-                const groupBy = (arr, key, startDate, endDate) =>
-                    arr.reduce((r, v) => {
-                        let value = key.split('.').reduce((o, i) => (i === 'ts')
-                            ? extractTimePeriod(o[i], startDate, endDate)
-                            : (o ? o[i] : null), v);
-                        (r[value] = r[value] || []).push(v);
-                        return r;
-                    }, {});
-
-                let transformedData = data.flatMap(item =>
-                    Object.entries(groupBy(item.data.total, 'ts', startDate, endDate))
-                        .map(([date, val]) =>
-                        ({
-                            ts: date,
-                            agent: (groupBy(val, 'u.name', startDate, endDate)['agente'] || []).length,
-                            visitor: (groupBy(val, 'u.name', startDate, endDate)['visitor'] || []).length,
-                            chatbot: (groupBy(val, 'u.name', startDate, endDate)['chatbot'] || []).length
-                        })
-                        )
-                );
-                setData({ data: transformedData, xaxisFormat });
-                setLoading(false);
             } else {
                 setErrorMsg(response.data.message);
             }
