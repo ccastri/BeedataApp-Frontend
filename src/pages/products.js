@@ -24,28 +24,63 @@ const Page = () => {
   const [state, setState] = useState({
     pack: [],
     wabas: [],
+    isConsumption: false,
+    accessToken: false,
+    credit: 0,
+    responseMessage: '',
+    errorMessage: '',
   });
 
-  const { pack, wabas } = state;
+  const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage } = state;
 
   useEffect(() => {
     const token = localStorage.getItem('jwt');
     const fetchData = async () => {
-      const [packResponse, wabasResponse] = await Promise.all([
+      const [packResponse, wabasResponse, companyResponse] = await Promise.all([
         api.get('/api/v1/products/company-all-products', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       setState(prevState => ({
         ...prevState,
         pack: packResponse.data.products,
         wabas: wabasResponse.data.wabas,
+        isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
+        accessToken: companyResponse.data.company.facebook_token ? true : false,
+        credit: parseFloat(companyResponse.data.company.credit),
       }));
 
       setLoading(false);
     };
 
     fetchData();
+  }, []);
+
+  console.log(state);
+
+  const updateCompanyConsumption = useCallback(async (newStatus) => {
+    try {
+      const updateInfo = newStatus ? Date.now() : null;
+      const updatedCompany = await api.put('/api/v1/companies/update-company', { creditMsgConsumption: updateInfo }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (updatedCompany.data.success) {
+        setState(prevState => ({ ...prevState, isConsumption: newStatus, credit: updatedCompany.data.company.credit, 
+                                responseMessage: updatedCompany.data.message }));
+      } else {
+        setState(prevState => ({ ...prevState, errorMessage: updatedCompany.data.message }));
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+      }, 4000);
+    }
   }, []);
 
   const updateWabas = useCallback((phoneId, departmentId = null) => {
@@ -60,13 +95,17 @@ const Page = () => {
     });
   }, []);
 
-  const deleteRow = (phoneId) => {
+
+  const deleteRow = useCallback((phoneId) => {
     setState(prevState => {
       const updatedWabas = prevState.wabas.filter(waba => waba.phone_id !== phoneId);
       return { ...prevState, wabas: updatedWabas };
     });
-  };
+  }, []);
 
+  const clearMessages = useCallback(() => {
+    setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+  }, []);
 
   if (loading) {
     return (
@@ -129,6 +168,7 @@ const Page = () => {
 
     return acc;
   }, []);
+  console.log(typeof clearMessages);
 
   return (
     <>
@@ -163,6 +203,13 @@ const Page = () => {
                     wabas={wabas}
                     updateWabas={updateWabas}
                     deleteRow={deleteRow}
+                    isConsumption={isConsumption}
+                    credit={credit}
+                    accessToken={accessToken}
+                    responseMessage={responseMessage}
+                    errorMessage={errorMessage}
+                    updateCompanyConsumption={updateCompanyConsumption}
+                    clearMessages={clearMessages}
                   />
                 </Grid>
               );

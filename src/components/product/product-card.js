@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SocialSettings } from './product-settings/social';
 import { WhatsappSettings } from './product-settings/whatsapp';
 import { LakeSettings } from './product-settings/lake';
@@ -11,7 +11,6 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
 
 
 const cardStyle = {
@@ -84,7 +83,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
   return (
     <Card
       sx={cardStyle}
-      {...rest}
     >
       <CardContent>
         <Box
@@ -155,7 +153,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
 updatedWabas={updateWabas} />)}
           {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
 deleteRow={deleteRow}
-productId={product.id} />)}
+productId={product.id} 
+{...rest} />)}
           {(product.id === 4) && (<LakeSettings />)}
           {(product.id !== 1) && (<ProductDialog name={product.name} image={product.image}/>)}
         </Box>
