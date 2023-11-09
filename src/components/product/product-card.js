@@ -125,17 +125,19 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
             <Box
               sx={{
                 display: 'flex',
+                justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: '6px',
                 textAlign: 'center',
                 boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
                 backgroundColor: '#EFEFEF',
                 p: 2,
-                mr: 2,
+                mr: 4,
+                ml: 4,
+                mt: 2,
               }}
             >
               <Typography
-                align="center"
                 color="#333333"
                 variant="subtitle2"
               >

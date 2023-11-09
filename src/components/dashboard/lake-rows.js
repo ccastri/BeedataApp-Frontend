@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import api from '../../lib/axios';
 
 
-export const LakeRows = ({ isConsumable, rowLimit }) => {
+export const LakeRows = ({ isConsumption, rowLimit }) => {
   const [rowCount, setRowCount] = useState(0);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export const LakeRows = ({ isConsumable, rowLimit }) => {
       try {
         const response = await api.get('/api/v1/lake/row-count-by-date', {
           headers: { Authorization: `Bearer ${token}` },
-          params: { isConsumable: isConsumable }
+          params: { isConsumption: isConsumption }
         });
         
         if (response.data.success) {

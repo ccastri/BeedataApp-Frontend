@@ -15,7 +15,7 @@ const Page = () => {
     msgLimit: 0,
     rowLimit: 0,
     activePurchases: [],
-    isConsumable: null,
+    isConsumption: null,
     loading: true,
   });
 
@@ -31,10 +31,10 @@ const Page = () => {
         });
 
         if (companyResponse.data.success) {
-          const isConsumable = companyResponse.data.company.credit_msg_consumption;
+          const isConsumption = companyResponse.data.company.credit_msg_consumption;
           setState(prevState => ({
             ...prevState,
-            isConsumable: isConsumable,
+            isConsumption: isConsumption,
           }));
 
           const purchasesResponse = await api.get('/api/v1/purchases/active', {
@@ -127,7 +127,7 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <WhatsappMsg isConsumable={state.isConsumable} msgLimit={state.msgLimit} />
+              <WhatsappMsg isConsumption={state.isConsumption} msgLimit={state.msgLimit} />
             </Grid>
             <Grid item
               xs={12}
@@ -135,7 +135,7 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <LakeRows isConsumable={state.isConsumable} rowLimit={state.rowLimit} />
+              <LakeRows isConsumption={state.isConsumption} rowLimit={state.rowLimit} />
             </Grid>
             <Grid item
               xs={12}

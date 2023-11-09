@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
-export const WhatsappMsg = ({ isConsumable, msgLimit }) => {
+export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
   const [msgCount, setMsgCount] = useState(0);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export const WhatsappMsg = ({ isConsumable, msgLimit }) => {
       try {
         const messagesResponse = await api.get('/api/v1/social/messages', {
           headers: { Authorization: `Bearer ${token}` },
-          params: { isConsumable: isConsumable }
+          params: { isConsumption: isConsumption, isRenewal: isConsumption ? false : true }
         });
 
         if (messagesResponse.data.success) {
@@ -38,7 +38,7 @@ export const WhatsappMsg = ({ isConsumable, msgLimit }) => {
       image="/static/images/products/beet_whatsapp.svg"
       value={msgCount}
       type="Messages"
-      totalAmount={isConsumable ? 'Credit Dependent' : msgLimit > 0 ? msgLimit  : 'Not Available'}
+      totalAmount={isConsumption ? 'Credit Dependent' : msgLimit > 0 ? msgLimit  : 'Not Available'}
     />
   );
 };

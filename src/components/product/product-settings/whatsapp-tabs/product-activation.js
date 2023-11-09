@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -25,6 +25,11 @@ import api from '../../../../lib/axios';
 */
 export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumption, purchaseConsumptionProduct }) => {
   const [open, setOpen] = useState(false);
+  const [msgCount, setMsgConsumed] = useState(0);
+  const [msgLimit, setMsgLimit] = useState(0);
+  const [activeMsgPurchase, setActiveMsgPurchase] = useState(false);
+
+  const token = localStorage.getItem('jwt');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -33,6 +38,50 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const purchasesResponse = await api.get('/api/v1/purchases/active', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const { success, active } = purchasesResponse.data;
+
+        if (success) {
+          const purchasesWithMsgs = active.filter(purchase => purchase.msg_qty > 0);
+          setActiveMsgPurchase(purchasesWithMsgs.length > 0);
+          setMsgLimit(purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0));
+        }
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getMessageCount = async (msgLimit) => {
+    try {
+      const messagesResponse = await api.get('/api/v1/social/messages', {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { isRenewal: true }
+      });
+  
+      console.log(messagesResponse);
+      if (messagesResponse.data.success) {
+        const totalMsgCount = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
+        const msgAvailability = msgLimit > totalMsgCount ? true : false;
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
 
   const setPurchaseExpired = async () => {
     const expirationDate = new Date();

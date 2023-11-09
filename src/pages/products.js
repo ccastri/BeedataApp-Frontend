@@ -32,9 +32,9 @@ const Page = () => {
   });
 
   const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage } = state;
+  const token = localStorage.getItem('jwt');
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
     const fetchData = async () => {
       const [packResponse, wabasResponse, companyResponse] = await Promise.all([
         api.get('/api/v1/products/company-all-products', { headers: { Authorization: `Bearer ${token}` } }),
@@ -57,7 +57,6 @@ const Page = () => {
     fetchData();
   }, []);
 
-  console.log(state);
 
   const updateCompanyConsumption = useCallback(async (newStatus) => {
     try {
@@ -168,7 +167,6 @@ const Page = () => {
 
     return acc;
   }, []);
-  console.log(typeof clearMessages);
 
   return (
     <>
