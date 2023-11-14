@@ -17,6 +17,7 @@ import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import PropTypes from 'prop-types';
 import SuccessSnackbar from '../settings/settings-success-msg';
 import ErrorSnackbar from '../settings/settings-error-msg';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -72,7 +73,6 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           headers: { Authorization: `Bearer ${token}` },
           params: { beetProduct: name },
         });
-        console.log('productSelection: ', response.data);
         if (response?.data?.productSelection) {
           setProductOptions(response.data.productSelection);
         }
@@ -271,4 +271,11 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
       </Dialog>
     </>
   );
+};
+
+ProductDialog.propTypes = {
+  name: PropTypes.string,
+  image: PropTypes.string,
+  isConsumption: PropTypes.bool,
+  updateCompanyConsumption: PropTypes.func,
 };

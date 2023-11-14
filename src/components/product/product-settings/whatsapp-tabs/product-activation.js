@@ -46,7 +46,6 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
 
       if (messagesResponse.data.success) {
         const totalMsgConsumed = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
-        console.log(totalMsgConsumed);
         const msgAvailability = msgLimit > totalMsgConsumed ? true : false;
         return msgAvailability;
       }
@@ -70,7 +69,6 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
 
         if (success) {
           const purchasesWithMsgs = active.filter(purchase => purchase.msg_qty > 0);
-          console.log('purchasesWithMsgs: ', purchasesWithMsgs);
 
           if (purchasesWithMsgs.length > 0) {
             const msgLimit = purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0);
@@ -98,7 +96,6 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
         },
       });
 
-      console.log(updatedCompanyResponse);
     } catch (error) {
       console.log(error);
     }

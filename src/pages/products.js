@@ -42,8 +42,6 @@ const Page = () => {
         api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
-      console.log('companyResponse ', companyResponse);  
-
       setState(prevState => ({
         ...prevState,
         pack: packResponse.data.products,

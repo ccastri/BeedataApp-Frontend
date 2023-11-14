@@ -1,5 +1,6 @@
 import React from 'react';
 import { FbSignupFlow } from '../fb-signup-flow';
+import { FbSignupFlow2 } from '../fb-signup-flow2';
 import { PermissionChange } from './permission-change';
 import { PhonesTable } from './phones-table';
 import { ProductActivation } from './product-activation';
@@ -13,10 +14,8 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 
 export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption, credit, updateCompanyConsumption, purchaseConsumptionProduct, productId }) => {
@@ -54,24 +53,32 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                     </CardContent>
                 </Card>
             )}
-            <Card sx={{ mt: 3, maxHeight: '600px', overflow: 'auto' }}>
+            <Card sx={{ mt: 3, maxHeight: '700px', overflow: 'auto' }}>
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
                         variant="subtitle2"
                         data-testid='permissions-title' >
-                        Permissions
+                        Meta Configuration
                     </Typography>
                     {accessToken ? (
                         <>
                             <Typography color="textSecondary"
                                 variant="body1"
-                                sx={{ ml: 1, mb: 3 }}>
-                                To change Meta permissions granted to Beet, click on the button below.
+                                sx={{ ml: 1 }}>
+                                To modify the permissions granted to Beet by Meta, click the button below.
                             </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 3 }}
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}
                                 data-testid='permissions-change'>
                                 <PermissionChange rows={wabas}
                                     deleteRow={deleteRow} />
+                            </Box>
+                            <Typography color="textSecondary"
+                                variant="body1"
+                                sx={{ ml: 1, mt: 2 }}>
+                                To add a new phone number line to your Meta application, click the button below.
+                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                <FbSignupFlow2 title={'Add Phone Number'} />
                             </Box>
                         </>
                     ) : (
@@ -79,15 +86,12 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                             <Typography color="textSecondary"
                                 variant="body1"
                                 sx={{ ml: 1, mb: 3 }}>
-                                To use Beet&apos;s characters (chatbot), you need to grant Meta permission to Beet.
-                                To do this, you need to have:
+                                To use Beet&apos;s characters (chatbot), you need to grant certain permissions from Meta. 
+                                Ensure you have:
                             </Typography>
-                            <List sx={{ ml: 8, mb: 3 }}>
+                            <List sx={{ ml: 2, mb: 3 }}>
                                 <ListItem>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <ListItemIcon>
-                                            <RadioButtonCheckedIcon />
-                                        </ListItemIcon>
                                         <ListItemText
                                             primary="A Meta Business account and ADMINISTRATOR access"
                                             sx={{ '& .MuiTypography-body1': { color: 'text.secondary', fontWeight: 'bold' } }}
@@ -100,9 +104,6 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                                 </ListItem>
                                 <ListItem>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <ListItemIcon>
-                                            <RadioButtonCheckedIcon />
-                                        </ListItemIcon>
                                         <ListItemText
                                             primary="A phone number configured to be used by the chatbot"
                                             sx={{ '& .MuiTypography-body1': { color: 'text.secondary', fontWeight: 'bold' } }}
@@ -115,9 +116,6 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                                 </ListItem>
                                 <ListItem>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <ListItemIcon>
-                                            <RadioButtonCheckedIcon />
-                                        </ListItemIcon>
                                         <ListItemText
                                             primary="A credit card configured in META."
                                             sx={{ '& .MuiTypography-body1': { color: 'text.secondary', fontWeight: 'bold' } }}
@@ -131,11 +129,20 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                             </List>
                             <Typography color="textSecondary"
                                 variant="body1"
-                                sx={{ ml: 1, mb: 3 }}>
+                                sx={{ ml: 1 }}>
                                 Once you have these requirements, you can grant permission to Beet by clicking on the button below.
                             </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                                <FbSignupFlow title={'Permissions'} />
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
+                                <FbSignupFlow title={'Grant Permissions'} />
+                            </Box>
+                            <Typography color="textSecondary"
+                                variant="body1"
+                                sx={{ ml: 1, mt: 2 }}>
+                                If you already have a Meta account, administrator access, and a credit card configured in Meta but do not have a 
+                                registered phone number line or want to add a new one, you can do so by clicking on the button below instead.
+                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
+                                <FbSignupFlow2 title={'Add Phone Number'} />
                             </Box>
                         </>
                     )}
@@ -146,7 +153,7 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                 <CardContent>
                     <Typography sx={{ ml: 1, mr: 2, mb: 2, mt: 2, fontSize: '1.2rem' }}
                         variant="subtitle2">
-                        Current Granted Permissions and Phone Number Lines in Use
+                        Current Phone Number Lines in Use
                     </Typography>
                     <Typography color="textSecondary"
                         variant="body1"
