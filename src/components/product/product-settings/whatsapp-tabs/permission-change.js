@@ -46,6 +46,7 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                 sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                 endIcon={<FacebookIcon />}
                 onClick={handleClickOpen()}
+                data-testid="change-permissions-button"
             >
                 Change Permissions
             </Button>

@@ -28,28 +28,18 @@ describe('PermissionChange', () => {
 
   it('renders the Permissions button', () => {
     render(<PermissionChange rows={rows} />);
-    expect(screen.getByRole('button', { name: 'Permissions' })).toBeInTheDocument();
+    expect(screen.getByTestId('change-permissions-button')).toBeInTheDocument();
   });
 
   it('opens the dialog when the Permissions button is clicked', () => {
     render(<PermissionChange rows={rows} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Permissions' }));
+    fireEvent.click(screen.getByTestId('change-permissions-button'));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('renders the correct number of rows in the table', () => {
     render(<PermissionChange rows={rows} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Permissions' }));
+    fireEvent.click(screen.getByTestId('change-permissions-button'));
     expect(screen.getAllByRole('row')).toHaveLength(1); // header row + 2 data rows
-  });
-
-  it('calls the deleteRow function when the delete button is clicked', async () => {
-    api.delete.mockResolvedValueOnce({ data: { message: 'success' } });
-
-    render(<PermissionChange rows={rows} deleteRow={deleteRow} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Permissions' }));
-    // fireEvent.click(screen.getByTestId('delete-button-2'));
-    
-    // await waitFor(() => expect(screen.getByTestId('delete-button-2')).toBeInTheDocument());
   });
 });

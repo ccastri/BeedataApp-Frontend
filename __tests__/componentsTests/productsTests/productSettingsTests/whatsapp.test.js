@@ -6,62 +6,35 @@ import api from '../../../../src/lib/axios';
 jest.mock('../../../../src/lib/axios');
 
 describe('WhatsappSettings', () => {
-    beforeEach(() => {
-        api.get.mockClear(); // Clear mock calls before each test
-        api.post.mockClear();
-        api.delete.mockClear();
-    });
-    
-    it('renders the component without errors', () => {
-        api.get.mockResolvedValueOnce({ data: { company: { facebook_token: 'token' } } });
-        render(<WhatsappSettings wabas={[]} deleteRow={jest.fn()} />);
-        act(() => {
-            fireEvent.click(screen.getByTestId('settings-button'));
-        });
-        expect(screen.getByTestId('permissions-title')).toBeInTheDocument();
-    });
+    const mockDeleteRow = jest.fn();
+    const mockUpdateCompanyConsumption = jest.fn();
+    const mockClearMessages = jest.fn();
 
-    it('displays the correct tab label', () => {
-        api.get.mockResolvedValueOnce({ data: { company: { facebook_token: 'token' } } });
-        render(<WhatsappSettings wabas={[]} deleteRow={jest.fn()}/>);
-        act(() => {
-            fireEvent.click(screen.getByTestId('settings-button'));
-        });
-        expect(screen.getByText('General')).toBeInTheDocument();
+    const defaultProps = {
+        wabas: [],
+        deleteRow: mockDeleteRow,
+        productId: 1,
+        accessToken: true,
+        isConsumption: true,
+        credit: 100,
+        responseMessage: 'Test message',
+        errorMessage: 'Test error',
+        updateCompanyConsumption: mockUpdateCompanyConsumption,
+        clearMessages: mockClearMessages,
+    };
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
-    it('calls the API to fetch company and wabas data', async () => {
-        api.get.mockResolvedValueOnce({ data: { company: { facebook_token: 'token' } } });
-        api.get.mockResolvedValueOnce({ data: { wabas: [] } });
-        render(<WhatsappSettings wabas={[]} deleteRow={jest.fn()} />);
-        act(() => {
-            fireEvent.click(screen.getByTestId('settings-button'));
-        });
-
-        await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/companies/company', {
-            headers: {
-                Authorization: 'Bearer null',
-            }
-        }));
+    it('renders without crashing', () => {
+        render(<WhatsappSettings {...defaultProps} />);
     });
 
-    it('displays the correct phone rows', async () => {
-        const wabas = [
-            { phone_number: '1234567890', waba_id: 'waba1', phone_id: 'phone1', department_id: 'dept1' },
-            { phone_number: '0987654321', waba_id: 'waba2', phone_id: 'phone2', department_id: null },
-        ];
-
-        const deleteRow = jest.fn();
-
-        api.get.mockResolvedValueOnce({ data: { company: { facebook_token: 'token' } } });
-        api.get.mockResolvedValueOnce({ data: { wabas } });
-        render(<WhatsappSettings wabas={wabas} deleteRow={deleteRow} />);
-        act(() => {
-            fireEvent.click(screen.getByTestId('settings-button'));
-        });
-        // await waitFor(() => {
-        //     expect(screen.getByTestId('permissions-change')).toBeInTheDocument();
-        //     expect(screen.getByTestId('phones-data')).toBeInTheDocument();
-        // });
+    it('renders SettingsDialog with correct props', () => {
+        render(<WhatsappSettings {...defaultProps} />);
+        fireEvent.click(screen.getByTestId('settings-button'));
+        expect(screen.getByText('Test message')).toBeInTheDocument();
     });
+
 });

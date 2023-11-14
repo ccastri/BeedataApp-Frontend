@@ -77,6 +77,7 @@ function getBusiestHour(messages) {
     return formattedBusiestHour;
 }
 
+
 export const MetricsContent = ({ agents }) => {
     const [state, setState] = useState({
         messages: [],
@@ -104,6 +105,7 @@ export const MetricsContent = ({ agents }) => {
                         Authorization: `Bearer ${token}`,
                     },
                     params: {
+                        isMetrics: true,
                         startFilter: startDate,
                         endFilter: endDate,
                     },
