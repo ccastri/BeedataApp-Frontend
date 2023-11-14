@@ -36,13 +36,13 @@ export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption,
                         <Typography color="textSecondary"
                             variant="body1"
 sx={{ ml: 1, mb: 3 }}>
-                            To activate the credit consumption on Beet, click on the button below.
+                            To activate the chatbot message consumption from credit, click on the button below.
                         </Typography>
                         <Alert severity="info"
                             sx={{ ml: 2, mb: 2 }}>
                             <Typography variant="body1"
                                 sx={{ ml: 1, mb: 1 }}>
-                                <strong>Important:</strong> You need to have credit to be availble to activate the message consumption.
+                                <strong>Important:</strong> You need to have credit to be available to activate the message consumption and no other purchased pack with available messaging.
                             </Typography>
                         </Alert>
                         <CardActions sx={{ display: 'flex', justifyContent: 'flex-start' }}>

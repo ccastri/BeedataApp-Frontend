@@ -42,6 +42,8 @@ const Page = () => {
         api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
+      console.log('companyResponse ', companyResponse);  
+
       setState(prevState => ({
         ...prevState,
         pack: packResponse.data.products,
@@ -61,7 +63,7 @@ const Page = () => {
   const updateCompanyConsumption = useCallback(async (newStatus) => {
     try {
       const updateInfo = newStatus ? Date.now() : null;
-      const updatedCompany = await api.put('/api/v1/companies/update-company', { creditMsgConsumption: updateInfo }, {
+      const updatedCompany = await api.put('/api/v1/companies/company', { creditMsgConsumption: updateInfo }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

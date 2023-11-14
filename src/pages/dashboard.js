@@ -30,6 +30,7 @@ const Page = () => {
           },
         });
 
+        console.log(companyResponse.data);
         if (companyResponse.data.success) {
           const isConsumption = companyResponse.data.company.credit_msg_consumption;
           setState(prevState => ({

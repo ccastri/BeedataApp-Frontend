@@ -69,41 +69,12 @@ const items = [
  * 
  */
 export const DashboardSidebar = (props) => {
-  const [n8nDomain, setN8nDomain] = useState(''); 
   const { open, onClose } = props;
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
   });
-
-  // Get user company n8n_domain property
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/v1/companies/company', {
-          headers: {  
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response && response.data && response.data.company) {
-          // Check if domain is empty
-          if (response.data.company.n8n_domain) {
-            setN8nDomain(response.data.company.n8n_domain);
-          } else {
-            setN8nDomain('https://pruebas.beedata.co/signin');
-          }
-        } else {
-          console.error('Invalid response:', response);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(
     () => {
@@ -157,9 +128,7 @@ export const DashboardSidebar = (props) => {
             <NavItem
               key={item.title}
               icon={item.icon}
-              href={
-                item.title === 'Beet Bot' ? n8nDomain : item.href
-              }
+              href={item.href}
               title={item.title}
               target={item.target}
             />

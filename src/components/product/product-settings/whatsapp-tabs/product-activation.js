@@ -25,9 +25,7 @@ import api from '../../../../lib/axios';
 */
 export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumption, purchaseConsumptionProduct }) => {
   const [open, setOpen] = useState(false);
-  const [msgCount, setMsgConsumed] = useState(0);
-  const [msgLimit, setMsgLimit] = useState(0);
-  const [activeMsgPurchase, setActiveMsgPurchase] = useState(false);
+  const [isMsgAvailable, setIsMsgAvailable] = useState(false);
 
   const token = localStorage.getItem('jwt');
 
@@ -37,6 +35,26 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const getMessageAvailability = async (msgLimit) => {
+    try {
+      const messagesResponse = await api.get('/api/v1/social/messages', {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { isRenewal: true }
+      });
+
+      if (messagesResponse.data.success) {
+        const totalMsgConsumed = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
+        console.log(totalMsgConsumed);
+        const msgAvailability = msgLimit > totalMsgConsumed ? true : false;
+        return msgAvailability;
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -52,8 +70,13 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
 
         if (success) {
           const purchasesWithMsgs = active.filter(purchase => purchase.msg_qty > 0);
-          setActiveMsgPurchase(purchasesWithMsgs.length > 0);
-          setMsgLimit(purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0));
+          console.log('purchasesWithMsgs: ', purchasesWithMsgs);
+
+          if (purchasesWithMsgs.length > 0) {
+            const msgLimit = purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0);
+            const msgAvailability = await getMessageAvailability(msgLimit);
+            setIsMsgAvailable(msgAvailability);
+          }
         }
 
       } catch (err) {
@@ -63,25 +86,6 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
 
     fetchData();
   }, []);
-
-  const getMessageCount = async (msgLimit) => {
-    try {
-      const messagesResponse = await api.get('/api/v1/social/messages', {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { isRenewal: true }
-      });
-  
-      console.log(messagesResponse);
-      if (messagesResponse.data.success) {
-        const totalMsgCount = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
-        const msgAvailability = msgLimit > totalMsgCount ? true : false;
-      }
-
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
 
   const setPurchaseExpired = async () => {
     const expirationDate = new Date();
@@ -98,7 +102,6 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
     } catch (error) {
       console.log(error);
     }
-
   };
 
 
@@ -107,7 +110,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
       if (isConsumption) {
         setPurchaseExpired();
         updateCompanyConsumption(false);
-      } else if (credit > 0 && !isConsumption){
+      } else if (credit > 0 && !isConsumption) {
         updateCompanyConsumption(true);
         purchaseConsumptionProduct();
       }
@@ -127,7 +130,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
         variant="contained"
         color="primary"
         sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
-        disabled={credit <= 0}
+        disabled={credit <= 0 || isMsgAvailable}
       >
         {isConsumption ? 'Deactivate' : 'Activate'}
       </Button>
@@ -144,7 +147,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
           <DialogContentText>
             {isConsumption ? 'Deactivating this product will disable all chatbot messaging.' : 'Activating this product will enable chatbot messaging by consuming '}
             {!isConsumption && <Typography component="span"
-fontWeight="bold">CREDIT.</Typography>}
+              fontWeight="bold">CREDIT.</Typography>}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -82,13 +82,13 @@ export const AccountProfileDetails = (props) => {
     try {
       const token = localStorage.getItem('jwt');
 
-      // update billing fields via /api/v1/companies/update-company
+      // update billing fields via /api/v1/companies/company
       const billingFields = {
         billingEmail: formValues.billingEmail,
         billingAddress: formValues.billingAddress,
       };
 
-      await api.put('/api/v1/companies/update-company', billingFields, {
+      await api.put('/api/v1/companies/company', billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }

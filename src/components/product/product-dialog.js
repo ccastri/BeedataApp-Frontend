@@ -54,7 +54,7 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
  *             api, useFormik.
  * Usage: Used to display product information for purchase.
  */
-export const ProductDialog = ({ name, image }) => {
+export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsumption }) => {
   const [open, setOpen] = useState(false);
   const [productOptions, setProductOptions] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -63,14 +63,16 @@ export const ProductDialog = ({ name, image }) => {
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const token = localStorage.getItem('jwt');
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('jwt');
         const response = await api.get('/api/v1/products/beet-products', {
           headers: { Authorization: `Bearer ${token}` },
           params: { beetProduct: name },
         });
+        console.log('productSelection: ', response.data);
         if (response?.data?.productSelection) {
           setProductOptions(response.data.productSelection);
         }
@@ -81,21 +83,39 @@ export const ProductDialog = ({ name, image }) => {
     fetchData();
   }, [name]);
 
+  const getCompanyCredit = async (token) => {
+    const { data: { company: { credit } = {} } = {} } = await api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } });
+    return Number(credit);
+  };
+  
+  const updateConsumptionExpiry = async (expirationDate, isConsumption, token) => {
+    await api.put('/api/v1/purchases/active', { expirationDate, isConsumption }, { headers: { Authorization: `Bearer ${token}` } });
+  };
+  
+  const purchaseProduct = async (purchaseDetails, token) => {
+    const { data: { purchase, message } = {} } = await api.post('/api/v1/products/purchase-product', purchaseDetails, { headers: { Authorization: `Bearer ${token}` } });
+    return { purchase, message };
+  };
+  
   const formik = useFormik({
     initialValues: { product: '' },
     onSubmit: async (values) => {
       try {
-        const token = localStorage.getItem('jwt');
-        const creditResponse = await api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } });
-        const companyCredit = Number(creditResponse?.data?.company?.credit);
+        const companyCredit = await getCompanyCredit(token);
         if (companyCredit < productPrice) {
           setErrorMessage('Not enough credit to purchase product');
           return;
         }
         const purchaseDetails = { productId: values.product, productQuantity: 1, productPrice };
-        const response = await api.post('/api/v1/products/purchase-product', purchaseDetails, { headers: { Authorization: `Bearer ${token}` } });
-        if (response?.data?.purchase) {
-          setResponseMessage(response.data.message);
+        if (isConsumption) {
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() - 1);
+          await updateConsumptionExpiry(expirationDate, isConsumption, token);
+          updateCompanyConsumption(false);
+        }
+        const { purchase, message } = await purchaseProduct(purchaseDetails, token);
+        if (purchase) {
+          setResponseMessage(message);
           setTimeout(() => { window.location.reload(); }, 2000);
         }
       } catch (error) {

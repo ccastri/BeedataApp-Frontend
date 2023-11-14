@@ -52,7 +52,7 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
  * 
  * Usage: Used to display Beet's available products.
  */
-export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, updateWabas, deleteRow, ...rest }) => {
+export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, updateWabas, deleteRow, isConsumption, credit, accessToken, responseMessage, errorMessage, updateCompanyConsumption, clearMessages }) => {
   const isActiveRef = useRef(isActive);
 
   const beetDetailsT = beetDetails ? beetDetails.replace(/^{"|"}$/g, '').replace(/\\"/g, '"') : '';
@@ -155,10 +155,17 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
 updatedWabas={updateWabas} />)}
           {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
 deleteRow={deleteRow}
-productId={product.id} 
-{...rest} />)}
+productId={product.id}
+accessToken={accessToken}
+isConsumption={isConsumption}
+credit={credit}
+responseMessage={responseMessage}
+errorMessage={errorMessage}
+updateCompanyConsumption={updateCompanyConsumption}
+clearMessages={clearMessages}
+/>)}
           {(product.id === 4) && (<LakeSettings />)}
-          {(product.id !== 1) && (<ProductDialog name={product.name} image={product.image}/>)}
+          {(product.id !== 1) && (<ProductDialog name={product.name} image={product.image} isConsumption={isConsumption} updateCompanyConsumption={updateCompanyConsumption}/>)}
         </Box>
       </CardActions>
     </Card>
