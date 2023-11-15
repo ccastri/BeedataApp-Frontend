@@ -78,7 +78,7 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                                 To add a new phone number line to your Meta application, click the button below.
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                <FbSignupFlow2 title={'Add Phone Number'} />
+                                <FbSignupFlow title={'Add Phone Number'} />
                             </Box>
                         </>
                     ) : (
@@ -133,7 +133,7 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                                 Once you have these requirements, you can grant permission to Beet by clicking on the button below.
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
-                                <FbSignupFlow title={'Grant Permissions'} />
+                                <FbSignupFlow2 title={'Connect Phone Number'} />
                             </Box>
                             <Typography color="textSecondary"
                                 variant="body1"
@@ -142,7 +142,7 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                                 registered phone number line or want to add a new one, you can do so by clicking on the button below instead.
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
-                                <FbSignupFlow2 title={'Add Phone Number'} />
+                                <FbSignupFlow title={'Add Phone Number'} />
                             </Box>
                         </>
                     )}

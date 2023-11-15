@@ -42,8 +42,8 @@ describe.each(viewports)('BeeCard (%p)', (viewport) => {
 
   it(`renders card content correctly`, () => {
       const { getByText } = render(<BeeCard />);
-      expect(getByText('CONNECT TO THE WORLD OF AUTOMATED SERVICES')).toBeInTheDocument();
-      expect(getByText('Our cloud-based platform allows you to access and share relevant data anytime, anywhere.')).toBeInTheDocument();
+      expect(getByText('EMPOWER YOUR BUSINESS WITH AI ASSISTANTS')).toBeInTheDocument();
+      expect(getByText('We provide AI assistants with personalities tailored to your business needs.')).toBeInTheDocument();
   });
 
   it(`applies correct styles`, () => {

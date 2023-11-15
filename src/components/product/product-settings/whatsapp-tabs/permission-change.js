@@ -48,7 +48,7 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                 onClick={handleClickOpen()}
                 data-testid="change-permissions-button"
             >
-                Change Permissions
+                Connect Phone Number
             </Button>
             <Dialog
                 open={open}
@@ -113,7 +113,7 @@ deleteRow={deleteRow} />
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <DialogActions sx={{ mt: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                            <FbSignupFlow2 title={'Change Permissions'} />
+                            <FbSignupFlow2 title={'Connect Phone Number'} />
                             <Button
                                 onClick={handleClose}
                                 variant="outlined"
