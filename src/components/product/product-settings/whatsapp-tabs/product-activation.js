@@ -37,26 +37,26 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
     setOpen(false);
   };
 
-  const getMessageAvailability = async (msgLimit) => {
-    try {
-      const messagesResponse = await api.get('/api/v1/social/messages', {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { isRenewal: true }
-      });
-
-      if (messagesResponse.data.success) {
-        const totalMsgConsumed = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
-        const msgAvailability = msgLimit > totalMsgConsumed ? true : false;
-        return msgAvailability;
-      }
-
-    } catch (err) {
-      console.log(err);
-    }
-    return false;
-  };
-
   useEffect(() => {
+    const getMessageAvailability = async (msgLimit) => {
+      try {
+        const messagesResponse = await api.get('/api/v1/social/messages', {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { isRenewal: true }
+        });
+  
+        if (messagesResponse.data.success) {
+          const totalMsgConsumed = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
+          const msgAvailability = msgLimit > totalMsgConsumed ? true : false;
+          return msgAvailability;
+        }
+  
+      } catch (err) {
+        console.log(err);
+      }
+      return false;
+    };
+
     const fetchData = async () => {
       try {
         const purchasesResponse = await api.get('/api/v1/purchases/active', {
@@ -83,19 +83,21 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   const setPurchaseExpired = async () => {
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() - 1);
     try {
-      const token = localStorage.getItem('jwt');
       const updatedCompanyResponse = await api.put('/api/v1/purchases/active', { expirationDate: expirationDate, isConsumption: isConsumption }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
+      if (updatedCompanyResponse.data.success) {
+        console.log('Successfully updated company');
+      }
     } catch (error) {
       console.log(error);
     }

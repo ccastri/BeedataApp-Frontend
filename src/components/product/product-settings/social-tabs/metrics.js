@@ -255,18 +255,21 @@ export const MetricsContent = ({ agents }) => {
                         <CardContent>
                             <ThemeProvider theme={theme}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <Grid container justifyContent="space-between">
+                                    <Grid container
+justifyContent="space-between">
                                         <Grid item>
                                             <ExportButton messages={messages} />
                                         </Grid>
                                         <Grid item>
-                                            <Grid container spacing={2}>
+                                            <Grid container
+spacing={2}>
                                                 <Grid item>
                                                     <DatePicker
                                                         label="Start Date"
                                                         value={startDate}
                                                         onChange={handleStartDateChange}
-                                                        renderInput={(props) => <TextField {...props} sx={{ mr: 3 }} />}
+                                                        renderInput={(props) => <TextField {...props}
+sx={{ mr: 3 }} />}
                                                     />
                                                 </Grid>
                                                 <Grid item>

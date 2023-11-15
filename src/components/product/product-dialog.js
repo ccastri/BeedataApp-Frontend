@@ -81,7 +81,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
       }
     };
     fetchData();
-  }, [name]);
+  }, [name, token]);
 
   const getCompanyCredit = async (token) => {
     const { data: { company: { credit } = {} } = {} } = await api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } });
@@ -168,11 +168,20 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           </IconButton>
         </DialogTitle>
         <Grid container  >
-          <Grid item xs={12} sm={6}>
+          <Grid item
+xs={12}
+sm={6}>
             <DialogContent>
               <StyledCard>
-                <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
-                  <Grid item display="flex" justifyContent="center" alignItems="center">
+                <Grid container
+spacing={2}
+display="flex"
+justifyContent="center"
+alignItems="center">
+                  <Grid item
+display="flex"
+justifyContent="center"
+alignItems="center">
                     <StyledCardMedia image={image} />
                   </Grid>
                   <Grid item
@@ -185,7 +194,8 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
                       </Typography>
                       {selectedProduct ? (
                         <>
-                          <Typography variant="subtitle2" color="text.secondary">
+                          <Typography variant="subtitle2"
+color="text.secondary">
                             {productDescription}
                           </Typography>
                           {productPrice && (
@@ -199,7 +209,9 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
                           )}
                         </>
                       ) : (
-                        <Typography gutterBottom variant="h7" color="text.secondary">
+                        <Typography gutterBottom
+variant="h7"
+color="text.secondary">
                           Select a product to see description
                         </Typography>
                       )}
@@ -209,7 +221,9 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
               </StyledCard>
             </DialogContent>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item
+xs={12}
+sm={6}>
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <DialogActions>
                 <Box sx={{

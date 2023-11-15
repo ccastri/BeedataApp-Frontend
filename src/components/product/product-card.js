@@ -165,7 +165,10 @@ updateCompanyConsumption={updateCompanyConsumption}
 clearMessages={clearMessages}
 />)}
           {(product.id === 4) && (<LakeSettings />)}
-          {(product.id !== 1) && (<ProductDialog name={product.name} image={product.image} isConsumption={isConsumption} updateCompanyConsumption={updateCompanyConsumption}/>)}
+          {(product.id !== 1) && (<ProductDialog name={product.name}
+image={product.image}
+isConsumption={isConsumption}
+updateCompanyConsumption={updateCompanyConsumption}/>)}
         </Box>
       </CardActions>
     </Card>

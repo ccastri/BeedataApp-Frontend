@@ -12,7 +12,7 @@ const RootCard = styled(Card)(({ theme }) => ({
   transition: '0.3s',
   boxShadow: '0px 0px 32px rgba(255, 255, 255, 0.3)',
   position: 'relative',
-  maxWidth: '70%',
+  maxWidth: '80%',
   maxHeight: '70%',
   marginLeft: 'auto',
   overflow: 'initial',
@@ -21,8 +21,8 @@ const RootCard = styled(Card)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   paddingBottom: theme.spacing(2),
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '55%',
+  [theme.breakpoints.up('lg')]: {
+    maxWidth: '80%',
     maxHeight: '55%',
     flexDirection: 'row',
     paddingTop: theme.spacing(2),
@@ -30,7 +30,7 @@ const RootCard = styled(Card)(({ theme }) => ({
 }));
 
 const Media = styled(CardMedia)(({ theme }) => ({
-  width: '80%',
+  width: '100%',
   marginLeft: 'auto',
   marginRight: 'auto',
   marginTop: -theme.spacing(3),
@@ -42,21 +42,8 @@ const Media = styled(CardMedia)(({ theme }) => ({
   backgroundColor: '#fff',
   position: 'relative',
   boxShadow: '0px 14px 80px rgba(34, 35, 58, 0.2)',
-  transform: 'translateX(0)', // added to reset transform
-  [theme.breakpoints.up('md')]: {
-    width: '100%',
-    marginLeft: '0%', // changed from -theme.spacing(3)
-    marginTop: '5%',
-    marginBottom: '5%',
-    transform: 'translateX(0)', // changed from 'translateX(-8px)'
-  },
-  [theme.breakpoints.between('sm', 'md')]: {
-    width: '80%',
-    paddingBottom: '60%',
-    paddingLeft: '8%',
-    paddingRight: '8%',
-  },
-  [theme.breakpoints.down('sm')]: {
+  transform: 'translateX(-10%)',
+  [theme.breakpoints.down('lg')]: {
     width: '100%',
     paddingBottom: '60%',
     paddingLeft: '8%',
@@ -77,7 +64,7 @@ const Media = styled(CardMedia)(({ theme }) => ({
 
 const Content = styled(CardContent)(({ theme }) => ({
   padding: theme.spacing(4),
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }));
 
@@ -98,11 +85,11 @@ export const BeeCard = React.memo(function BeeCard() {
         <Typography variant="h5"
 gutterBottom
 sx={{ mt: 2, color: '#ffffff' }}>
-          <strong>{'CONNECT TO THE WORLD OF AUTOMATED SERVICES'}</strong>
+          <strong>{'EMPOWER YOUR BUSINESS WITH AI ASSISTANTS'}</strong>
         </Typography>
         <Typography variant="body1"
 sx={{ color: '#FFFFFF' }}>
-          {'Our cloud-based platform allows you to access and share relevant data anytime, anywhere.'}
+          {'We provide AI assistants with personalities tailored to your business needs.'}
         </Typography>
       </Content>
     </RootCard>

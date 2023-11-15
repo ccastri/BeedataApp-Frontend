@@ -188,20 +188,35 @@ export const MsgInsOuts = () => {
                     {loading ? (
                         <CircularProgress data-testid='loading' />
                     ) : data.data ? (
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%"
+height="100%">
                             <LineChart data={data.data}>
-                                <Line type="monotone" dataKey="agent" stroke="#8884d8" strokeWidth={2} />
-                                <Line type="monotone" dataKey="visitor" stroke="#82ca9d" strokeWidth={2} />
-                                <Line type="monotone" dataKey="chatbot" stroke="#ffc658" strokeWidth={2} />
-                                <CartesianGrid stroke="#FFFFFF" strokeDasharray="5 5" />
-                                <XAxis dataKey="ts" stroke="#FFFFFF" tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
-                                <YAxis stroke="#FFFFFF" allowDecimals={false} />
+                                <Line type="monotone"
+dataKey="agent"
+stroke="#8884d8"
+strokeWidth={2} />
+                                <Line type="monotone"
+dataKey="visitor"
+stroke="#82ca9d"
+strokeWidth={2} />
+                                <Line type="monotone"
+dataKey="chatbot"
+stroke="#ffc658"
+strokeWidth={2} />
+                                <CartesianGrid stroke="#FFFFFF"
+strokeDasharray="5 5" />
+                                <XAxis dataKey="ts"
+stroke="#FFFFFF"
+tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
+                                <YAxis stroke="#FFFFFF"
+allowDecimals={false} />
                                 <Tooltip />
                                 <Legend />
                             </LineChart>
                         </ResponsiveContainer>
                     ) : (
-                        <Typography variant="h6" align="center"><br />No data to display</Typography>
+                        <Typography variant="h6"
+align="center"><br />No data to display</Typography>
                     )}
                     {errorMsg && (
                         <ErrorSnackbar

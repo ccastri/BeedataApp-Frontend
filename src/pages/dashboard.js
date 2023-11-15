@@ -29,8 +29,7 @@ const Page = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log(companyResponse.data);
+        
         if (companyResponse.data.success) {
           const isConsumption = companyResponse.data.company.credit_msg_consumption;
           setState(prevState => ({
@@ -128,7 +127,8 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <WhatsappMsg isConsumption={state.isConsumption} msgLimit={state.msgLimit} />
+              <WhatsappMsg isConsumption={state.isConsumption}
+msgLimit={state.msgLimit} />
             </Grid>
             <Grid item
               xs={12}
@@ -136,7 +136,8 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <LakeRows isConsumption={state.isConsumption} rowLimit={state.rowLimit} />
+              <LakeRows isConsumption={state.isConsumption}
+rowLimit={state.rowLimit} />
             </Grid>
             <Grid item
               xs={12}

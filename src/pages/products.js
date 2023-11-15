@@ -41,6 +41,7 @@ const Page = () => {
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
+      console.log('pack: ', packResponse.data.company);
 
       setState(prevState => ({
         ...prevState,
@@ -55,7 +56,7 @@ const Page = () => {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
 
   const updateCompanyConsumption = useCallback(async (newStatus) => {
@@ -80,7 +81,7 @@ const Page = () => {
         setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
       }, 4000);
     }
-  }, []);
+  }, [token]);
 
   const updateWabas = useCallback((phoneId, departmentId = null) => {
     setState(prevState => {
