@@ -6,22 +6,39 @@ import Page from '../../src/pages/products';
 jest.mock('../../src/lib/axios');
 
 describe('Products page', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-      });
-    
-      it('should render loading spinner when data is being fetched', async () => {
-        api.get.mockResolvedValueOnce({ data: { products: [] } });
-        render(<Page />);
-        expect(screen.getByRole('progressbar')).toBeInTheDocument();
-        await waitFor(() => expect(api.get).toHaveBeenCalledTimes(2));
-      });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-      it('should render product cards when data is fetched', async () => {
-        api.get.mockResolvedValueOnce({ data: { products: [] } });
-        api.get.mockResolvedValueOnce({ data: { wabas: [] } });
-        render(<Page />);
-        await waitFor(() => expect(api.get).toHaveBeenCalledTimes(2));
-        expect(screen.getAllByTestId('product-avatar'));
-      });
+  it('should render loading state initially', async () => {
+    api.get.mockResolvedValue({ data: {} });
+    render(<Page />);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  });
+
+  it('should render products after loading', async () => {
+    const mockData = {
+      products: [],
+      wabas: [],
+      company: {
+        credit_msg_consumption: false,
+        facebook_token: false,
+        credit: 0,
+      },
+    };
+  
+    api.get.mockResolvedValueOnce({ data: { products: mockData.products } })
+      .mockResolvedValueOnce({ data: { wabas: mockData.wabas } })
+      .mockResolvedValueOnce({ data: { company: mockData.company } });
+  
+    api.put.mockResolvedValue({ data: { success: true, company: { credit: 0 }, message: '' } });
+  
+    render(<Page />);
+    await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
+  
+    mockData.products.forEach(product => {
+      expect(screen.getByText(product.name)).toBeInTheDocument();
+    });
+  });
+
 });

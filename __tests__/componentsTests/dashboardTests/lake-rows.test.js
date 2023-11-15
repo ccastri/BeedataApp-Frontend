@@ -13,7 +13,7 @@ describe('LakeRows', () => {
   it('should render the component', async () => {
     api.get.mockResolvedValueOnce({ data: { success: true, rowCount: 100 } });
     await act(async () => {
-      render(<LakeRows isConsumable={'2023-11-01T20:28:39.179Z'} rowLimit={500}/>);
+      render(<LakeRows isConsumption={'2023-11-01T20:28:39.179Z'} rowLimit={500}/>);
     });
     const lakeRows = screen.getByText(/Lake Rows/i);
     expect(lakeRows).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('LakeRows', () => {
   it('should display the row count', async () => {
     api.get.mockResolvedValueOnce({ data: { success: true, rowCount: 100 } });
     await act(async () => {
-      render(<LakeRows isConsumable={'2023-11-01T20:28:39.179Z'} rowLimit={500} />);
+      render(<LakeRows isConsumption={'2023-11-01T20:28:39.179Z'} rowLimit={500} />);
     });
     await waitFor(() => screen.getByText(/100/i));
     expect(screen.getByText(/500/i)).toBeInTheDocument();

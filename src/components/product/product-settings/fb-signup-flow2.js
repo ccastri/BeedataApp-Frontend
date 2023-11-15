@@ -9,9 +9,7 @@ import api from '../../../lib/axios';
  * @returns {JSX.Element} - The button to launch the WhatsApp Signup flow
  * 
  */
-
-export const FbSignupFlow = ({title}) => {
-
+export const FbSignupFlow2 = ({title}) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.fbAsyncInit = function () {
@@ -22,10 +20,8 @@ export const FbSignupFlow = ({title}) => {
           xfbml: true,
           version: 'v18.0'
         });
-
         FB.AppEvents.logPageView();
       };
-
       // Load the Facebook SDK script
       (function (d, s, id) {
         let js, fjs = d.getElementsByTagName(s)[0];
@@ -39,32 +35,6 @@ export const FbSignupFlow = ({title}) => {
           document.head.appendChild(js);
         }
       })(document, 'script', 'facebook-jssdk');
-
-      const sessionInfoListener = (event) => {
-        if (event.origin !== "https://www.facebook.com") return;
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'WA_EMBEDDED_SIGNUP') {
-            // if user finishes the Embedded Signup flow
-            if (data.event === 'FINISH') {
-              const {phone_number_id, waba_id} = data.data;
-            }
-            // if user cancels the Embedded Signup flow
-            else {
-             const{current_step} = data.data;
-            }
-          }
-        } catch {
-          // Don’t parse info that’s not a JSON
-          console.log('Non JSON Response', event.data);
-        }
-      };
-
-      window.addEventListener('message', sessionInfoListener);
-
-      return () => {
-        window.removeEventListener('message', sessionInfoListener);
-      };
     }
   }, []);
 
@@ -74,17 +44,16 @@ export const FbSignupFlow = ({title}) => {
       if (typeof FB !== 'undefined') {
         FB.login(async function (response) {
           if (response.authResponse) {
-            const code = response.authResponse.code;
+            const signedRequest = response.authResponse.signedRequest;
             const token = localStorage.getItem('jwt');
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {
                   Authorization: `Bearer ${token}`,
-                  'x-access-token': code,
+                  'x-access-token': signedRequest,
                 },
                 mode: 'cors'
               });
-
               window.location.reload();
             } catch (err) {
               console.log(err);
@@ -94,9 +63,8 @@ export const FbSignupFlow = ({title}) => {
             console.log('User cancelled login or did not fully authorize.');
           }
         }, {
-          config_id: '244953425243988',
-          response_type: 'code',
-          override_default_response_type: true,
+          scope: 'business_management, whatsapp_business_management, whatsapp_business_messaging',
+          response_type: 'code' 
         });
       }
     }
@@ -108,7 +76,6 @@ export const FbSignupFlow = ({title}) => {
       color="primary"
       onClick={launchWhatsAppSignup}
       sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
-      data-testid='facebook-flow'
       endIcon={<FacebookIcon />}
     >
       { title }

@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MetricsTable } from './metrics-table';
 import { StatsCard } from '../../../general/stats-cards';
+import { ExportButton } from './social-msgs-export';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -77,6 +78,7 @@ function getBusiestHour(messages) {
     return formattedBusiestHour;
 }
 
+
 export const MetricsContent = ({ agents }) => {
     const [state, setState] = useState({
         messages: [],
@@ -104,6 +106,7 @@ export const MetricsContent = ({ agents }) => {
                         Authorization: `Bearer ${token}`,
                     },
                     params: {
+                        isMetrics: true,
                         startFilter: startDate,
                         endFilter: endDate,
                     },
@@ -132,6 +135,8 @@ export const MetricsContent = ({ agents }) => {
         }
         fetchData();
     }, [startDate, endDate]);
+
+    console.log('messages', messages);
 
     const handleStartDateChange = (date) => {
         setStartDate(date);
@@ -239,7 +244,8 @@ export const MetricsContent = ({ agents }) => {
 
     return (
         <Box sx={{ mt: 4 }}
-            data-testid='metrics'>
+            data-testid='metrics'
+            id='metrics-content'>
             <Grid container
                 spacing={2}>
                 <Grid container
@@ -249,25 +255,29 @@ export const MetricsContent = ({ agents }) => {
                         <CardContent>
                             <ThemeProvider theme={theme}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <Grid container
-                                        spacing={2}
-                                        justifyContent="flex-end">
+                                    <Grid container justifyContent="space-between">
                                         <Grid item>
-                                            <DatePicker
-                                                label="Start Date"
-                                                value={startDate}
-                                                onChange={handleStartDateChange}
-                                                renderInput={(props) => <TextField {...props}
-                                                    sx={{ mr: 3 }} />}
-                                            />
+                                            <ExportButton messages={messages} />
                                         </Grid>
                                         <Grid item>
-                                            <DatePicker
-                                                label="End Date"
-                                                value={endDate}
-                                                onChange={handleEndDateChange}
-                                                renderInput={(props) => <TextField {...props} />}
-                                            />
+                                            <Grid container spacing={2}>
+                                                <Grid item>
+                                                    <DatePicker
+                                                        label="Start Date"
+                                                        value={startDate}
+                                                        onChange={handleStartDateChange}
+                                                        renderInput={(props) => <TextField {...props} sx={{ mr: 3 }} />}
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <DatePicker
+                                                        label="End Date"
+                                                        value={endDate}
+                                                        onChange={handleEndDateChange}
+                                                        renderInput={(props) => <TextField {...props} />}
+                                                    />
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </LocalizationProvider>
@@ -292,7 +302,8 @@ export const MetricsContent = ({ agents }) => {
                     <Grid item
                         xs={12}
                         md={6}
-                        data-testid='rooms-chart'>
+                        data-testid='rooms-chart'
+                        id='chart-container'>
                         <Card sx={{ mb: 4 }}>
                             <CardHeader title="Total Chat Rooms" />
                             <CardContent sx={{
@@ -320,7 +331,8 @@ export const MetricsContent = ({ agents }) => {
                     <Grid item
                         xs={12}
                         md={6}
-                        data-testid='agents-rooms-table'>
+                        data-testid='agents-rooms-table'
+                        id='table-container'>
                         <MetricsTable data={agentData} />
                     </Grid>
                 </Grid>

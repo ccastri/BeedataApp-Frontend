@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FbSignupFlow } from '../fb-signup-flow';
+import { FbSignupFlow2 } from '../fb-signup-flow2';
 import { PhoneDeleteTable } from './phones-table-deletion';
 import PropTypes from 'prop-types';
 import Alert from '@mui/material/Alert';
@@ -46,8 +46,9 @@ export const PermissionChange = ({ rows, deleteRow }) => {
                 sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                 endIcon={<FacebookIcon />}
                 onClick={handleClickOpen()}
+                data-testid="change-permissions-button"
             >
-                Permissions
+                Change Permissions
             </Button>
             <Dialog
                 open={open}
@@ -112,7 +113,7 @@ deleteRow={deleteRow} />
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <DialogActions sx={{ mt: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                            <FbSignupFlow title={'Permissions'} />
+                            <FbSignupFlow2 title={'Change Permissions'} />
                             <Button
                                 onClick={handleClose}
                                 variant="outlined"

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SocialSettings } from './product-settings/social';
 import { WhatsappSettings } from './product-settings/whatsapp';
 import { LakeSettings } from './product-settings/lake';
+import { ProductDialog } from './product-dialog';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -10,7 +11,6 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
 
 
 const cardStyle = {
@@ -52,7 +52,7 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
  * 
  * Usage: Used to display Beet's available products.
  */
-export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, updateWabas, deleteRow, ...rest }) => {
+export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, updateWabas, deleteRow, isConsumption, credit, accessToken, responseMessage, errorMessage, updateCompanyConsumption, clearMessages }) => {
   const isActiveRef = useRef(isActive);
 
   const beetDetailsT = beetDetails ? beetDetails.replace(/^{"|"}$/g, '').replace(/\\"/g, '"') : '';
@@ -83,7 +83,6 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
   return (
     <Card
       sx={cardStyle}
-      {...rest}
     >
       <CardContent>
         <Box
@@ -122,6 +121,30 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
           >
             {(isActiveRef.current && product.id != 1) ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : (!isActiveRef.current && product.id != 1) ? "Not available" : ''}
           </Typography>
+          {isActiveRef.current && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '6px',
+                textAlign: 'center',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
+                backgroundColor: '#EFEFEF',
+                p: 2,
+                mr: 4,
+                ml: 4,
+                mt: 2,
+              }}
+            >
+              <Typography
+                color="#333333"
+                variant="subtitle2"
+              >
+                Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
@@ -132,30 +155,17 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
 updatedWabas={updateWabas} />)}
           {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
 deleteRow={deleteRow}
-productId={product.id} />)}
+productId={product.id}
+accessToken={accessToken}
+isConsumption={isConsumption}
+credit={credit}
+responseMessage={responseMessage}
+errorMessage={errorMessage}
+updateCompanyConsumption={updateCompanyConsumption}
+clearMessages={clearMessages}
+/>)}
           {(product.id === 4) && (<LakeSettings />)}
-          {isActiveRef.current && (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                borderRadius: '6px',
-                textAlign: 'center',
-                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)',
-                backgroundColor: '#EFEFEF',
-                p: 2,
-                mr: 2,
-              }}
-            >
-              <Typography
-                align="center"
-                color="#333333"
-                variant="subtitle2"
-              >
-                Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
-              </Typography>
-            </Box>
-          )}
+          {(product.id !== 1) && (<ProductDialog name={product.name} image={product.image} isConsumption={isConsumption} updateCompanyConsumption={updateCompanyConsumption}/>)}
         </Box>
       </CardActions>
     </Card>

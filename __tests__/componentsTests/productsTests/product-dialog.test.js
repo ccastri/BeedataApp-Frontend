@@ -1,46 +1,51 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ProductDialog } from '../../../src/components/product/product-dialog'; 
 import api from '../../../src/lib/axios';
 
 jest.mock('../../../src/lib/axios');
 
 describe('ProductDialog', () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
-    
-  it('renders dialog', () => {
-    render(<ProductDialog name="Product 1" description="Description of Product 1" image="path/to/image.png" />);
-    const purchaseButton = screen.getByText('Purchase');
-    fireEvent.click(purchaseButton);
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
-    
-//   it('fetches product options on mount', async () => {
-//     const mockProductOptions = [{
-//       product_id: 1,
-//       name: 'Product 1',
-//       description: 'Description of Product 1',
-//       product_alert: 10,
-//     }, {
-//       product_id: 2,
-//       name: 'Product 2',
-//       description: 'Description of Product 2',
-//       product_alert: 20,
-//     }];
-//     api.post.mockResolvedValueOnce({ data: { productSelection: mockProductOptions } });
-//     render(<ProductDialog name="Product 1" description="Description of Product 1" image="path/to/image.png" />);
-//     await waitFor(() => expect(api.post).toHaveBeenCalledWith('/api/v1/products/beet-products', {
-//         beetProduct: 'Product 1'
-//     }, {
-//         headers: {
-//             Authorization: `Bearer ${null}`,
-//         },
-//     }));
 
-    
-//   });
+  it('renders without crashing', () => {
+    render(<ProductDialog name="Test Product" image="test.jpg" isConsumption={false} updateCompanyConsumption={jest.fn()} />);
+    expect(screen.getByTestId('purchase-button')).toBeInTheDocument();
+  });
 
+  it('opens dialog on purchase button click', async () => {
+    render(<ProductDialog name="Test Product" image="test.jpg" isConsumption={false} updateCompanyConsumption={jest.fn()} />);
+    fireEvent.click(screen.getByTestId('purchase-button'));
+    await waitFor(() => expect(screen.getByLabelText('close-product-dialog')).toBeInTheDocument());
+  });
+
+  it('fetches product options on mount', async () => {
+    api.get.mockResolvedValue({ data: { productSelection: [{ product_id: '1', name: 'Test Product', description: 'Test Description', price: '10' }] } });
+    render(<ProductDialog name="Test Product" image="test.jpg" isConsumption={false} updateCompanyConsumption={jest.fn()} />);
+    fireEvent.click(screen.getByTestId('purchase-button'));
+    await waitFor(() => expect(screen.getByText(/Test Product/i)).toBeInTheDocument());
+    await waitFor(() => expect(api.get).toHaveBeenCalledTimes(1));
+  });
   
+  // Haven´t been able to properly mock the selection of an option by the user
+
+  // it('handles product purchase', async () => {
+  //   api.get.mockResolvedValue({ data: { productSelection: [{ product_id: '1', name: 'Test Product', description: 'Test Description', price: '10' }] } });
+  //   api.post.mockResolvedValue({ data: { purchase: {}, message: 'Purchase successful' } });
+  //   const updateCompanyConsumption = jest.fn();
+  //   render(<ProductDialog name="Test Product" image="test.jpg" isConsumption={false} updateCompanyConsumption={updateCompanyConsumption} />);
+  //   fireEvent.click(screen.getByTestId('purchase-button'));
+  
+  //   // Wait for the option to be in the document
+  //   await waitFor(() => screen.getByText('Test Product'));
+  
+  //   // Then select its value
+  //   userEvent.selectOptions(screen.getByLabelText('product-label product'), ['1']);
+  
+  //   fireEvent.click(screen.getByText('Purchase'));
+  //   await waitFor(() => expect(api.post).toHaveBeenCalledTimes(1));
+  // });
 });
