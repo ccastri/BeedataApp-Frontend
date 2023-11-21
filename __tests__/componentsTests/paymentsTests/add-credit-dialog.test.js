@@ -55,6 +55,6 @@ describe('CreditDialog', () => {
       expect(screen.getByText(/credit will be invoiced/)).toBeInTheDocument();
     });
     expect(api.post).toHaveBeenCalledTimes(1);
-    expect(api.post).toHaveBeenCalledWith('/api/v1/products/purchase-product', { productId: 50, productQuantity: '50' }, { headers: { Authorization: 'Bearer null' } });
+    expect(api.post).toHaveBeenCalledWith('/api/v1/products/beet', { productId: 50, productQuantity: '50' }, { headers: { Authorization: 'Bearer null' } });
   });
 });

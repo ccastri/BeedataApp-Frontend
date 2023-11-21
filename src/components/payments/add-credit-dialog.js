@@ -60,7 +60,7 @@ export const CreditDialog = () => {
         productQuantity: values.amount,
       };
 
-      const result = await api.post('/api/v1/products/purchase-product', purchaseCredit, {
+      const result = await api.post('/api/v1/products/beet', purchaseCredit, {
         headers: {
           Authorization: `Bearer ${token}`,
       }

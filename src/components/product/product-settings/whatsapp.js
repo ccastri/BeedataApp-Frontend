@@ -23,7 +23,7 @@ export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isC
         productQuantity: 1,
       };
 
-      await api.post('/api/v1/products/purchase-product', productInfo, {
+      await api.post('/api/v1/products/beet', productInfo, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

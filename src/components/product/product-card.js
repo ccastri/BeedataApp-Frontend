@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { SocialSettings } from './product-settings/social';
 import { WhatsappSettings } from './product-settings/whatsapp';
 import { LakeSettings } from './product-settings/lake';
@@ -13,38 +13,12 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 
-const cardStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100%',
-  boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.4)',
-};
-
-const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
-  let expirationDate = new Date(purchaseDate);
-  switch (renewalUnit) {
-    case 'days':
-      expirationDate.setDate(expirationDate.getDate() + renewalTime);
-      break;
-    case 'month':
-      expirationDate.setMonth(expirationDate.getMonth() + renewalTime);
-      break;
-    case 'year':
-      expirationDate.setFullYear(expirationDate.getFullYear() + renewalTime);
-      break;
-    default:
-      break;
-  }
-  return expirationDate;
-}
 
 /**
  * ProductCard component that displays Beet's available products.
  * 
- * Dependencies: useState, useEffect, useRef, getUserRole, WpConfigAccountDialog,
- *              FbSignupFlow, SocialAgentSelection, ProductDialog, ProductActivation,
- *             PropTypes, Avatar, Box, Card, CardContent, CardActions, Divider,
- *            Typography, CircularProgress, api.
+ * Dependencies: Avatar, Box, Card, CardContent, CardActions, Divider, Typography,
+ *              SocialSettings, WhatsappSettings, LakeSettings, ProductDialog.
  * 
  * @param {Object} props Component props
  * 
@@ -52,37 +26,18 @@ const calculateExpirationDate = (purchaseDate, renewalTime, renewalUnit) => {
  * 
  * Usage: Used to display Beet's available products.
  */
-export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, wabas, updateWabas, deleteRow, isConsumption, credit, accessToken, responseMessage, errorMessage, updateCompanyConsumption, clearMessages }) => {
-  const isActiveRef = useRef(isActive);
-
-  const beetDetailsT = beetDetails ? beetDetails.replace(/^{"|"}$/g, '').replace(/\\"/g, '"') : '';
-  const parseBeetDetails = beetDetailsT ? JSON.parse(beetDetailsT) : '';
-
-  const productQuantity = parseBeetDetails ? parseBeetDetails.products.find(item => item.name === product.name)?.quantity : '';
-  const productUnitType = parseBeetDetails ? parseBeetDetails.products.find(item => item.name === product.name)?.unit_type : '';
-
-  const renewalTime = purchaseDetails ? Number(purchaseDetails.beet_renewal_time) : 0;
-  const renewalUnit = purchaseDetails ? purchaseDetails.beet_renewal_exp_unit : '';
-  const expirationTime = purchaseDetails ? Number(purchaseDetails.beet_expiration_time) : 0;
-
-  let renewalString = '';
-  if (renewalTime == 1) {
-    renewalString = `${renewalUnit}`;
-  } else {
-    renewalString = `${renewalTime.toString().replace('.00', '')} ${renewalUnit}`;
-  }
-
-  const purchaseDate = purchaseDetails ? new Date(purchaseDetails.create_date) : null;
-  const expirationDate = purchaseDate ? calculateExpirationDate(purchaseDate, expirationTime, renewalUnit) : '';
-
-  useEffect(() => {
-    const currentDate = new Date();
-    isActiveRef.current = (currentDate < expirationDate);
-  }, [expirationDate]);
+export const ProductCard = (props) => {
+  const { product, wabas, updateWabas, deleteRow, isConsumption, credit, accessToken, responseMessage, errorMessage, updateCompanyConsumption, clearMessages } = props;
+  const appProduct = product.app_product ? JSON.parse(product.app_product)[0].products[0] : {};
 
   return (
     <Card
-      sx={cardStyle}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.4)'
+      }}
     >
       <CardContent>
         <Box
@@ -103,7 +58,7 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
         <Box
           sx={{
             textAlign: 'center',
-            filter: !isActiveRef.current ? 'grayscale(100%)' : 'none',
+            filter: product.isActive ? 'grayscale(100%)' : 'none',
           }}
         >
           <Typography
@@ -119,9 +74,10 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
             color="textSecondary"
             variant="subtitle1"
           >
-            {(isActiveRef.current && product.id != 1) ? `Available: ${productQuantity} ${productUnitType} / ${renewalString}` : (!isActiveRef.current && product.id != 1) ? "Not available" : ''}
+            {(product.isActive && product.id != 1) ? `Available: ${appProduct.quantity} ${product.unitType} / ${product.renewal_exp_unit
+              }` : (!product.isActive && product.id != 1) ? "Not available" : ''}
           </Typography>
-          {isActiveRef.current && (
+          {product.isActive && (
             <Box
               sx={{
                 display: 'flex',
@@ -141,7 +97,8 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
                 color="#333333"
                 variant="subtitle2"
               >
-                Expires on: {expirationDate.toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+                Expires on: {new Date(product.expiration_date)
+                  .toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
               </Typography>
             </Box>
           )}
@@ -152,23 +109,23 @@ export const ProductCard = ({ product, purchaseDetails, beetDetails, isActive, w
       <CardActions>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           {(product.id === 5) && (<SocialSettings wabas={wabas}
-updatedWabas={updateWabas} />)}
+            updatedWabas={updateWabas} />)}
           {(product.id === 2 || product.id === 1) && (<WhatsappSettings wabas={wabas}
-deleteRow={deleteRow}
-productId={product.id}
-accessToken={accessToken}
-isConsumption={isConsumption}
-credit={credit}
-responseMessage={responseMessage}
-errorMessage={errorMessage}
-updateCompanyConsumption={updateCompanyConsumption}
-clearMessages={clearMessages}
-/>)}
+            deleteRow={deleteRow}
+            productId={product.id}
+            accessToken={accessToken}
+            isConsumption={isConsumption}
+            credit={credit}
+            responseMessage={responseMessage}
+            errorMessage={errorMessage}
+            updateCompanyConsumption={updateCompanyConsumption}
+            clearMessages={clearMessages}
+          />)}
           {(product.id === 4) && (<LakeSettings />)}
           {(product.id !== 1) && (<ProductDialog name={product.name}
-image={product.image}
-isConsumption={isConsumption}
-updateCompanyConsumption={updateCompanyConsumption}/>)}
+            image={product.image}
+            isConsumption={isConsumption}
+            updateCompanyConsumption={updateCompanyConsumption} />)}
         </Box>
       </CardActions>
     </Card>
@@ -178,10 +135,14 @@ updateCompanyConsumption={updateCompanyConsumption}/>)}
 
 ProductCard.propTypes = {
   product: PropTypes.object.isRequired,
-  isActive: PropTypes.bool.isRequired,
-  purchaseDetails: PropTypes.object,
-  beetDetails: PropTypes.string,
-  wabas: PropTypes.array,
-  updateWabas: PropTypes.func,
-  deleteRow: PropTypes.func,
+  wabas: PropTypes.array.isRequired,
+  updateWabas: PropTypes.func.isRequired,
+  deleteRow: PropTypes.func.isRequired,
+  isConsumption: PropTypes.bool.isRequired,
+  credit: PropTypes.number.isRequired,
+  accessToken: PropTypes.bool.isRequired,
+  responseMessage: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  updateCompanyConsumption: PropTypes.func.isRequired,
+  clearMessages: PropTypes.func.isRequired,
 };

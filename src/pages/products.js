@@ -10,6 +10,45 @@ import { baseProducts } from '../data/base_products';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 import api from '../lib/axios';
 
+
+const getProductDetails = async (pack, token) => {
+  const updatedPack = await Promise.all(pack.map(async (product) => {
+    const response = await api.get('/api/v1/products/beet', {
+      params: { productId: product.product_id },
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return Object.assign({}, product, response.data.product[0]);
+  }));
+
+  return updatedPack;
+};
+
+const updateBaseProducts = (pack, baseProducts) => {
+  const updatedBaseProducts = [];
+
+  baseProducts.forEach(baseProduct => {
+    let isActive = false;
+    let activeProductData = {};
+
+    pack.forEach(packProduct => {
+      if (packProduct.app_product.includes(baseProduct.name)) {
+        isActive = true;
+        activeProductData = packProduct;
+      }
+    });
+
+    if (isActive) {
+      const { id, name, ...activeProductDataReduce } = activeProductData;
+      updatedBaseProducts.push({ ...baseProduct, ...activeProductDataReduce, isActive });
+    } else {
+      updatedBaseProducts.push({ ...baseProduct, isActive });
+    }
+  });
+
+  return updatedBaseProducts;
+};
+
 /**
 
 Page component that displays user purchased products information.
@@ -36,16 +75,18 @@ const Page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [packResponse, wabasResponse, companyResponse] = await Promise.all([
-        api.get('/api/v1/products/company-all-products', { headers: { Authorization: `Bearer ${token}` } }),
+      const [purchaseResponse, wabasResponse, companyResponse] = await Promise.all([
+        api.get('/api/v1/purchases/active', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
-      console.log('pack: ', packResponse.data.company);
+
+      const updatedPack = await getProductDetails(purchaseResponse.data.active, token);
+      console.log(updatedPack);
 
       setState(prevState => ({
         ...prevState,
-        pack: packResponse.data.products,
+        pack: updatedPack,
         wabas: wabasResponse.data.wabas,
         isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
         accessToken: companyResponse.data.company.facebook_token ? true : false,
@@ -122,52 +163,8 @@ const Page = () => {
     );
   }
 
-  const products = pack.length > 0 ? pack.map(product => {
-    const bulkProducts = baseProducts.map(baseProduct => {
-      if (product.beet_app_product && product.beet_app_product.includes(baseProduct.name)) {
-        return {
-          ...baseProduct,
-          details: {
-            display_name: product.display_name || '',
-            create_date: product.create_date || '',
-            beet_expiration_time: product.beet_expiration_time || '',
-            beet_renewal_time: product.beet_renewal_time || '',
-            beet_renewal_exp_unit: product.beet_renewal_exp_unit || '',
-          },
-          beet_app_product: product.beet_app_product,
-          isActive: true,
-        };
-      } else {
-        return {
-          ...baseProduct,
-          isActive: false,
-        };
-      }
-    });
-
-    return {
-      bulkProducts,
-    };
-  }) : baseProducts.map(baseProduct => ({ bulkProducts: { ...baseProduct, isActive: false } }));
-
-  const allBulkProducts = products.flatMap(product => product.bulkProducts);
-
-  const distinctBulkProducts = allBulkProducts.reduce((acc, bulkProduct) => {
-    const existingIndex = acc.findIndex(p => p.id === bulkProduct.id);
-
-    if (existingIndex !== -1) {
-      const existingProduct = acc[existingIndex];
-
-      if (!existingProduct.isActive && bulkProduct.isActive) {
-        acc.splice(existingIndex, 1);
-        acc.push(bulkProduct);
-      }
-    } else {
-      acc.push(bulkProduct);
-    }
-
-    return acc;
-  }, []);
+  const updatedBaseProducts = updateBaseProducts(pack, baseProducts);
+  console.log('updatedBaseProducts', updatedBaseProducts);
 
   return (
     <>
@@ -186,7 +183,7 @@ const Page = () => {
           <Grid container
             spacing={3}
             mt={3}>
-            {distinctBulkProducts.map((product) => {
+            {updatedBaseProducts.map((product) => {
               return (
                 <Grid item
                   xs={12}
@@ -196,9 +193,6 @@ const Page = () => {
                   key={product.id}>
                   <ProductCard
                     product={product}
-                    purchaseDetails={product.details}
-                    beetDetails={product.beet_app_product}
-                    isActive={product.isActive}
                     wabas={wabas}
                     updateWabas={updateWabas}
                     deleteRow={deleteRow}

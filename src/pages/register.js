@@ -69,7 +69,7 @@ const Register = () => {
             productQuantity: 10,
             registerPurchase: true
           };
-          await api.post('/api/v1/products/purchase-product', registrationProduct);
+          await api.post('/api/v1/products/beet', registrationProduct);
           setCredentials(data.user);
           setOpenCredentials(true);
         }

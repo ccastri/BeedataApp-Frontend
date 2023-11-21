@@ -69,11 +69,12 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/api/v1/products/beet-products', {
+        const response = await api.get('/api/v1/products/beetPacks', {
           headers: { Authorization: `Bearer ${token}` },
           params: { beetProduct: name },
         });
         if (response?.data?.productSelection) {
+          console.log(response.data.productSelection);
           setProductOptions(response.data.productSelection);
         }
       } catch (error) {
@@ -93,7 +94,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   };
   
   const purchaseProduct = async (purchaseDetails, token) => {
-    const { data: { purchase, message } = {} } = await api.post('/api/v1/products/purchase-product', purchaseDetails, { headers: { Authorization: `Bearer ${token}` } });
+    const { data: { purchase, message } = {} } = await api.post('/api/v1/products/beet', purchaseDetails, { headers: { Authorization: `Bearer ${token}` } });
     return { purchase, message };
   };
   
