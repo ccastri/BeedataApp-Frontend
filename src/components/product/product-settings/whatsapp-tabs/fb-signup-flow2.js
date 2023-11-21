@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import api from '../../../lib/axios';
+import api from '../../../../lib/axios';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow

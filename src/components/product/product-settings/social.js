@@ -6,6 +6,39 @@ import { MetricsContent } from './social-tabs/metrics';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
+const fetchData = async (token, setState) => {
+  const [usersResponse, agentsResponse, departmentsResponse, availableDepartmentsResponse, phoneIdsResponse] = await Promise.all([
+    api.get('/api/v1/users/users-group-by', { headers: { Authorization: `Bearer ${token}` } }),
+    api.get('/api/v1/social/agents', { headers: { Authorization: `Bearer ${token}` } }),
+    api.get('/api/v1/social/departments', { headers: { Authorization: `Bearer ${token}` } }),
+    api.get('/api/v1/social/available-departments', { headers: { Authorization: `Bearer ${token}` } }),
+    api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } })
+  ]);
+
+  setState(prevState => ({
+    ...prevState,
+    users: usersResponse.data.users,
+    agents: agentsResponse.data.agents,
+    departments: departmentsResponse.data.departments,
+    availableDepartments: availableDepartmentsResponse.data.departments,
+    availablePhoneNums: phoneIdsResponse.data.availablePhoneNumbers,
+    departmentsAllowed: phoneIdsResponse.data.availablePhoneNumbers.length > 0
+  }));
+};
+
+const fetchAgentsQty = async (token, agents, setState) => {
+  try {
+    const response = await api.get('/api/v1/purchases/active', { headers: { Authorization: `Bearer ${token}` } });
+
+    if (response && response.data) {
+      const activePurchases = response.data.active.filter(purchase => purchase.agents_qty > 0);
+      const agentsQty = activePurchases.length > 0 ? activePurchases.reduce((acc, curr) => acc + curr.agents_qty, 0) : 0;
+      setState(prevState => ({ ...prevState, agentsAllowed: agentsQty > agents.length }));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const SocialSettings = ({ wabas, updatedWabas }) => {
   const [state, setState] = useState({
     users: [],
@@ -23,46 +56,11 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
   const token = localStorage.getItem('jwt');
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [usersResponse, agentsResponse, departmentsResponse, availableDepartmentsResponse, phoneIdsResponse] = await Promise.all([
-        api.get('/api/v1/users/users-group-by', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/social/agents', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/social/departments', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/social/available-departments', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } })
-      ]);
-
-      // const phoneNumbers = phoneIdsResponse.data.availablePhoneNumbers; // Calculate once
-
-      setState(prevState => ({
-        ...prevState,
-        users: usersResponse.data.users,
-        agents: agentsResponse.data.agents,
-        departments: departmentsResponse.data.departments,
-        availableDepartments: availableDepartmentsResponse.data.departments,
-        availablePhoneNums: phoneIdsResponse.data.availablePhoneNumbers, // Set the calculated value
-        departmentsAllowed: phoneIdsResponse.data.availablePhoneNumbers.length > 0 // Update based on the calculated value
-      }));
-    };
-    fetchData();
+    fetchData(token, setState);
   }, [token]); 
 
   useEffect(() => {
-    const fetchAgentsQty = async () => {
-      try {
-        const response = await api.get('/api/v1/purchases/active', { headers: { Authorization: `Bearer ${token}` } });
-
-        if (response && response.data) {
-          const activePurchases = response.data.active.filter(purchase => purchase.agents_qty > 0);
-          const agentsQty = activePurchases.length > 0 ? activePurchases.reduce((acc, curr) => acc + curr.agents_qty, 0) : 0;
-          setState(prevState => ({ ...prevState, agentsAllowed: agentsQty > agents.length }));
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchAgentsQty();
+    fetchAgentsQty(token, agents, setState);
   }, [token, agents]);
 
   const handleAgentsDelete = useCallback(async (row) => {

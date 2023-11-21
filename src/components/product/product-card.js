@@ -28,7 +28,16 @@ import Typography from '@mui/material/Typography';
  */
 export const ProductCard = (props) => {
   const { product, wabas, updateWabas, deleteRow, isConsumption, credit, accessToken, responseMessage, errorMessage, updateCompanyConsumption, clearMessages } = props;
-  const appProduct = product.app_product ? JSON.parse(product.app_product)[0].products[0] : {};
+
+  const getAvailableQuantity = (product) => {
+    const unitTypeMap = {
+      'messages': `${product.msg_qty} messages / ${product.renewal_exp_unit}`,
+      'rows': `${product.db_rows_qty} rows / ${product.renewal_exp_unit}`,
+      'agents': `${product.agents_qty} agents`,
+    };
+  
+    return unitTypeMap[product.unitType];
+  };
 
   return (
     <Card
@@ -74,8 +83,7 @@ export const ProductCard = (props) => {
             color="textSecondary"
             variant="subtitle1"
           >
-            {(product.isActive && product.id != 1) ? `Available: ${appProduct.quantity} ${product.unitType} / ${product.renewal_exp_unit
-              }` : (!product.isActive && product.id != 1) ? "Not available" : ''}
+            {(product.isActive && product.id != 1) ? `Available: ${getAvailableQuantity(product)}` : (!product.isActive && product.id != 1) ? "Not available" : ''}
           </Typography>
           {product.isActive && (
             <Box

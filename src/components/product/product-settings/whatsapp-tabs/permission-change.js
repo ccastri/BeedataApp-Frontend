@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FbSignupFlow2 } from '../fb-signup-flow2';
+import { FbSignupFlow2 } from './fb-signup-flow2';
 import { PhoneDeleteTable } from './phones-table-deletion';
 import PropTypes from 'prop-types';
 import Alert from '@mui/material/Alert';

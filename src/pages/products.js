@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useEffect, useCallback } from 'react';
+import { useReducer, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -49,6 +49,36 @@ const updateBaseProducts = (pack, baseProducts) => {
   return updatedBaseProducts;
 };
 
+const initialState = {
+  pack: [],
+  wabas: [],
+  isConsumption: false,
+  accessToken: false,
+  credit: 0,
+  responseMessage: '',
+  errorMessage: '',
+  loading: true,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'FETCH_DATA':
+      return { ...state, ...action.payload, loading: false };
+    case 'UPDATE_COMPANY_CONSUMPTION':
+      return { ...state, isConsumption: action.payload.newStatus, credit: action.payload.credit, responseMessage: action.payload.message };
+    case 'SET_ERROR_MESSAGE':
+      return { ...state, errorMessage: action.payload };
+    case 'CLEAR_MESSAGES':
+      return { ...state, responseMessage: '', errorMessage: '' };
+    case 'UPDATE_WABAS':
+      return { ...state, wabas: action.payload };
+    case 'DELETE_ROW':
+      return { ...state, wabas: state.wabas.filter(waba => waba.phone_id !== action.payload) };
+    default:
+      throw new Error();
+}
+}
+
 /**
 
 Page component that displays user purchased products information.
@@ -59,18 +89,8 @@ Usage: Used to display user purchased products base on Beet's base products.
  */
 
 const Page = () => {
-  const [loading, setLoading] = useState(true);
-  const [state, setState] = useState({
-    pack: [],
-    wabas: [],
-    isConsumption: false,
-    accessToken: false,
-    credit: 0,
-    responseMessage: '',
-    errorMessage: '',
-  });
-
-  const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage } = state;
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage, loading } = state;
   const token = localStorage.getItem('jwt');
 
   useEffect(() => {
@@ -82,23 +102,21 @@ const Page = () => {
       ]);
 
       const updatedPack = await getProductDetails(purchaseResponse.data.active, token);
-      console.log(updatedPack);
 
-      setState(prevState => ({
-        ...prevState,
-        pack: updatedPack,
-        wabas: wabasResponse.data.wabas,
-        isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
-        accessToken: companyResponse.data.company.facebook_token ? true : false,
-        credit: parseFloat(companyResponse.data.company.credit),
-      }));
-
-      setLoading(false);
+      dispatch({
+        type: 'FETCH_DATA',
+        payload: {
+          pack: updatedPack,
+          wabas: wabasResponse.data.wabas,
+          isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
+          accessToken: companyResponse.data.company.facebook_token ? true : false,
+          credit: parseFloat(companyResponse.data.company.credit),
+        },
+      });
     };
 
     fetchData();
   }, [token]);
-
 
   const updateCompanyConsumption = useCallback(async (newStatus) => {
     try {
@@ -108,44 +126,47 @@ const Page = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (updatedCompany.data.success) {
-        setState(prevState => ({ ...prevState, isConsumption: newStatus, credit: updatedCompany.data.company.credit, 
-                                responseMessage: updatedCompany.data.message }));
+        dispatch({
+          type: 'UPDATE_COMPANY_CONSUMPTION',
+          payload: {
+            newStatus: newStatus,
+            credit: updatedCompany.data.company.credit,
+            message: updatedCompany.data.message
+          }
+        });
       } else {
-        setState(prevState => ({ ...prevState, errorMessage: updatedCompany.data.message }));
+        dispatch({
+          type: 'SET_ERROR_MESSAGE',
+          payload: updatedCompany.data.message
+        });
       }
     } catch (error) {
       console.log(error);
     } finally {
       setTimeout(() => {
-        setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+        dispatch({ type: 'CLEAR_MESSAGES' });
       }, 4000);
     }
   }, [token]);
-
+  
   const updateWabas = useCallback((phoneId, departmentId = null) => {
-    setState(prevState => {
-      const updatedWabas = prevState.wabas.map(waba => {
-        if (waba.phone_id === phoneId) {
-          return { ...waba, department_id: departmentId };
-        }
-        return waba;
-      });
-      return { ...prevState, wabas: updatedWabas };
+    const updatedWabas = state.wabas.map(waba => {
+      if (waba.phone_id === phoneId) {
+        return { ...waba, department_id: departmentId };
+      }
+      return waba;
     });
-  }, []);
-
-
+    dispatch({ type: 'UPDATE_WABAS', payload: updatedWabas });
+  }, [state.wabas]);
+  
   const deleteRow = useCallback((phoneId) => {
-    setState(prevState => {
-      const updatedWabas = prevState.wabas.filter(waba => waba.phone_id !== phoneId);
-      return { ...prevState, wabas: updatedWabas };
-    });
+    dispatch({ type: 'DELETE_ROW', payload: phoneId });
   }, []);
-
+  
   const clearMessages = useCallback(() => {
-    setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+    dispatch({ type: 'CLEAR_MESSAGES' });
   }, []);
 
   if (loading) {
@@ -164,7 +185,6 @@ const Page = () => {
   }
 
   const updatedBaseProducts = updateBaseProducts(pack, baseProducts);
-  console.log('updatedBaseProducts', updatedBaseProducts);
 
   return (
     <>
