@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
+import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -64,7 +65,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const token = localStorage.getItem('jwt');
+  const token = Cookies.get('jwt')
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -36,7 +37,7 @@ export const AccountProfileDetails = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('jwt');
+      const token = Cookies.get('jwt')
       const userResponse = await api.get('/api/v1/users/user', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -80,7 +81,7 @@ export const AccountProfileDetails = (props) => {
 
   const handleSaveDetails = async () => {
     try {
-      const token = localStorage.getItem('jwt');
+      const token = Cookies.get('jwt')
 
       // update billing fields via /api/v1/companies/company
       const billingFields = {

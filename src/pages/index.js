@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { BeeCard } from '../components/login/side-card';
 import { useFormik } from 'formik';
@@ -11,7 +12,6 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import * as Yup from 'yup';
@@ -24,7 +24,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Manage password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
@@ -35,9 +34,7 @@ const Login = () => {
       
       if (data.success) {
         const token = data.token;
-        
-        // Set the JWT in local storage
-        localStorage.setItem('jwt', token);
+        Cookies.set('jwt', token);
 
         if (typeof Router !== 'undefined') {
           Router.push("/dashboard").catch(console.error);

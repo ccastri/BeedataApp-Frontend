@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -15,7 +16,7 @@ export const BillingPreferences = ({ title }) => {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
+    const token = Cookies.get('jwt')
 
     const fetchBillingInfo = async () => {
       try {

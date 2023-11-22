@@ -1,5 +1,5 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -21,7 +21,7 @@ export const PurchaseSummary = ({ title }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const token = localStorage.getItem('jwt');
+          const token = Cookies.get('jwt')
           const response = await api.get('/api/v1/payments/purchase-history', {
             headers: {
               Authorization: `Bearer ${token}`,

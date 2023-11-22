@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
@@ -7,7 +8,7 @@ import api from '../../lib/axios';
 export const SocialAgents = () => {
   const [socialAgents, setSocialAgents] = useState(0);
   const [totalSocialAgents, setTotalSocialAgents] = useState(0);
-  const token = localStorage.getItem('jwt');
+  const token = Cookies.get('jwt')
 
   useEffect(() => {
     try {

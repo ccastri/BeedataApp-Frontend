@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import api from '../../../../lib/axios';
@@ -75,7 +76,7 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const code = response.authResponse.code;
-            const token = localStorage.getItem('jwt');
+            const token = Cookies.get('jwt')
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { StatsCard } from '../general/stats-cards';
 import PropTypes from 'prop-types';
 import api from '../../lib/axios';
@@ -8,7 +9,7 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
   const [rowCount, setRowCount] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
+    const token = Cookies.get('jwt')
     const fetchRowCount = async () => {
       try {
         const response = await api.get('/api/v1/lake/row-count-by-date', {

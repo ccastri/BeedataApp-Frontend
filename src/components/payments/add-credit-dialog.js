@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Cookies from 'js-cookie';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import Box from '@mui/material/Box';
@@ -53,7 +54,7 @@ export const CreditDialog = () => {
 
   const onSubmit = async (values) => {
     try {
-      const token = localStorage.getItem('jwt');
+      const token = Cookies.get('jwt')
 
       const purchaseCredit = {
         productId: 50,

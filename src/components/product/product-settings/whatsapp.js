@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { WpGeneralContent } from './whatsapp-tabs/general';
 import { SettingsDialog } from './settings-dialog';
+import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
@@ -17,7 +18,7 @@ export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isC
 
   const purchaseConsumptionProduct = async () => {
     try {
-      const token = localStorage.getItem('jwt');
+      const token = Cookies.get('jwt')
       const productInfo = {
         productId: 4,
         productQuantity: 1,

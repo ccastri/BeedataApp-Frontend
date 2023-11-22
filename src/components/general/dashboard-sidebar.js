@@ -12,7 +12,7 @@ import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 import { Cog as CogIcon } from '../../icons/cog';
 import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
-import api from '../../lib/axios';
+import { DropDown } from './dropdown-list';
 
 const items = [
   {
@@ -123,6 +123,9 @@ export const DashboardSidebar = (props) => {
             my: 3
           }}
         />
+        <Box sx={{ p: 1 }}>
+          <DropDown />
+        </Box>
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
             <NavItem

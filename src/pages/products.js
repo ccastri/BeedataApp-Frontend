@@ -1,5 +1,6 @@
+import React, { useReducer, useEffect, useCallback } from 'react';
+import Cookies from 'js-cookie';
 import Head from 'next/head';
-import { useReducer, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -91,7 +92,7 @@ Usage: Used to display user purchased products base on Beet's base products.
 const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage, loading } = state;
-  const token = localStorage.getItem('jwt');
+  const token = Cookies.get('jwt')
 
   useEffect(() => {
     const fetchData = async () => {

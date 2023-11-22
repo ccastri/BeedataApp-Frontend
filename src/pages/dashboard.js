@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
 import { WhatsappMsg } from '../components/dashboard/whatsapp-msg';
@@ -19,7 +20,7 @@ const Page = () => {
     loading: true,
   });
 
-  const token = localStorage.getItem('jwt');
+  const token = Cookies.get('jwt')
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
@@ -36,7 +37,7 @@ export const MsgInsOuts = () => {
     const theme = useTheme();
 
     useEffect(() => {
-        const token = localStorage.getItem('jwt');
+        const token = Cookies.get('jwt')
         const fetchMsgCount = async () => {
             if (!startDate || !endDate) {
                 return;

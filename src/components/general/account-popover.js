@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -26,7 +27,7 @@ export const AccountPopover = (props) => {
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
   // retrieve JWT token from localStorage
-  const token = localStorage.getItem('jwt');
+  const token = Cookies.get('jwt')
 
   // Handle user's profile redirection
   const handleProfile = () => {

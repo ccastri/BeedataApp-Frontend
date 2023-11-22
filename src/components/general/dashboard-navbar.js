@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import AppBar from '@mui/material/AppBar';
@@ -27,7 +27,7 @@ export const DashboardNavbar = (props) => {
 
   // Retrieve user name from JWT token
   const getUserName = () => {
-    const token = localStorage.getItem('jwt');
+    const token = Cookies.get('jwt')
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
       return payload.userName.toUpperCase();

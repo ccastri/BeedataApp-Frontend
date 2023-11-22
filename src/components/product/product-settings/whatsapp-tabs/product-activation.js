@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -27,7 +28,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
   const [open, setOpen] = useState(false);
   const [isMsgAvailable, setIsMsgAvailable] = useState(false);
 
-  const token = localStorage.getItem('jwt');
+  const token = Cookies.get('jwt')
 
   const handleClickOpen = () => {
     setOpen(true);

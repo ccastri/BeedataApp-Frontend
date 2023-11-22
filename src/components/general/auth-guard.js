@@ -1,18 +1,32 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import api from '../../lib/axios';
 
+
+/**
+ * AuthGuard component
+ * 
+ * @param {Object} props - The properties passed to the component
+ * 
+ * @returns {JSX.Element} - The JSX representation of the auth guard component
+ * 
+ */
 export const AuthGuard = (props) => {
   const { children } = props;
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(null); // set initial state to null
   const [verificationComplete, setVerificationComplete] = useState(false);
 
+  const getToken = () => {
+    return Cookies.get('jwt');
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
+    const token = getToken();
 
     if (!token) {
       setIsAuthorized(false);
@@ -30,11 +44,11 @@ export const AuthGuard = (props) => {
             setIsAuthorized(true);
           } else {
             setIsAuthorized(false);
-            localStorage.removeItem('jwt');
+            Cookies.remove('jwt');
           }
         } catch (err) {
           setIsAuthorized(false);
-          localStorage.removeItem('jwt');
+          Cookies.remove('jwt');
           console.error(err);
         } finally {
           setTimeout(() => {
@@ -49,9 +63,9 @@ export const AuthGuard = (props) => {
   useEffect(() => {
     if (router.isReady && verificationComplete && isAuthorized === false) {
       try {
-        router.replace({
+        router.push({
           pathname: '/',
-          query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined,
+          query: { continueUrl: router.asPath },
         });
       } catch (error) {
         console.error(error);

@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,7 +17,7 @@ export const AccountProfile = (props) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const token = localStorage.getItem('jwt');
+        const token = Cookies.get('jwt')
         const response = await api.get('/api/v1/users/user', {
           headers: {
             Authorization: `Bearer ${token}`

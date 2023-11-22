@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
@@ -6,7 +7,7 @@ export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
   const [msgCount, setMsgCount] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
+    const token = Cookies.get('jwt')
     const fetchData = async () => {
       try {
         const messagesResponse = await api.get('/api/v1/social/messages', {

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -214,7 +215,7 @@ export const PhoneDeleteTable = ({rows, deleteRow}) => {
     const unassignedRows = selectedRows.filter((row) => row.status !== 'Assigned');
   
     if (unassignedRows.length > 0) {
-      const token = localStorage.getItem('jwt');
+      const token = Cookies.get('jwt')
       for (const row of unassignedRows) {
         const response = await api.delete('/api/v1/whatsapp/business-account', {
           headers: { Authorization: `Bearer ${token}` },
