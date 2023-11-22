@@ -1,11 +1,11 @@
 import React from 'react';
 import api from '../../../src/lib/axios';
-import * as utils from '../../../src/utils/get-user-role';
+import * as utils from '../../../src/utils/get-user-data';
 import { render, screen, act } from '@testing-library/react';
 import { BalanceSection } from '../../../src/components/payments/balance-section';
 
 jest.mock('../../../src/lib/axios');
-jest.mock('../../../src/utils/get-user-role', () => ({
+jest.mock('../../../src/utils/get-user-data', () => ({
   getUserRole: jest.fn(),
 }));
 

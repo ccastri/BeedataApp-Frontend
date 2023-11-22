@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import BusinessIcon from '@mui/icons-material/Business';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import Cookies from 'js-cookie';
+import api from '../../lib/axios';
 
-
-// Traer la lista de las compañías como data
 export const DropDown = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    const token = Cookies.get('jwt');
+    const fetchData = async () => {
+      const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });
+
+      if (response.data.success) {
+        const companies = response.data.companies.map(company => ({ 
+          name: company.name.charAt(0).toUpperCase() + company.name.slice(1),
+          id: company.id 
+        }));
+        setCompanies(companies);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleClick = () => {
     setOpen(!open);
+  };
+
+  const handleCompanyClick = (company) => {
+    // Define the function here
   };
 
   return (
@@ -22,21 +43,47 @@ export const DropDown = () => {
       sx={{ width: '100%', maxWidth: 360 }}
       component="nav"
     >
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <BusinessIcon />
-        </ListItemIcon>
-        <ListItemText primary="Companies" />
+      <Button
+        disableRipple
+        onClick={handleClick}
+        startIcon={<BusinessIcon />}
+        sx={{
+          justifyContent: 'flex-start',
+          borderRadius: 1,
+          fontWeight: 'fontWeightBold',
+          px: 4,
+          width: '100%',
+          textTransform: 'none',
+          textAlign: 'left',
+          color: 'neutral.300',
+          '&:hover': { backgroundColor: 'rgba(255,255,255, 0.08)' }
+        }}
+      >
+        <Box sx={{ flexGrow: 1 }}>
+          Companies
+        </Box>
         {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
+      </Button>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemText primary="Company 1" />
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemText primary="Company 2" />
-          </ListItemButton>
+        <List component="div" disablePadding sx={{ maxHeight: '200px', overflow: 'auto' }}>
+          {companies.map((company) => (
+            <Button
+              key={company.id}
+              onClick={() => handleCompanyClick(company)}
+              sx={{
+                justifyContent: 'flex-start',
+                px: 7, width: '100%',
+                borderRadius: 1,
+                textTransform: 'none',
+                textAlign: 'left',
+                color: 'neutral.300',
+                '&:hover': { backgroundColor: 'rgba(255,255,255, 0.08)' } }}
+            >
+              <Box sx={{ flexGrow: 1 }}>
+                {company.name}
+              </Box>
+            </Button>
+          ))}
         </List>
       </Collapse>
     </List>

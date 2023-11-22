@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import api from '../../lib/axios';
 import { CreditDialog } from './add-credit-dialog';
-import { getUserRole } from '../../utils/get-user-role';
+import { getUserRole } from '../../utils/get-user-data';
 
 
 export const BalanceSection = ({ title }) => {

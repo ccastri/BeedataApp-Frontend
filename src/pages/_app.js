@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
 import Head from 'next/head';
+import { useState } from 'react';
 import { SessionProvider } from "next-auth/react"
 import { CacheProvider } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,6 +9,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
+import { getUserCompanyId } from '../utils/get-user-data';
+import CompanyContext from '../contexts/companyContext';
+
+
 
 registerChartJs();
 
@@ -16,6 +20,7 @@ const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const [companyId, setCompanyId] = useState(getUserCompanyId());
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -34,7 +39,9 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SessionProvider session={pageProps.session}>
-            {getLayout(<Component {...pageProps} />)}
+            <CompanyContext.Provider value={{ companyId, setCompanyId }}>
+              {getLayout(<Component {...pageProps} />)}
+            </CompanyContext.Provider>
           </SessionProvider>
         </ThemeProvider>
       </LocalizationProvider>
