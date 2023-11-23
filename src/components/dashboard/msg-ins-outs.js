@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
@@ -36,6 +36,8 @@ export const MsgInsOuts = () => {
     const [endDate, setEndDate] = useState(new Date());
     const theme = useTheme();
 
+    const { companyId } = useContext(CompanyContext);
+
     useEffect(() => {
         const token = Cookies.get('jwt')
         const fetchMsgCount = async () => {
@@ -52,7 +54,7 @@ export const MsgInsOuts = () => {
                 return;
             }
 
-            const response = await api.get('/api/v1/social/messages', {
+            const response = await api.get(`/api/v1/${companyId}/social/messages`, {
                 headers: { Authorization: `Bearer ${token}` },
                 params: { startFilter: startDate, endFilter: endDate }
             });

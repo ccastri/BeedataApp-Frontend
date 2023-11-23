@@ -97,8 +97,8 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       const [purchaseResponse, wabasResponse, companyResponse] = await Promise.all([
-        api.get('/api/v1/purchases/active', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get(`/api/v1/${companyId}/purchases/active`, { headers: { Authorization: `Bearer ${token}` } }),
+        api.get(`/api/v1/${companyId}/whatsapp`, { headers: { Authorization: `Bearer ${token}` } }),
         api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 

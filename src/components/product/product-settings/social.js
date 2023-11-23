@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react';
 import { useFormik } from 'formik';
 import { SettingsDialog } from './settings-dialog';
 import { SocialGeneralContent } from './social-tabs/general';
@@ -7,13 +7,13 @@ import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
-const fetchData = async (token, setState) => {
+const fetchData = async (companyId, token, setState) => {
   const [usersResponse, agentsResponse, departmentsResponse, availableDepartmentsResponse, phoneIdsResponse] = await Promise.all([
-    api.get('/api/v1/users/users-group-by', { headers: { Authorization: `Bearer ${token}` } }),
-    api.get('/api/v1/social/agents', { headers: { Authorization: `Bearer ${token}` } }),
-    api.get('/api/v1/social/departments', { headers: { Authorization: `Bearer ${token}` } }),
-    api.get('/api/v1/social/available-departments', { headers: { Authorization: `Bearer ${token}` } }),
-    api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } })
+    api.get(`/api/v1/${companyId}/users`, { headers: { Authorization: `Bearer ${token}` } }),
+    api.get(`/api/v1/${companyId}/social/agents`, { headers: { Authorization: `Bearer ${token}` } }),
+    api.get(`/api/v1/${companyId}/social/departments`, { headers: { Authorization: `Bearer ${token}` } }),
+    api.get(`/api/v1/${companyId}/social/available-departments`, { headers: { Authorization: `Bearer ${token}` } }),
+    api.get(`/api/v1/${companyId}/whatsapp`, { headers: { Authorization: `Bearer ${token}` } })
   ]);
 
   setState(prevState => ({
@@ -27,9 +27,9 @@ const fetchData = async (token, setState) => {
   }));
 };
 
-const fetchAgentsQty = async (token, agents, setState) => {
+const fetchAgentsQty = async (companyId, token, agents, setState) => {
   try {
-    const response = await api.get('/api/v1/purchases/active', { headers: { Authorization: `Bearer ${token}` } });
+    const response = await api.get(`/api/v1/${companyId}/purchases/active`, { headers: { Authorization: `Bearer ${token}` } });
 
     if (response && response.data) {
       const activePurchases = response.data.active.filter(purchase => purchase.agents_qty > 0);
@@ -54,22 +54,21 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
   });
 
   const { users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
-  const token = Cookies.get('jwt')
+  const token = Cookies.get('jwt');
+  const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {
-    fetchData(token, setState);
-  }, [token]); 
+    fetchData(companyId, token, setState);
+  }, [token]);
 
   useEffect(() => {
-    fetchAgentsQty(token, agents, setState);
+    fetchAgentsQty(companyId, token, agents, setState);
   }, [token, agents]);
 
   const handleAgentsDelete = useCallback(async (row) => {
     try {
-      const response = await api.delete('/api/v1/social/agents', {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { agent: row }
-      });
+      const response = await api.delete(`/api/v1/${companyId}/social/agents`, { agentId: row.agent_id, departmentId: row.department_id },
+        { headers: { Authorization: `Bearer ${token}` } });
 
       setState(prevState => ({
         ...prevState,
@@ -83,10 +82,11 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
   const handleDisconnect = useCallback(async (phoneId, phoneNumber, department, departmentId) => {
     try {
-      const response = await api.put('/api/v1/whatsapp/business-account', {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { phoneNumberId: phoneId, departmentId: null }
-      });
+      const response = await api.put(`/api/v1/${companyId}/whatsapp`, { departmentId: null },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { phoneNumberId: phoneId }
+        });
 
       if (response.data.success) {
         updatedWabas(phoneId);
@@ -139,10 +139,9 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
     if (formik.values.agent !== '' && formik.values.department !== '') {
       try {
-        const response = await api.post('/api/v1/social/agents', {
-          headers: { Authorization: `Bearer ${token}` },
-          data: { userId: formik.values.agent, departmentId: formik.values.department }
-        });
+        const response = await api.post(`/api/v1/${companyId}/social/agents`, { userId: formik.values.agent, departmentId: formik.values.department },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         if (response.data.success) {
           setState(prevState => ({
@@ -173,10 +172,9 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
     if (formik.values.newDepartment !== '') {
       try {
-        const response = await api.post('/api/v1/social/departments', {
-          headers: { Authorization: `Bearer ${token}` },
-          data: { departmentName: formik.values.newDepartment }
-        });
+        const response = await api.post(`/api/v1/${companyId}/social/departments`, { departmentName: formik.values.newDepartment },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         if (response.data.success) {
           setState(prevState => ({
@@ -208,9 +206,10 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
     if (formik.values.availableDepartment !== '' && formik.values.departmentPhoneNumber !== '') {
       try {
-        const response = await api.put('/api/v1/whatsapp/business-account', {
+        const response = await api.put(`/api/v1/${companyId}/whatsapp`, { departmentId: formik.values.availableDepartment }, 
+        {
           headers: { Authorization: `Bearer ${token}` },
-          data: { phoneNumberId: formik.values.departmentPhoneNumber, departmentId: formik.values.availableDepartment }
+          params: { phoneNumberId: formik.values.departmentPhoneNumber }
         });
 
         if (response.data.success) {
@@ -237,10 +236,8 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
     if (formik.values.departmentToDelete !== '') {
       try {
-        const response = await api.delete('/api/v1/social/departments', {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { departmentId: formik.values.departmentToDelete }
-        });
+        const response = await api.delete(`/api/v1/${companyId}/social/departments`, { departmentId: formik.values.departmentToDelete },
+          { headers: { Authorization: `Bearer ${token}` } });
 
         if (response.data.success) {
           const newPhoneNum = response.data.availablePhoneNum;
@@ -277,7 +274,7 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
       newDepartment: '',
       departmentToDelete: ''
     },
-    onSubmit: () => {}
+    onSubmit: () => { }
   });
 
   const clearMessages = () => {

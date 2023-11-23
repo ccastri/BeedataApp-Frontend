@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
@@ -8,12 +8,13 @@ import api from '../../lib/axios';
 export const SocialAgents = () => {
   const [socialAgents, setSocialAgents] = useState(0);
   const [totalSocialAgents, setTotalSocialAgents] = useState(0);
-  const token = Cookies.get('jwt')
+  const token = Cookies.get('jwt');
+  const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {
     try {
       const fetchAgentsPurchased = async () => {
-        const response = await api.get('/api/v1/purchases/active', {
+        const response = await api.get(`/api/v1/${companyId}/purchases/active`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -37,7 +38,7 @@ export const SocialAgents = () => {
   useEffect(() => {
     try {
       const fetchSocialAgents = async () => {
-        const response = await api.get('/api/v1/social/agents', {
+        const response = await api.get(`/api/v1/${companyId}/social/agents`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

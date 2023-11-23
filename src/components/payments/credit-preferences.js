@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { getUserId } from '../../utils/get-user-data';
 import Cookies from 'js-cookie';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -6,7 +7,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { useState, useEffect } from 'react';
 import api from '../../lib/axios';
 
 
@@ -15,13 +15,14 @@ export const BillingPreferences = ({ title }) => {
   const [location, setLocation] = useState('');
   const [email, setEmail] = useState('');
   const { companyId } = useContext(CompanyContext);
+  const userId = getUserId();
 
   useEffect(() => {
     const token = Cookies.get('jwt')
 
     const fetchBillingInfo = async () => {
       try {
-        const userResponse = await api.get('/api/v1/users/user', {
+        const userResponse = await api.get(`/api/v1/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

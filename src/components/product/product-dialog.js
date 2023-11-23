@@ -92,11 +92,11 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   };
   
   const updateConsumptionExpiry = async (expirationDate, isConsumption, token) => {
-    await api.put('/api/v1/purchases/active', { expirationDate, isConsumption }, { headers: { Authorization: `Bearer ${token}` } });
+    await api.put(`/api/v1/${companyId}/purchases/active`, { expirationDate, isConsumption }, { headers: { Authorization: `Bearer ${token}` } });
   };
   
   const purchaseProduct = async (purchaseDetails, token) => {
-    const { data: { purchase, message } = {} } = await api.post('/api/v1/products/beet', purchaseDetails, { headers: { Authorization: `Bearer ${token}` } });
+    const { data: { purchase, message } = {} } = await api.post(`/api/v1/${companyId}/products/${purchaseDetails.productId}`,{ headers: { Authorization: `Bearer ${token}` } });
     return { purchase, message };
   };
   
@@ -109,7 +109,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           setErrorMessage('Not enough credit to purchase product');
           return;
         }
-        const purchaseDetails = { productId: values.product, productQuantity: 1, productPrice };
+        const purchaseDetails = { productId: values.product };
         if (isConsumption) {
           const expirationDate = new Date();
           expirationDate.setDate(expirationDate.getDate() - 1);

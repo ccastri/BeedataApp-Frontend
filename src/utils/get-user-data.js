@@ -42,3 +42,25 @@ export const getUserCompanyId = () => {
     console.error(error);
   }
 };
+
+
+/**
+ * 
+ * Function to get the user id from the JWT
+ * 
+ * @returns {string} The user id
+ * 
+ */
+export const getUserId = () => {
+  try {
+    const token = Cookies.get('jwt')
+
+    if (token) {
+      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+      return payload.userId;
+    }
+    return '';
+  } catch (error) {
+    console.error(error);
+  }
+};

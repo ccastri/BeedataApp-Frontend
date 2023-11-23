@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { getUserId } from '../../utils/get-user-data';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -27,6 +28,7 @@ export const AccountProfileDetails = (props) => {
     billingAddress: ''
   });
   const { companyId } = useContext(CompanyContext);
+  const userId = getUserId();
 
   const idTypes = [
     { value: 'CC', label: 'Cédula de ciudadanía' },
@@ -39,7 +41,7 @@ export const AccountProfileDetails = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get('jwt');
-      const userResponse = await api.get('/api/v1/users/user', {
+      const userResponse = await api.get(`/api/v1/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -95,7 +97,6 @@ export const AccountProfileDetails = (props) => {
         }
       });
 
-      // update remaining fields via /api/update-user
       const remainingFields = {
         fullName: formValues.fullName,
         identificationType: formValues.identificationType,
@@ -106,7 +107,7 @@ export const AccountProfileDetails = (props) => {
         city: formValues.city
       };
 
-      const response = await api.post('/api/v1/users/update-user', remainingFields, {
+      const response = await api.put(`/api/v1/users/${userId}`, remainingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }

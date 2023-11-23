@@ -217,7 +217,7 @@ export const PhoneDeleteTable = ({rows, deleteRow}) => {
     if (unassignedRows.length > 0) {
       const token = Cookies.get('jwt')
       for (const row of unassignedRows) {
-        const response = await api.delete('/api/v1/whatsapp/business-account', {
+        const response = await api.delete(`/api/v1/${companyId}/whatsapp`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { phoneId: row.phoneId },
         });

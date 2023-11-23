@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -28,7 +28,8 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
   const [open, setOpen] = useState(false);
   const [isMsgAvailable, setIsMsgAvailable] = useState(false);
 
-  const token = Cookies.get('jwt')
+  const token = Cookies.get('jwt');
+  const { companyId } = useContext(CompanyContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -41,7 +42,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
   useEffect(() => {
     const getMessageAvailability = async (msgLimit) => {
       try {
-        const messagesResponse = await api.get('/api/v1/social/messages', {
+        const messagesResponse = await api.get(`/api/v1/${companyId}/social/messages`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { isRenewal: true }
         });
@@ -60,7 +61,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
 
     const fetchData = async () => {
       try {
-        const purchasesResponse = await api.get('/api/v1/purchases/active', {
+        const purchasesResponse = await api.get(`/api/v1/${companyId}/purchases/active`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -90,7 +91,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() - 1);
     try {
-      const updatedCompanyResponse = await api.put('/api/v1/purchases/active', { expirationDate: expirationDate, isConsumption: isConsumption }, {
+      const updatedCompanyResponse = await api.put(`/api/v1/${companyId}/purchases/active`, { expirationDate: expirationDate, isConsumption: isConsumption }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

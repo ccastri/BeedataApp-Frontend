@@ -21,7 +21,7 @@ const Page = () => {
   });
 
   const { companyId } = useContext(CompanyContext);
-  const token = Cookies.get('jwt')
+  const token = Cookies.get('jwt');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +39,7 @@ const Page = () => {
             isConsumption: isConsumption,
           }));
 
-          const purchasesResponse = await api.get('/api/v1/purchases/active', {
+          const purchasesResponse = await api.get(`/api/v1/${companyId}/purchases/active`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import api from '../../../../lib/axios';
 
-function getBusiestDay(rooms) {
+const  getBusiestDay = (rooms) => {
     if (rooms.length === 0) {
         return 0;
     }
@@ -37,7 +37,7 @@ function getBusiestDay(rooms) {
     return daysOfWeek[busiestDayIndex];
 }
 
-function getAverageRoomsPerDay(rooms) {
+const getAverageRoomsPerDay = (rooms) => {
     const roomsByDate = {};
 
     rooms.forEach(room => {
@@ -56,7 +56,7 @@ function getAverageRoomsPerDay(rooms) {
     return parseFloat(averageRoomsPerDay.toFixed(2));
 }
 
-function getBusiestHour(messages) {
+const getBusiestHour = (messages) => {
     if (messages.length === 0) {
         return 0;
     }
@@ -89,6 +89,7 @@ export const MetricsContent = ({ agents }) => {
     const data = [];
 
     const { messages, rooms } = state;
+    const { companyId } = useContext(CompanyContext);
 
     const [startDate, setStartDate] = useState(() => {
         const oneMonthAgo = new Date();
@@ -102,7 +103,7 @@ export const MetricsContent = ({ agents }) => {
         const fetchData = async () => {
             try {
                 const token = Cookies.get('jwt')
-                const messagesResponse = await api.get('/api/v1/social/messages', {
+                const messagesResponse = await api.get(`/api/v1/${companyId}/social/messages`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -113,7 +114,7 @@ export const MetricsContent = ({ agents }) => {
                     },
                 });
 
-                const roomsResponse = await api.get('/api/v1/social/rooms', {
+                const roomsResponse = await api.get(`api/v1/${companyId}/social/rooms`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
