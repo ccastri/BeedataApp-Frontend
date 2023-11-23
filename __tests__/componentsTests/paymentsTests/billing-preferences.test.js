@@ -1,7 +1,7 @@
 import React from 'react';
 import api from '../../../src/lib/axios';
 import { render, screen, act } from '@testing-library/react';
-import { BillingPreferences } from '../../../src/components/payments/billing-preferences';
+import { BillingPreferences } from '../../../src/components/payments/credit-preferences';
 
 jest.mock('../../../src/lib/axios');
 

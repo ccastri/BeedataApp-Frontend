@@ -19,6 +19,7 @@ import Container from '@mui/material/Container';
 import FormHelperText from '@mui/material/FormHelperText';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import { compose } from '@mui/system';
 
 
 const Register = () => {
@@ -46,30 +47,27 @@ const Register = () => {
     try {
       const { data } = await api.post('/api/v1/users/register', values);
 
-      // If data success, display credentials and purchase free product
       if (data.success) {
-        const registrationProductCheck = {
-          productId: 50,
-          registerCompanyId: data.user.company_id,
-          productQuantity: 10,
-        };
+        const companyId = data.user.company_id;
+        const productId = 50;
 
-        const productCheck = await api.get('/api/v1/products/company-product', {
-          params: registrationProductCheck
+        const productCheck = await api.get(`/api/v1/${companyId}/products/${productId}`, {
+          params: {
+            productQty: 10,
+            isRegistration: true
+          }
         });
 
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
           setOpenCredentials(true);
         } else {
-          const registrationProduct = {
-            productId: 50,
-            companyId: data.user.company_id,
-            userId: data.user.id,
-            productQuantity: 10,
-            registerPurchase: true
-          };
-          await api.post('/api/v1/products/beet', registrationProduct);
+          await api.post(`/api/v1/${companyId}/products/${productId}`, {
+            params: {
+              productQty: 10,
+              isRegistration: true
+            }
+          });
           setCredentials(data.user);
           setOpenCredentials(true);
         }

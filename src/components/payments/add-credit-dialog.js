@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -39,6 +39,7 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
 
 export const CreditDialog = () => {
   const [open, setOpen] = useState(false);
+  const { companyId } = useContext(CompanyContext);
 
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const isMediumScreen = useMediaQuery('(max-width:960px)');
@@ -48,7 +49,7 @@ export const CreditDialog = () => {
   };
 
   const handleClose = () => {
-    formik.resetForm(); // Reset form values
+    formik.resetForm();
     setOpen(false);
   };
 
@@ -61,7 +62,7 @@ export const CreditDialog = () => {
         productQuantity: values.amount,
       };
 
-      const result = await api.post('/api/v1/products/beet', purchaseCredit, {
+      const result = await api.post(`/api/v1/${companyId}/products`, purchaseCredit, {
         headers: {
           Authorization: `Bearer ${token}`,
       }

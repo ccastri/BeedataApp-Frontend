@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from 'react';
+import React, { useReducer, useEffect, useCallback, useContext } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
@@ -14,8 +14,7 @@ import api from '../lib/axios';
 
 const getProductDetails = async (pack, token) => {
   const updatedPack = await Promise.all(pack.map(async (product) => {
-    const response = await api.get('/api/v1/products/beet', {
-      params: { productId: product.product_id },
+    const response = await api.get(`/api/v1/products/${product.product_id }`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -92,6 +91,7 @@ Usage: Used to display user purchased products base on Beet's base products.
 const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage, loading } = state;
+  const { companyId } = useContext(CompanyContext);
   const token = Cookies.get('jwt')
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const Page = () => {
       const [purchaseResponse, wabasResponse, companyResponse] = await Promise.all([
         api.get('/api/v1/purchases/active', { headers: { Authorization: `Bearer ${token}` } }),
         api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       const updatedPack = await getProductDetails(purchaseResponse.data.active, token);
@@ -122,7 +122,7 @@ const Page = () => {
   const updateCompanyConsumption = useCallback(async (newStatus) => {
     try {
       const updateInfo = newStatus ? Date.now() : null;
-      const updatedCompany = await api.put('/api/v1/companies/company', { creditMsgConsumption: updateInfo }, {
+      const updatedCompany = await api.put(`/api/v1/companies/${companyId}`, { creditMsgConsumption: updateInfo }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Cookies from 'js-cookie';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -14,6 +14,7 @@ export const BillingPreferences = ({ title }) => {
   const [billingAddress, setBillingAddress] = useState('');
   const [location, setLocation] = useState('');
   const [email, setEmail] = useState('');
+  const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {
     const token = Cookies.get('jwt')
@@ -26,7 +27,7 @@ export const BillingPreferences = ({ title }) => {
           },
         });
 
-        const companyResponse = await api.get('/api/v1/companies/company', {
+        const companyResponse = await api.get(`/api/v1/companies/${companyId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

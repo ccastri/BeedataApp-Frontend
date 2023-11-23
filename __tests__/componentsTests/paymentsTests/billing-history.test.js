@@ -1,12 +1,12 @@
 import React from 'react';
 import api from '../../../src/lib/axios';
 import { render, screen, act } from '@testing-library/react';
-import { BillingHistory } from '../../../src/components/payments/billing-history';
+import { CreditHistory } from '../../../src/components/payments/credit-history';
 
 jest.mock('../../../src/lib/axios');
 
 /*
-Test suite for BillingHistory component
+Test suite for CreditHistory component
 
 Test cases:
 -  Renders title
@@ -14,7 +14,7 @@ Test cases:
 -  Renders billing history table when data is not empty
 */
 
-describe('BillingHistory', () => {
+describe('CreditHistory', () => {
     const token = 'fake-token';
 
     beforeEach(() => {
@@ -27,17 +27,17 @@ describe('BillingHistory', () => {
     });
 
     test('renders title', () => {
-        render(<BillingHistory title="Billing History" />);
+        render(<CreditHistory title="Billing History" />);
         const titleElement = screen.getByTestId("billing-history-title");
         expect(titleElement).toBeInTheDocument();
     });
 
     test('renders no billing history message when data is empty', async () => {
 
-      api.get.mockResolvedValueOnce({ data: { billingHistory: [] } });
+      api.get.mockResolvedValueOnce({ data: { CreditHistory: [] } });
     
       await act(async () => {
-        render(<BillingHistory title="Billing History" />);
+        render(<CreditHistory title="Billing History" />);
       });
 
       const messageElement = screen.getByText(/no billing history found/i);
@@ -49,10 +49,10 @@ describe('BillingHistory', () => {
         { id: 1, create_date: '2022-01-01 3:00', amount: 100 },
         { id: 2, create_date: '2022-02-01 4:00', amount: 200 },
       ];
-      api.get.mockResolvedValueOnce({ data: { billingHistory: mockData } });
+      api.get.mockResolvedValueOnce({ data: { CreditHistory: mockData } });
   
       await act(async () => {
-        render(<BillingHistory title="Billing History" />);
+        render(<CreditHistory title="Billing History" />);
       });
   
       const tableElement = screen.getByTestId("billing-history-table");

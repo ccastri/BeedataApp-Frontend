@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import { BalanceSection } from '../components/payments/balance-section';
 import { BillingPreferences } from '../components/payments/billing-preferences';
-import { PurchaseSummary } from '../components/payments/purchase-summary';
-import { BillingHistory } from '../components/payments/billing-history';
+import { ToolsSummary } from '../components/payments/tools-summary';
+import { CreditHistory } from '../components/payments/credit-history';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 
 
@@ -30,11 +30,11 @@ md={6}>
           </Grid>
           <Grid item
 xs={12}>
-            <PurchaseSummary title="Purchase Summary" />
+            <ToolsSummary title="Purchase Summary" />
           </Grid>
           <Grid item
 xs={12}>
-            <BillingHistory title="Recharge History" />
+            <CreditHistory title="Recharge History" />
           </Grid>
         </Grid>
       </Container>

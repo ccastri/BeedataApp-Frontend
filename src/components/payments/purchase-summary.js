@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,22 +13,23 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import api from '../../lib/axios';
 
-export const PurchaseSummary = ({ title }) => {
+export const ToolsSummary = ({ title }) => {
     
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const { companyId } = useContext(CompanyContext);
 
     useEffect(() => {
       const fetchData = async () => {
         try {
           const token = Cookies.get('jwt')
-          const response = await api.get('/api/v1/payments/purchase-history', {
+          const response = await api.get(`/api/v1/${companyId}/payments/tools`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          if (response.data.purchaseHistory) {
-            setData(response.data.purchaseHistory);
+          if (response.data.toolsHistory) {
+            setData(response.data.toolsHistory);
           }
         } catch (error) {
           console.error(error);
@@ -52,7 +53,7 @@ export const PurchaseSummary = ({ title }) => {
           <Card sx={{ marginTop: 2 }}>
               <CardContent>
                 {data.length === 0 ? (
-                  <Typography>No purchase history found</Typography>
+                  <Typography>No tools history found</Typography>
                 ) : (
                   <TableContainer>
                     <Table>

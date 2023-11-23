@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
@@ -20,12 +20,13 @@ const Page = () => {
     loading: true,
   });
 
+  const { companyId } = useContext(CompanyContext);
   const token = Cookies.get('jwt')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const companyResponse = await api.get('/api/v1/companies/company', {
+        const companyResponse = await api.get(`/api/v1/companies/${companyId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

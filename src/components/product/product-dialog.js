@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import Cookies from 'js-cookie';
@@ -65,14 +65,15 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const token = Cookies.get('jwt')
+  const token = Cookies.get('jwt');
+  const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/api/v1/products/beetPacks', {
+        const response = await api.get(`/api/v1/products/packs`, {
           headers: { Authorization: `Bearer ${token}` },
-          params: { beetProduct: name },
+          params: { productName: name },
         });
         if (response?.data?.productSelection) {
           console.log(response.data.productSelection);
@@ -86,7 +87,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   }, [name, token]);
 
   const getCompanyCredit = async (token) => {
-    const { data: { company: { credit } = {} } = {} } = await api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } });
+    const { data: { company: { credit } = {} } = {} } = await api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
     return Number(credit);
   };
   

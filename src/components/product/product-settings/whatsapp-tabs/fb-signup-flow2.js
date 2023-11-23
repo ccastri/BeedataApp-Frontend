@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -11,6 +11,8 @@ import api from '../../../../lib/axios';
  * 
  */
 export const FbSignupFlow2 = ({title}) => {
+  const { companyId } = useContext(CompanyContext);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.fbAsyncInit = function () {
@@ -53,7 +55,10 @@ export const FbSignupFlow2 = ({title}) => {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': signedRequest,
                 },
-                mode: 'cors'
+                mode: 'cors',
+                params: {
+                  companyId: companyId,
+                },
               });
               window.location.reload();
             } catch (err) {

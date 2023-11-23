@@ -8,8 +8,8 @@ Test suite for Payments page
 test cases:
 - renders BalanceSection component
 - renders BillingPreferences component
-- renders PurchaseSummary component
-- renders BillingHistory component
+- renders ToolsSummary component
+- renders CreditHistory component
 */
 
 describe('Payments component', () => {
@@ -23,12 +23,12 @@ describe('Payments component', () => {
         expect(getByText('Billing Preferences')).toBeInTheDocument();
       });
     
-      test('renders PurchaseSummary component', () => {
+      test('renders ToolsSummary component', () => {
         const { getByText } = render(<Payments />);
         expect(getByText('Purchase Summary')).toBeInTheDocument();
       });
     
-      test('renders BillingHistory component', () => {
+      test('renders CreditHistory component', () => {
         const { getByText } = render(<Payments />);
         expect(getByText('Recharge History')).toBeInTheDocument();
       });

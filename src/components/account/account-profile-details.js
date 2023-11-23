@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -26,6 +26,7 @@ export const AccountProfileDetails = (props) => {
     billingEmail: '',
     billingAddress: ''
   });
+  const { companyId } = useContext(CompanyContext);
 
   const idTypes = [
     { value: 'CC', label: 'Cédula de ciudadanía' },
@@ -37,14 +38,14 @@ export const AccountProfileDetails = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get('jwt')
+      const token = Cookies.get('jwt');
       const userResponse = await api.get('/api/v1/users/user', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const companyResponse = await api.get('/api/v1/companies/company', {
+      const companyResponse = await api.get(`/api/v1/companies/${companyId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -83,13 +84,12 @@ export const AccountProfileDetails = (props) => {
     try {
       const token = Cookies.get('jwt')
 
-      // update billing fields via /api/v1/companies/company
       const billingFields = {
         billingEmail: formValues.billingEmail,
         billingAddress: formValues.billingAddress,
       };
 
-      await api.put('/api/v1/companies/company', billingFields, {
+      await api.put(`/api/v1/companies/${companyId}`, billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
