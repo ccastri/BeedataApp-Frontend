@@ -15,7 +15,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import * as Yup from 'yup';
-import ErrorSnackbar from '../components/settings/settings-error-msg';
+import ErrorSnackbar from '../components/general/error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
 import api from '../lib/axios';
 

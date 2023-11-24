@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { CompanyContext } from '../../context/company-context';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -16,6 +16,7 @@ import Button from '@mui/material/Button';
 import TextFieldWrapper from '../general/textfield-wrapper';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import api from '../../lib/axios';
+import SuccessSnackbar from '../general/success-msg';
 
 
 const StyledCard = styled(Card)(({ theme }) => {
@@ -38,38 +39,44 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => {
   };
 });
 
-export const CreditDialog = () => {
+/** 
+ * Credit dialog component
+ * 
+ * @param {string} productId - a string that specifies the product id
+ * @param {function} updateCredit - a function that updates the credit
+ * 
+ * @returns {JSX.Element} - a JSX.Element representing the credit dialog component
+ * 
+ */
+export const CreditDialog = ({ productId, updateCredit }) => {
   const [open, setOpen] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
   const { companyId } = useContext(CompanyContext);
 
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
-  const isMediumScreen = useMediaQuery('(max-width:960px)');
-  
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    formik.resetForm();
+    setResponseMessage('');
     setOpen(false);
   };
 
   const onSubmit = async (values) => {
     try {
-      const token = Cookies.get('jwt')
-
-      const purchaseCredit = {
-        productId: 50,
-        productQuantity: values.amount,
-      };
-
-      const result = await api.post(`/api/v1/${companyId}/products`, purchaseCredit, {
+      const token = Cookies.get('jwt');
+      const result = await api.post(`/api/v1/${companyId}/products/${productId}`, {
+        productQty: values.amount,
+      }, {
         headers: {
           Authorization: `Bearer ${token}`,
-      }
+        }
       });
 
       if (result.data.success) {
+        setResponseMessage('Credit Added Successfully');
+        formik.resetForm();
+        updateCredit(values.amount);
         handleClose();
       }
     } catch (error) {
@@ -81,7 +88,7 @@ export const CreditDialog = () => {
   const formik = useFormik({
     initialValues: {
       amount: '',
-  },
+    },
     onSubmit
   });
 
@@ -90,7 +97,6 @@ export const CreditDialog = () => {
       <Button
         onClick={handleClickOpen}
         variant="contained"
-        fullWidth
         color="primary"
         sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
       >
@@ -101,30 +107,28 @@ export const CreditDialog = () => {
         onClose={handleClose}
         PaperProps={{
           sx: {
-            width: isSmallScreen ? '90vw' : isMediumScreen ? '60vw' : '30vw',
-            height: isSmallScreen ? '70vh' : isMediumScreen ? '60vh' : '45vh',
             overflow: 'hidden',
           },
-      }}
+        }}
       >
         <DialogContent>
           <StyledCard>
             <Grid container
-spacing={2}>
+              spacing={2}>
               <Grid item
-xs={5}>
+                xs={5}>
                 <StyledCardMedia image='/static/beet_nb.svg' />
               </Grid>
               <Grid item
-xs={7}>
+                xs={7}>
                 <CardContent>
                   <Typography gutterBottom
-variant="h4"
-component="div">
+                    variant="h4"
+                    component="div">
                     Credit
                   </Typography>
                   <Typography variant="body2"
-color="text.secondary">
+                    color="text.secondary">
                     Add credit to your account. <b>Your credit will be invoiced at the end of the month</b>.
                   </Typography>
                 </CardContent>
@@ -134,7 +138,7 @@ color="text.secondary">
         </DialogContent>
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
           <DialogActions>
-            <Box sx={{ maxWidth: '400px' }}>
+            <Box sx={{ maxWidth: '400px', mb: 4 }}>
               <form onSubmit={formik.handleSubmit}>
                 <TextFieldWrapper
                   formik={formik}
@@ -145,7 +149,7 @@ color="text.secondary">
                   variant="outlined"
                   onClick={handleClose}
                   fullWidth
-                  sx={{ mb: 1, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
+                  sx={{ mb: 1, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                 >
                   Cancel
                 </Button>
@@ -154,13 +158,18 @@ color="text.secondary">
                   type="submit"
                   fullWidth
                   color="secondary"
-                  sx={{ mb: 2, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)'}}
+                  sx={{ mb: 2, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                 >
                   Add Credit
                 </Button>
               </form>
             </Box>
           </DialogActions>
+          {responseMessage && (
+            <SuccessSnackbar
+              responseMessage={responseMessage}
+            />
+          )}
         </Box>
       </Dialog>
     </>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { CompanyContext } from '../../context/company-context';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';

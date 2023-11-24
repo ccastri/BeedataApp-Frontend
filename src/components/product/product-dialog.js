@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
-import { CompanyContext } from '../../context/company-context';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -20,8 +20,8 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
-import SuccessSnackbar from '../settings/settings-success-msg';
-import ErrorSnackbar from '../settings/settings-error-msg';
+import SuccessSnackbar from '../general/success-msg';
+import ErrorSnackbar from '../general/error-msg';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import api from '../../lib/axios';
 
@@ -153,6 +153,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           setOpen(false);
           formik.resetForm();
           setSelectedProduct(null);
+          setErrorMessage('');
         }}
         fullWidth={true}
         maxWidth={'md'}
@@ -165,6 +166,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
               setOpen(false);
               formik.resetForm();
               setSelectedProduct(null);
+              setErrorMessage('');
             }}
             aria-label="close-product-dialog"
           >

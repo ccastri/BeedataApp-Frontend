@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import SuccessSnackbar from '../settings/settings-success-msg';
+import SuccessSnackbar from '../general/success-msg';
 import api from '../../lib/axios';
 
 export const AccountProfileDetails = (props) => {

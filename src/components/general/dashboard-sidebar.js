@@ -1,7 +1,7 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import NextLink from 'next/link';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
@@ -13,6 +13,7 @@ import { Cog as CogIcon } from '../../icons/cog';
 import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
 import { DropDown } from './dropdown-list';
+import { getUserRole } from '../../utils/get-user-data';
 
 const items = [
   {
@@ -123,9 +124,11 @@ export const DashboardSidebar = (props) => {
             my: 3
           }}
         />
-        <Box sx={{ p: 1 }}>
-          <DropDown />
-        </Box>
+        {getUserRole() === 'superadmin' && (
+          <Box sx={{ p: 1 }}>
+            <DropDown />
+          </Box>
+        )}
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
             <NavItem

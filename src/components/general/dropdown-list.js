@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import CompanyContext from '../../contexts/company-context';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
@@ -9,9 +10,16 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import Cookies from 'js-cookie';
 import api from '../../lib/axios';
 
+/**
+ * Dropdown component
+ * 
+ * @returns {JSX.Element} - a JSX.Element representing the dropdown list component
+ * 
+ */
 export const DropDown = () => {
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
+  const { companyId, setCompanyId } = useContext(CompanyContext);
 
   useEffect(() => {
     const token = Cookies.get('jwt');
@@ -35,7 +43,8 @@ export const DropDown = () => {
   };
 
   const handleCompanyClick = (company) => {
-    // Define the function here
+    setCompanyId(company.id);
+    setOpen(!open);
   };
 
   return (

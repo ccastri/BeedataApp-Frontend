@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { CompanyContext } from '../../context/company-context';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,10 +11,21 @@ import api from '../../lib/axios';
 import { CreditDialog } from './add-credit-dialog';
 import { getUserRole } from '../../utils/get-user-data';
 
-
+/** 
+ * Balance section component
+ * 
+ * @param {string} props.title - a string that specifies the title of the balance section
+ * 
+ * @returns {JSX.Element} - a JSX.Element representing the balance section component
+ * 
+*/
 export const BalanceSection = ({ title }) => {
   const [balance, setBalance] = useState(0);
   const { companyId } = useContext(CompanyContext);
+
+  const updateCredit = (value) => {
+    setBalance((prevBalance) => (parseFloat(prevBalance) + parseFloat(value)).toFixed(2));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,11 +69,11 @@ sx={{ mb: 2 }}>
             USD$ {balance}
           </Typography>
         </CardContent>
-        {getUserRole() === 'admin' && (
+        {(getUserRole() === 'admin' || getUserRole() === 'superadmin') && (
           <>
             <Divider />
             <CardActions sx={{ mt: 1, mb: 1 }}>
-              <CreditDialog />
+              <CreditDialog productId={50} updateCredit={updateCredit}/>
             </CardActions>
           </>
         )}

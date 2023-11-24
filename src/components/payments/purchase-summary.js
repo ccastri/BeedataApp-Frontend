@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { CompanyContext } from '../../context/company-context';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import api from '../../lib/axios';
 
-export const ToolsSummary = ({ title }) => {
+export const PurchaseSummary = ({ title }) => {
     
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);

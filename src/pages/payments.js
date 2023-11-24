@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
 import { BalanceSection } from '../components/payments/balance-section';
 import { BillingPreferences } from '../components/payments/billing-preferences';
-import { ToolsSummary } from '../components/payments/tools-summary';
+import { PurchaseSummary } from '../components/payments/purchase-summary';
 import { CreditHistory } from '../components/payments/credit-history';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 
@@ -30,7 +30,7 @@ md={6}>
           </Grid>
           <Grid item
 xs={12}>
-            <ToolsSummary title="Purchase Summary" />
+            <PurchaseSummary title="Purchase Summary" />
           </Grid>
           <Grid item
 xs={12}>

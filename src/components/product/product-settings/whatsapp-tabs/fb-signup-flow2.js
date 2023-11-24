@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { CompanyContext } from '../../../../context/company-context';
+import CompanyContext from '../../../../contexts/company-context';
 import Cookies from 'js-cookie';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -7,6 +7,8 @@ import api from '../../../../lib/axios';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow
+ * (This sign up flow is use to connect a phone number
+ * that already exists in Facebook Business Manager and has been registered)
  * 
  * @returns {JSX.Element} - The button to launch the WhatsApp Signup flow
  * 

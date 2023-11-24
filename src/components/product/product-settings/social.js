@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { SettingsDialog } from './settings-dialog';
 import { SocialGeneralContent } from './social-tabs/general';
 import { MetricsContent } from './social-tabs/metrics';
-import { CompanyContext } from '../../../context/company-context';
+import CompanyContext from '../../../contexts/company-context';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';

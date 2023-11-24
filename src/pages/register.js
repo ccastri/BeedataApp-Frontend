@@ -4,7 +4,7 @@ import { useState } from 'react';
 import NextLink from 'next/link';
 import { useFormik } from 'formik';
 import RegisterSchema from '../components/register/register-validation-schema';
-import ErrorSnackbar from '../components/settings/settings-error-msg';
+import ErrorSnackbar from '../components/general/error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
 import CircularProgress from '@mui/material/CircularProgress';
 import PhoneField from '../components/register/phone-field';
