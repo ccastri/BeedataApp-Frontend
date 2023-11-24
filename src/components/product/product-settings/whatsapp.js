@@ -1,6 +1,7 @@
 import React, { useMemo, useContext } from 'react';
 import { WpGeneralContent } from './whatsapp-tabs/general';
 import { SettingsDialog } from './settings-dialog';
+import { CompanyContext } from '../../../context/company-context';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';

@@ -1,4 +1,5 @@
 import React, { useEffect, useContext } from 'react';
+import { CompanyContext } from '../../../../context/company-context';
 import Cookies from 'js-cookie';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';

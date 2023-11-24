@@ -10,7 +10,7 @@ import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
 import { getUserCompanyId } from '../utils/get-user-data';
-import CompanyContext from '../contexts/companyContext';
+import CompanyContext from '../contexts/company-context';
 
 
 

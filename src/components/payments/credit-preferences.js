@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { getUserId } from '../../utils/get-user-data';
+import { CompanyContext } from '../../context/company-context';
 import Cookies from 'js-cookie';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';

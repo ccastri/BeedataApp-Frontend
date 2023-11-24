@@ -19,7 +19,6 @@ import Container from '@mui/material/Container';
 import FormHelperText from '@mui/material/FormHelperText';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import { compose } from '@mui/system';
 
 
 const Register = () => {
@@ -62,12 +61,7 @@ const Register = () => {
           setCredentials(data.user);
           setOpenCredentials(true);
         } else {
-          await api.post(`/api/v1/${companyId}/products/${productId}`, {
-            params: {
-              productQty: 10,
-              isRegistration: true
-            }
-          });
+          await api.post(`/api/v1/${companyId}/products/${productId}`, { productQty: 10, isRegistration: true});
           setCredentials(data.user);
           setOpenCredentials(true);
         }
@@ -131,17 +125,6 @@ const Register = () => {
         maxWidth="sm"
         sx={{ position: "relative", zIndex: 1 }}
         >
-          <NextLink
-            href="/"
-            passHref
-          >
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
-              Back
-            </Button>
-          </NextLink>
           <Box
             sx={{
               display: 'flex',

@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect, useCallback, useContext } from 'react';
+import { CompanyContext } from '../context/company-context';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Box from '@mui/material/Box';

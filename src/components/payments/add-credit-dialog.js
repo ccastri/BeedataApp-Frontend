@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { CompanyContext } from '../../context/company-context';
 import Cookies from 'js-cookie';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';

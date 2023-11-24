@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext} from 'react';
+import CompanyContext from '../contexts/company-context';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';

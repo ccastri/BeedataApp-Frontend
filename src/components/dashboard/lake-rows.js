@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import { StatsCard } from '../general/stats-cards';
 import PropTypes from 'prop-types';

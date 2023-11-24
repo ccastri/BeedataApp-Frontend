@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import CompanyContext from '../../contexts/company-context';
 import Cookies from 'js-cookie';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
