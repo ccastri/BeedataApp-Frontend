@@ -24,14 +24,18 @@ export const DropDown = () => {
   useEffect(() => {
     const token = Cookies.get('jwt');
     const fetchData = async () => {
-      const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });
+      try {
+        const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });
 
-      if (response.data.success) {
-        const companies = response.data.companies.map(company => ({ 
-          name: company.name.charAt(0).toUpperCase() + company.name.slice(1),
-          id: company.id 
-        }));
-        setCompanies(companies);
+        if (response.data.success) {
+          const companies = response.data.companies.map(company => ({ 
+            name: capitalizeFirstLetter(company.name),
+            id: company.id 
+          }));
+          setCompanies(companies);
+        }
+      } catch (error) {
+        console.error('Error fetching companies:', error);
       }
     };
 
@@ -39,13 +43,17 @@ export const DropDown = () => {
   }, []);
 
   const handleClick = () => {
-    setOpen(!open);
+    setOpen(prevOpen => !prevOpen);
   };
 
   const handleCompanyClick = (company) => {
     setCompanyId(company.id);
-    setOpen(!open);
   };
+
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
 
   return (
     <List

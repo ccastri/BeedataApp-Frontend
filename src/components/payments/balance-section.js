@@ -47,7 +47,7 @@ export const BalanceSection = ({ title }) => {
     };
 
     fetchData();
-  }, []);
+  }, [companyId]);
 
   return (
     <Box sx={{ mb: 3 }}>

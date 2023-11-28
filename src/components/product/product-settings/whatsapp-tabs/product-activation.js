@@ -86,7 +86,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
     };
 
     fetchData();
-  }, [token]);
+  }, [token, companyId]);
 
   const setPurchaseExpired = async () => {
     const expirationDate = new Date();

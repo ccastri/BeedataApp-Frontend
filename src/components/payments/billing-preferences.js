@@ -48,7 +48,7 @@ export const BillingPreferences = ({ title }) => {
     };
 
     fetchBillingInfo();
-  }, []);
+  }, [companyId, userId]);
 
   return (
     <Box sx={{ mb: 3 }}>

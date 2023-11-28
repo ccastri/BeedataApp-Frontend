@@ -7,24 +7,37 @@ import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import GroupsIcon from '@mui/icons-material/Groups';
+import ThreePIcon from '@mui/icons-material/ThreeP';
+import BuildIcon from '@mui/icons-material/Build';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Payment as PaymentIcon } from '../../icons/payment';
-import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 import { Cog as CogIcon } from '../../icons/cog';
-import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
 import { DropDown } from './dropdown-list';
 import { getUserRole } from '../../utils/get-user-data';
 
+const getPageName = () => {
+  const userRole = getUserRole();
+  let pageName = 'Users';
+
+  if (userRole === 'partner') {
+    pageName = 'Users & Companies';
+  }
+
+  return pageName;
+};
+
 const items = [
   {
     href: '/dashboard',
-    icon: (<TrendingDownIcon fontSize="small" />),
+    icon: (<QueryStatsIcon fontSize="small" />),
     target: '_self',
     title: 'Consumption'
   },
   {
     href: 'https://social.beet.digital/home',
-    icon: (<UsersIcon fontSize="small" />),
+    icon: (<ThreePIcon fontSize="small" />),
     target: '_blank',
     title: 'Beet Social'
   },
@@ -34,15 +47,21 @@ const items = [
     target: '_blank',
     title: 'Beet Lake'
   },
-  // {
-  //   href: '/bots',
-  //   icon: (<SmartToyIcon fontSize="small" />),
-  //   target: '_self',
-  //   title: 'Beet Bots'
-  // },
+  {
+    href: '/bots',
+    icon: (<SmartToyIcon fontSize="small" />),
+    target: '_self',
+    title: 'Beet Bots'
+  },
+  {
+    href: '/users',
+    icon: (<GroupsIcon fontSize="small" />),
+    target: '_self',
+    title: getPageName()
+  },
   {
     href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<BuildIcon fontSize="small" />),
     target: '_self',
     title: 'Beet Tools'
   },
@@ -82,7 +101,6 @@ export const DashboardSidebar = (props) => {
       if (!router.isReady) {
         return;
       }
-
       if (open) {
         onClose?.();
       }

@@ -137,9 +137,7 @@ export const MetricsContent = ({ agents }) => {
             }
         }
         fetchData();
-    }, [startDate, endDate]);
-
-    console.log('messages', messages);
+    }, [startDate, endDate, companyId]);
 
     const handleStartDateChange = (date) => {
         setStartDate(date);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -97,6 +98,7 @@ export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
                                             <DialogTitle id="alert-dialog-title">
                                                 {"Are You Sure?"}
                                             </DialogTitle>
+                                            <Divider />
                                             <DialogContent>
                                                 <DialogContentText>
                                                     Disconnecting the chatbot department from this phone number will temporarily disable messaging with the chatbot.
@@ -104,7 +106,7 @@ export const DepartmentsTable = ({ departmentRows, handleDisconnect }) => {
                                                 </DialogContentText>
                                             </DialogContent>
                                             <DialogActions>
-                                                <Box sx={{ mt: 2, mb: 2, mr: 2, display: "flex", justifyContent: "flex-end" }}>
+                                                <Box sx={{ mb: 2, mr: 2, display: "flex", justifyContent: "flex-end" }}>
                                                     <Button
                                                         onClick={handleClose}
                                                         variant="outlined"

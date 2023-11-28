@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useState } from 'react';
-import { SessionProvider } from "next-auth/react"
+// import { SessionProvider } from "next-auth/react"
 import { CacheProvider } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -38,11 +38,9 @@ const App = (props) => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <SessionProvider session={pageProps.session}>
-            <CompanyContext.Provider value={{ companyId, setCompanyId }}>
-              {getLayout(<Component {...pageProps} />)}
-            </CompanyContext.Provider>
-          </SessionProvider>
+          <CompanyContext.Provider value={{ companyId, setCompanyId }}>
+            {getLayout(<Component {...pageProps} />)}
+          </CompanyContext.Provider>
         </ThemeProvider>
       </LocalizationProvider>
     </CacheProvider>

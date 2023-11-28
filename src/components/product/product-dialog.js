@@ -85,7 +85,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
       }
     };
     fetchData();
-  }, [name, token]);
+  }, [name, token, companyId]);
 
   const getCompanyCredit = async (token) => {
     const { data: { company: { credit } = {} } = {} } = await api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });

@@ -116,7 +116,7 @@ export const MsgInsOuts = () => {
             }
         };
         fetchMsgCount();
-    }, [startDate, endDate]);
+    }, [startDate, endDate, companyId]);
 
     const checkDateValidity = (start, end) => {
         if (end <= start) return "End date must be greater than Start date";

@@ -33,7 +33,7 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
       }
     };
     fetchRowCount();
-  }, [isConsumption]);
+  }, [isConsumption, companyId]);
 
   return (
       <StatsCard

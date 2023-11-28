@@ -89,7 +89,7 @@ const Page = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, [token, companyId]);
 
   if (state.loading) {
     return (

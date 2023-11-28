@@ -38,7 +38,7 @@ export const PurchaseSummary = ({ title }) => {
       };
   
       fetchData();
-    }, []);
+    }, [companyId]);
 
     const handleChangePage = (_, newPage) => {
       setCurrentPage(newPage);

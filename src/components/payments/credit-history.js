@@ -42,7 +42,7 @@ export const CreditHistory = ({ title }) => {
       };
   
       fetchData();
-    }, []);
+    }, [companyId]);
 
     const handleChangePage = (_, newPage) => {
       setCurrentPage(newPage);

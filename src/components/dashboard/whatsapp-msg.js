@@ -28,7 +28,7 @@ export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
     };
 
     fetchData();
-  }, [isConsumption]);
+  }, [isConsumption, companyId]);
 
   return (
     <StatsCard

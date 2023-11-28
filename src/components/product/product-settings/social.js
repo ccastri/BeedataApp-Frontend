@@ -60,11 +60,11 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
   useEffect(() => {
     fetchData(companyId, token, setState);
-  }, [token]);
+  }, [token, companyId]);
 
   useEffect(() => {
     fetchAgentsQty(companyId, token, agents, setState);
-  }, [token, agents]);
+  }, [token, agents, companyId]);
 
   const handleAgentsDelete = useCallback(async (row) => {
     try {
@@ -112,7 +112,7 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
     } catch (error) {
       console.log(error);
     }
-  }, [token, updatedWabas]);
+  }, [token, updatedWabas, companyId, setState]);
 
   const agentRows = useMemo(() => agents.map((agent, index) => ({
     id: index,

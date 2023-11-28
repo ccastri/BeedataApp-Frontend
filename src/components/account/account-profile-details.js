@@ -74,7 +74,7 @@ export const AccountProfileDetails = (props) => {
     };
 
     fetchData();
-  }, []);
+  }, [companyId, userId]);
 
   const handleChange = (event) => {
     setFormValues({

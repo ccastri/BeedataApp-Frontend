@@ -118,7 +118,7 @@ const Page = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, [token, companyId]);
 
   const updateCompanyConsumption = useCallback(async (newStatus) => {
     try {
@@ -151,7 +151,7 @@ const Page = () => {
         dispatch({ type: 'CLEAR_MESSAGES' });
       }, 4000);
     }
-  }, [token]);
+  }, [token, companyId]);
   
   const updateWabas = useCallback((phoneId, departmentId = null) => {
     const updatedWabas = state.wabas.map(waba => {
