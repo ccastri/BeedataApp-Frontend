@@ -17,17 +17,7 @@ import { NavItem } from './nav-item';
 import { DropDown } from './dropdown-list';
 import { getUserRole } from '../../utils/get-user-data';
 
-const getPageName = () => {
-  const userRole = getUserRole();
-  let pageName = 'Users';
-
-  if (userRole === 'partner') {
-    pageName = 'Users & Companies';
-  }
-
-  return pageName;
-};
-
+const userRole = getUserRole();
 const items = [
   {
     href: '/dashboard',
@@ -54,12 +44,6 @@ const items = [
     title: 'Beet Bots'
   },
   {
-    href: '/users',
-    icon: (<GroupsIcon fontSize="small" />),
-    target: '_self',
-    title: getPageName()
-  },
-  {
     href: '/products',
     icon: (<BuildIcon fontSize="small" />),
     target: '_self',
@@ -77,6 +61,21 @@ const items = [
   //   title: 'Settings'
   // },
 ];
+
+if (userRole === 'superadmin' || userRole === 'partner') {
+  let pageName = 'Users';
+  if (userRole === 'partner') {
+    pageName = 'Users & Companies';
+  }
+
+  items.push({
+    href: '/users',
+    icon: (<GroupsIcon fontSize="small" />),
+    target: '_self',
+    title: pageName
+  });
+}
+
 
 /** 
  * Sidebar component for the dashboard page that contains navigation items
@@ -142,7 +141,7 @@ export const DashboardSidebar = (props) => {
             my: 3
           }}
         />
-        {getUserRole() === 'superadmin' && (
+        {(getUserRole() === 'superadmin' || getUserRole() === 'partner' ) && (
           <Box sx={{ p: 1 }}>
             <DropDown />
           </Box>
