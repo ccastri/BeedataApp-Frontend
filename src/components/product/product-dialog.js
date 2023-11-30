@@ -77,7 +77,6 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           params: { productName: name },
         });
         if (response?.data?.productSelection) {
-          console.log(response.data.productSelection);
           setProductOptions(response.data.productSelection);
         }
       } catch (error) {

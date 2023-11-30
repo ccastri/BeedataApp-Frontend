@@ -9,13 +9,13 @@ import CardContent from '@mui/material/CardContent';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TextFieldWrapper from '../general/textfield-wrapper';
+import PhoneField from '../register/phone-field';
 import api from '../../lib/axios';
 
 
@@ -49,13 +49,15 @@ export const RegistrationDialog = ({ companyId, role }) => {
     const formik = useFormik({
         initialValues: {
             fullName: '',
-            companyId: companyId,
+            company: role === 'admin' ? '' : companyId,
             identificationType: '',
             identificationNumber: '',
+            phoneNumber: role === 'admin' ? '' : undefined,
             email: '',
             role: role,
+            partnerId: role === 'admin' ? companyId : undefined,
         },
-        validationSchema: createValidationSchema(['fullName', 'identificationType', 'identificationNumber', 'email']),
+        validationSchema: createValidationSchema(['fullName', 'identificationType', 'identificationNumber', 'email'].concat(role === 'admin' ? ['company', 'phoneNumber'] : [])),
         onSubmit: onSubmit,
     });
 
@@ -68,7 +70,7 @@ export const RegistrationDialog = ({ companyId, role }) => {
                 startIcon={<AddCircleOutlineIcon />}
                 onClick={() => setOpen(true)}
             >
-                Invite User
+                {role === 'admin' ? 'Invite Company' : 'Invite User'}
             </Button>
             <Dialog
                 open={open}
@@ -80,7 +82,7 @@ export const RegistrationDialog = ({ companyId, role }) => {
                 <DialogTitle>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Typography variant="h5">
-                            Register a New User
+                            {role === 'admin' ? 'Register a New Company' : 'Register a New User'}
                         </Typography>
                         <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
                             <CloseIcon />
@@ -106,6 +108,11 @@ export const RegistrationDialog = ({ companyId, role }) => {
                                     formik={formik}
                                     autoFocus
                                 />
+                                {role === 'admin' && <TextFieldWrapper
+                                    label="Company"
+                                    name="company"
+                                    formik={formik}
+                                />}
                                 <TextFieldWrapper
                                     label="Identification Type"
                                     name="identificationType"
@@ -117,6 +124,11 @@ export const RegistrationDialog = ({ companyId, role }) => {
                                     name="identificationNumber"
                                     formik={formik}
                                 />
+                                {role === 'admin' && <PhoneField
+                                    label="Phone Number"
+                                    name="phoneNumber"
+                                    formik={formik}
+                                />}
                                 <TextFieldWrapper
                                     label="Email"
                                     name="email"
@@ -127,6 +139,7 @@ export const RegistrationDialog = ({ companyId, role }) => {
                                         variant="contained"
                                         color="primary"
                                         type="submit"
+                                        disabled={!formik.isValid}
                                         sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
                                     >
                                         Invite

@@ -26,10 +26,8 @@ export const AccountPopover = (props) => {
   // retrieve Next.js router object
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
-  // retrieve JWT token from localStorage
-  const token = Cookies.get('jwt')
 
-  // Handle user's profile redirection
+  const token = Cookies.get('jwt');
   const handleProfile = () => {
     onClose?.();
     router.push('/account');
@@ -40,7 +38,7 @@ export const AccountPopover = (props) => {
     onClose?.();
 
     if (token) {
-      localStorage.removeItem('jwt');
+      Cookies.remove('jwt');
     }
     router.push('/');
     };
