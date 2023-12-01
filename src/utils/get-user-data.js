@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
  */
 export const getUserRole = () => {
   try {
-    const token = Cookies.get('jwt')
+    const token = Cookies.get('jwt');
 
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());

@@ -38,7 +38,7 @@ export const AccountPopover = (props) => {
     onClose?.();
 
     if (token) {
-      Cookies.remove('jwt');
+      Cookies.remove('jwt', { path: '/', secure: true });
     }
     router.push('/');
     };

@@ -34,7 +34,8 @@ const Login = () => {
       
       if (data.success) {
         const token = data.token;
-        Cookies.set('jwt', token);
+        Cookies.set('jwt', token, { path: '/', secure: true });
+
 
         if (typeof Router !== 'undefined') {
           Router.push("/dashboard").catch(console.error);

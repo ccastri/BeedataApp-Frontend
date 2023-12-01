@@ -48,6 +48,7 @@ export const DropDown = () => {
 
   const handleCompanyClick = (company) => {
     setCompanyId(company.id);
+    localStorage.setItem('companyId', company.id);
   };
 
   const capitalizeFirstLetter = (str) => {

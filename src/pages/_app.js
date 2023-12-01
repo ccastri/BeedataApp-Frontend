@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import { SessionProvider } from "next-auth/react"
 import { CacheProvider } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -20,9 +20,13 @@ const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const [companyId, setCompanyId] = useState(getUserCompanyId());
   const getLayout = Component.getLayout ?? ((page) => page);
+  const [companyId, setCompanyId] = useState(getUserCompanyId());
 
+  useEffect(() => {
+    console.log(companyId);
+  }, [companyId]);
+  
   return (
     <CacheProvider value={emotionCache}>
       <Head>
