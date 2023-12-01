@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import { UsersTable } from '../components/users/users-table';
 import { CompanyTable } from '../components/users/company-table';
 import { RegistrationDialog } from '../components/users/registration-dialog';
+import { getUserCompanyId } from '../utils/get-user-data';
 import CompanyContext from '../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
@@ -13,6 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import api from '../lib/axios';
+import { get } from 'http';
 
 
 const fetchUsers = async (companyId, token) => {
@@ -68,15 +70,17 @@ const Page = () => {
     const [admins, setAdmins] = useState([]);
 
     const { companyId } = useContext(CompanyContext);
+    const userCompanyId = getUserCompanyId();
     const token = Cookies.get('jwt');
 
     useEffect(() => {
         const getUsers = async () => {
             const users = await fetchUsers(companyId, token);
             const partners = await fetchPartners(token);
-            const admins = await Promise.all(partners.map(partner => fetchAdmins(partner.id, token)));
+            const filteredPartners = partners.filter(partner => partner.id !== userCompanyId);
+            const admins = await Promise.all(filteredPartners.map(partner => fetchAdmins(partner.id, token)));
             setUsers(users);
-            setPartners(partners);
+            setPartners(filteredPartners);
             setAdmins(admins);
             setLoading(false);
         };

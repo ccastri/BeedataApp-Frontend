@@ -21,15 +21,17 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
         
         if (response.data.success) {
           setRowCount(response.data.rowCount);
-        } else if (response.status === 404) {
-          console.log(response.data.message);
-          setRowCount(0);
         } else {
           console.log(response.data.message);
           setErrorMessages(response.data.message);
         }
       } catch (err) {
-        console.log(err);
+        if (err.response && err.response.status === 404) {
+          console.log(err.response.data.message);
+          setRowCount(0);
+        } else {
+          console.log(err);
+        }
       }
     };
     fetchRowCount();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useReducer, useContext} from 'react';
 import CompanyContext from '../contexts/company-context';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
@@ -11,16 +11,29 @@ import { DashboardLayout } from '../components/general/dashboard-layout';
 import CircularProgress from '@mui/material/CircularProgress';
 import api from '../lib/axios';
 
+const initialState = {
+  msgLimit: 0,
+  rowLimit: 0,
+  activePurchases: [],
+  isConsumption: null,
+  loading: true,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SET_COMPANY':
+      return { ...state, isConsumption: action.payload.isConsumption };
+    case 'SET_PURCHASES':
+      return { ...state, activePurchases: action.payload.activePurchases, msgLimit: action.payload.msgLimit, rowLimit: action.payload.rowLimit };
+    case 'SET_LOADING':
+      return { ...state, loading: action.payload.loading };
+    default:
+      throw new Error();
+  }
+}
 
 const Page = () => {
-  const [state, setState] = useState({
-    msgLimit: 0,
-    rowLimit: 0,
-    activePurchases: [],
-    isConsumption: null,
-    loading: true,
-  });
-
+  const [state, dispatch] = useReducer(reducer, initialState);
   const { companyId } = useContext(CompanyContext);
   const token = Cookies.get('jwt');
 
@@ -32,13 +45,9 @@ const Page = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        
+
         if (companyResponse.data.success) {
-          const isConsumption = companyResponse.data.company.credit_msg_consumption;
-          setState(prevState => ({
-            ...prevState,
-            isConsumption: isConsumption,
-          }));
+          dispatch({ type: 'SET_COMPANY', payload: { isConsumption: companyResponse.data.company.credit_msg_consumption } });
 
           const purchasesResponse = await api.get(`/api/v1/${companyId}/purchases/active`, {
             headers: {
@@ -46,42 +55,17 @@ const Page = () => {
             },
           });
 
-          const { success, active } = purchasesResponse.data;
-
-          if (success) {
-            setState(prevState => ({
-              ...prevState,
-              activePurchases: active,
-            }));
-
+          if (purchasesResponse.data.success) {
+            const active = purchasesResponse.data.active;
             const purchasesWithMsgs = active.filter(purchase => purchase.msg_qty > 0);
             const purchasesWithRows = active.filter(purchase => purchase.db_rows_qty > 0);
+            const msgLimit = purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0);
+            const rowLimit = purchasesWithRows.reduce((prev, curr) => prev + curr.db_rows_qty, 0);
 
-            if (purchasesWithMsgs.length > 0) {
-              const purchaseMsgLimit = purchasesWithMsgs.reduce((prev, curr) => prev + curr.msg_qty, 0);
-              setState(prevState => ({
-                ...prevState,
-                msgLimit: purchaseMsgLimit,
-              }));
-            }
-
-            if (purchasesWithRows.length > 0) {
-              const purchaseRowLimit = purchasesWithRows.reduce((prev, curr) => prev + curr.db_rows_qty, 0);
-              setState(prevState => ({
-                ...prevState,
-                rowLimit: purchaseRowLimit,
-              }));
-            }
-          } else {
-            console.log(purchasesResponse.data.message);
+            dispatch({ type: 'SET_PURCHASES', payload: { activePurchases: active, msgLimit, rowLimit } });
           }
 
-          setState(prevState => ({
-            ...prevState,
-            loading: false,
-          }));
-        } else {
-          console.log(companyResponse.data.message);
+          dispatch({ type: 'SET_LOADING', payload: { loading: false } });
         }
       } catch (err) {
         console.error(err);
@@ -139,7 +123,7 @@ msgLimit={state.msgLimit} />
               md={4}
               lg={4}
               xl={4}>
-              <LakeRows isConsumption={state.isConsumption}
+              <LakeRows companyId={companyId} isConsumption={state.isConsumption}
 rowLimit={state.rowLimit} />
             </Grid>
             <Grid item

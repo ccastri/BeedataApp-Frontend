@@ -69,7 +69,7 @@ sx={{ mb: 2 }}>
             USD$ {balance}
           </Typography>
         </CardContent>
-        {(getUserRole() === 'admin' || getUserRole() === 'superadmin') && (
+        {(getUserRole() !== 'user') && (
           <>
             <Divider />
             <CardActions sx={{ mt: 1, mb: 1 }}>

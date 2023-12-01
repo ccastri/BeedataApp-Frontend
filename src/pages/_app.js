@@ -21,7 +21,6 @@ const clientSideEmotionCache = createEmotionCache();
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const [companyId, setCompanyId] = useState(getUserCompanyId());
-
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
