@@ -38,7 +38,7 @@ const items = [
     title: 'Beet Lake'
   },
   {
-    href: '/bots',
+    href: '/coming-soon',
     icon: (<SmartToyIcon fontSize="small" />),
     target: '_self',
     title: 'Beet Bots'

@@ -4,11 +4,10 @@ import { useState, useEffect, useContext } from 'react';
 import { UsersTable } from '../components/users/users-table';
 import { CompanyTable } from '../components/users/company-table';
 import { RegistrationDialog } from '../components/users/registration-dialog';
-import { getUserCompanyId } from '../utils/get-user-data';
+import { getUserCompanyId, getUserRole } from '../utils/get-user-data';
 import CompanyContext from '../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
@@ -71,6 +70,7 @@ const Page = () => {
 
     const { companyId } = useContext(CompanyContext);
     const userCompanyId = getUserCompanyId();
+    const userRole = getUserRole();
     const token = Cookies.get('jwt');
 
     useEffect(() => {
@@ -86,9 +86,8 @@ const Page = () => {
         };
         getUsers();
     }, [companyId, token]);
-    
+
     const deleteUsers = async (userIds) => {
-        const token = Cookies.get('jwt');
         await Promise.all(userIds.map((userId) => api.delete(`/api/v1/users/${userId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })));
@@ -96,7 +95,13 @@ const Page = () => {
         setUsers(users.filter((user) => !userIds.includes(user.id)));
     };
 
-    const deleteCompanies = async (companyIds) => {};
+    const deleteCompanies = async (companyIds) => {
+        await Promise.all(companyIds.map((companyId) => api.delete(`/api/v1/companies/${companyId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })));
+
+        setPartners(partners.filter((partner) => !companyIds.includes(partner.id)));
+    };
 
     if (loading) {
         return (
@@ -152,26 +157,30 @@ const Page = () => {
                         >
                             <UsersTable users={users} deleteUsers={deleteUsers} />
                         </Grid>
-                        <Grid item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            xl={12}
-                        >
-                            <Card sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <RegistrationDialog companyId={companyId} role={'admin'} />
-                            </Card>
-                        </Grid>
-                        <Grid item
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            lg={12}
-                            xl={12}
-                        >
-                            <CompanyTable partners={partners} admins={admins} deleteCompanies={deleteCompanies} />
-                        </Grid>
+                        {userRole === 'partner' && (
+                            <>
+                                <Grid item
+                                    xs={12}
+                                    sm={12}
+                                    md={12}
+                                    lg={12}
+                                    xl={12}
+                                >
+                                    <Card sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <RegistrationDialog companyId={companyId} role={'admin'} />
+                                    </Card>
+                                </Grid>
+                                <Grid item
+                                    xs={12}
+                                    sm={12}
+                                    md={12}
+                                    lg={12}
+                                    xl={12}
+                                >
+                                    <CompanyTable partners={partners} admins={admins} deleteCompanies={deleteCompanies} />
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
                 </Container>
             </Box>

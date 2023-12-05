@@ -7,6 +7,7 @@ import Collapse from '@mui/material/Collapse';
 import BusinessIcon from '@mui/icons-material/Business';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import Check from '@mui/icons-material/Check'
 import Cookies from 'js-cookie';
 import api from '../../lib/axios';
 
@@ -19,6 +20,7 @@ import api from '../../lib/axios';
 export const DropDown = () => {
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(null);
   const { companyId, setCompanyId } = useContext(CompanyContext);
 
   useEffect(() => {
@@ -28,9 +30,9 @@ export const DropDown = () => {
         const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });
 
         if (response.data.success) {
-          const companies = response.data.companies.map(company => ({ 
+          const companies = response.data.companies.map(company => ({
             name: capitalizeFirstLetter(company.name),
-            id: company.id 
+            id: company.id
           }));
           setCompanies(companies);
         }
@@ -48,6 +50,7 @@ export const DropDown = () => {
 
   const handleCompanyClick = (company) => {
     setCompanyId(company.id);
+    setSelectedCompany(company.id);
     localStorage.setItem('companyId', company.id);
   };
 
@@ -90,15 +93,17 @@ export const DropDown = () => {
               onClick={() => handleCompanyClick(company)}
               sx={{
                 justifyContent: 'flex-start',
-                px: 7, width: '100%',
+                px: 5, width: '100%',
                 borderRadius: 1,
                 textTransform: 'none',
                 textAlign: 'left',
                 color: 'neutral.300',
-                '&:hover': { backgroundColor: 'rgba(255,255,255, 0.08)' } }}
+                '&:hover': { backgroundColor: 'rgba(255,255,255, 0.08)' }
+              }}
             >
-              <Box sx={{ flexGrow: 1 }}>
-                {company.name}
+              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                {selectedCompany === company.id && <Check color="secondary" sx={{mr: 2}} />}
+                <span>{company.name}</span>
               </Box>
             </Button>
           ))}
