@@ -1,0 +1,23 @@
+# Ignore .env files
+*.env
+
+# Ignore node_modules
+node_modules/
+
+# Ignore builds
+.next/
+
+# Ignore tests
+__tests__/
+
+# Ignore .git
+.git/
+
+# Ignore .editorconfig
+.editorconfig
+
+# Ignore .swc
+*.swc
+
+# Ignore .gitattributes
+.gitattributes
