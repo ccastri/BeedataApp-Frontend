@@ -1,7 +1,6 @@
 import axios from 'axios';
-// import throttleAdapterEnhancer from 'axios-throttle';
 
-const backendServer = 'https://api.beet.digital';
+const backendServer = 'https://api.blackwater-85bce617.eastus.azurecontainerapps.io';
 
 const api = axios.create({
     baseURL: backendServer,
