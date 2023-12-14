@@ -107,7 +107,7 @@ export const RegistrationDialog = ({ companyId, role }) => {
                         <CardContent>
                             <form onSubmit={formik.handleSubmit}>
                                 <TextFieldWrapper
-                                    label="Name"
+                                    label={role === 'admin' ? "Admin Name" : "Name"}
                                     name="fullName"
                                     formik={formik}
                                     autoFocus

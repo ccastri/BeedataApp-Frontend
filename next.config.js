@@ -14,8 +14,8 @@ module.exports = {
             "https://connect.facebook.net",
             ...(process.env.NODE_ENV === 'development' ? ["'unsafe-eval'"] : [])
           ],
-          imgSrc: ["'self'", "data:"],
-          connectSrc: ["'self'", "http://localhost:3001", "https://graph.facebook.com"],
+          imgSrc: ["'self'", "data:", "https://flagcdn.com"],
+          connectSrc: ["'self'", "http://localhost:3001", "https://api.blackwater-85bce617.eastus.azurecontainerapps.io", "https://graph.facebook.com"],
           fontSrc: ["'self'", "https://fonts.gstatic.com"],
         },
       },
