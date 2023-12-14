@@ -26,3 +26,25 @@ steps:
 - script: |
     npm run test:ci
   displayName: 'npm run test'
+
+- task: Docker@2
+  displayName: 'Build and push Docker image'
+  inputs:
+    containerRegistry: 'BeedataApp'
+    repository: 'appbeetdigital'
+    command: 'buildAndPush'
+    Dockerfile: 'Dockerfile'
+    tags: '1.0.$(Build.BuildId)'
+- task: AzureContainerApps@1
+  inputs:
+    azureSubscription: 'Bee_Prototipos(ad415fa8-3333-44cc-8337-4001938578c8)'
+    acrName: 'appbeetdigital'
+    acrUsername: $(ACR-USER)
+    acrPassword: $(ACR-PWD)
+    imageToDeploy: 'appbeetdigital.azurecr.io/appbeetdigital:1.0.$(Build.BuildId)'
+    containerAppName: 'app'
+    resourceGroup: 'appbeetdigital'
+    containerAppEnvironment: 'appbeetdigital'
+    targetPort: '3001'
+    location: 'East US'
+    disableTelemetry: true
