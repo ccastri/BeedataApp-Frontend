@@ -10,6 +10,7 @@ import { ExportButton } from './social-msgs-export';
 import CompanyContext from '../../../../contexts/company-context';
 import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -19,7 +20,7 @@ import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import api from '../../../../lib/axios';
 
-const  getBusiestDay = (rooms) => {
+const getBusiestDay = (rooms) => {
     if (rooms.length === 0) {
         return 0;
     }
@@ -86,10 +87,11 @@ export const MetricsContent = ({ agents }) => {
         messages: [],
         rooms: [],
         loading: true,
+        applyFilters: false,
     });
     const data = [];
 
-    const { messages, rooms } = state;
+    const { messages, rooms, loading, applyFilters } = state;
     const { companyId } = useContext(CompanyContext);
 
     const [startDate, setStartDate] = useState(() => {
@@ -130,6 +132,7 @@ export const MetricsContent = ({ agents }) => {
                         messages: messagesResponse.data.messages,
                         rooms: roomsResponse.data.rooms,
                         loading: false,
+                        applyFilters: false,
                     });
                 }
             } catch (err) {
@@ -137,7 +140,14 @@ export const MetricsContent = ({ agents }) => {
             }
         }
         fetchData();
-    }, [startDate, endDate, companyId]);
+    }, [applyFilters, companyId]);
+
+    const handleApply = () => {
+        setState({
+            ...state,
+            applyFilters: true,
+        });
+    };
 
     const handleStartDateChange = (date) => {
         setStartDate(date);
@@ -226,7 +236,7 @@ export const MetricsContent = ({ agents }) => {
         };
     });
 
-    if (state.loading) {
+    if (loading) {
         return (
             <Box
                 sx={{
@@ -257,20 +267,20 @@ export const MetricsContent = ({ agents }) => {
                             <ThemeProvider theme={theme}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <Grid container
-justifyContent="space-between">
+                                        justifyContent="space-between">
                                         <Grid item>
                                             <ExportButton messages={messages} />
                                         </Grid>
                                         <Grid item>
                                             <Grid container
-spacing={2}>
+                                                spacing={2}>
                                                 <Grid item>
                                                     <DatePicker
                                                         label="Start Date"
                                                         value={startDate}
                                                         onChange={handleStartDateChange}
                                                         renderInput={(props) => <TextField {...props}
-sx={{ mr: 3 }} />}
+                                                            sx={{ mr: 3 }} />}
                                                     />
                                                 </Grid>
                                                 <Grid item>
@@ -280,6 +290,16 @@ sx={{ mr: 3 }} />}
                                                         onChange={handleEndDateChange}
                                                         renderInput={(props) => <TextField {...props} />}
                                                     />
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button
+                                                        autoFocus
+                                                        variant="contained"
+                                                        sx={{ ml: 2, mr: 2, mt: 1, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                                                        onClick={handleApply}
+                                                    >
+                                                        Apply
+                                                    </Button>
                                                 </Grid>
                                             </Grid>
                                         </Grid>

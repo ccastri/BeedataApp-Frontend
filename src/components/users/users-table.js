@@ -20,7 +20,6 @@ const columns = [
     { field: 'idNumber', headerName: 'ID Number', width: 160 },
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'role', headerName: 'Role', width: 130 },
-    { field: 'status', headerName: 'Status', width: 200 }
 ];
 
 export const UsersTable = ({ users, deleteUsers }) => {
@@ -47,8 +46,7 @@ export const UsersTable = ({ users, deleteUsers }) => {
         idType: user.identification_type,
         idNumber: user.identification_number,
         name: user.name,
-        role: user.role,
-        status: 'Active',
+        role: user.role
     }));
 
     return (

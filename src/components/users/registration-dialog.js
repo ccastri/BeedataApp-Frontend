@@ -8,6 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
@@ -28,6 +29,7 @@ const idTypes = [
 ];
 export const RegistrationDialog = ({ companyId, role }) => {
     const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
     const token = Cookies.get('jwt');
 
     const handleClose = () => {
@@ -35,14 +37,17 @@ export const RegistrationDialog = ({ companyId, role }) => {
         formik.resetForm();
     };
 
-    const onSubmit = async(values) => {
+    const onSubmit = async (values) => {
         try {
-            const response = await api.post('/api/v1/users/register', {values, isInvite: true}, {headers: { Authorization: `Bearer ${token}` }});
+            const response = await api.post('/api/v1/users/register', { values, isInvite: true }, { headers: { Authorization: `Bearer ${token}` } });
             if (response.data.success) {
+                console.log(response.data);
                 if (role === 'admin') {
                     const productId = 50;
-                    await api.post(`/api/v1/${companyId}/products/${productId}`, {productQty: 10}, {headers: { Authorization: `Bearer ${token}` }});
+                    const newCompanyId = response.data.user.company_id;
+                    await api.post(`/api/v1/${newCompanyId}/products/${productId}`, { productQty: 10 }, { headers: { Authorization: `Bearer ${token}` } });
                 }
+                setSuccessMessage(`The email has been successfully sent to: ${values.email}`);
                 handleClose();
             }
         } catch (err) {
@@ -152,6 +157,27 @@ export const RegistrationDialog = ({ companyId, role }) => {
                             </form>
                         </CardContent>
                     </Card>
+                </DialogContent>
+            </Dialog>
+            <Dialog
+                open={!!successMessage}
+                onClose={() => setSuccessMessage('')}
+            >
+                <DialogTitle>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography variant="h5">
+                            Email Sent Successfully!
+                        </Typography>
+                        <IconButton edge="end" color="inherit" onClick={() => setSuccessMessage('')} aria-label="close">
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                </DialogTitle>
+                <Divider />
+                <DialogContent>
+                    <DialogContentText>
+                        {successMessage}
+                    </DialogContentText>
                 </DialogContent>
             </Dialog>
         </>
