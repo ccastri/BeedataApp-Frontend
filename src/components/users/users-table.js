@@ -16,10 +16,10 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const columns = [
-    { field: 'idType', headerName: 'ID Type', width: 130 },
-    { field: 'idNumber', headerName: 'ID Number', width: 160 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'role', headerName: 'Role', width: 130 },
+    { field: 'idType', headerName: 'ID Type', width: 200 },
+    { field: 'idNumber', headerName: 'ID Number', width: 200 },
+    { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'role', headerName: 'Role', width: 200 },
 ];
 
 export const UsersTable = ({ users, deleteUsers }) => {

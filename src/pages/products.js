@@ -19,7 +19,7 @@ const getProductDetails = async (pack, token) => {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    return Object.assign({}, product, response.data.product[0]);
+    return Object.assign({}, product, response.data.product);
   }));
 
   return updatedPack;
@@ -102,8 +102,10 @@ const Page = () => {
         api.get(`/api/v1/${companyId}/whatsapp`, { headers: { Authorization: `Bearer ${token}` } }),
         api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
+      console.log(purchaseResponse.data.active);
 
       const updatedPack = await getProductDetails(purchaseResponse.data.active, token);
+      console.log('updatedPack', updatedPack);
 
       dispatch({
         type: 'FETCH_DATA',
