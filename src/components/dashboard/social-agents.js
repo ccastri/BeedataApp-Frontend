@@ -4,7 +4,43 @@ import Cookies from 'js-cookie';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
+const fetchAgentsPurchased = async (companyId, token, setTotalSocialAgents) => {
+  try {
+    const response = await api.get(`/api/v1/${companyId}/purchases/active`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    if (response.data.success) {
+      const purchases = response.data.active;
+      const filteredPurchases = purchases.filter(purchase => purchase.agents_qty > 0);
+      const totalAgentsPurchased = filteredPurchases.reduce((acc, purchase) => acc + purchase.agents_qty, 0);
+      setTotalSocialAgents(totalAgentsPurchased);
+    } else {
+      console.log(response.data.message);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
+const fetchSocialAgents = async (companyId, token, setSocialAgents) => {
+  try {
+    const response = await api.get(`/api/v1/${companyId}/social/agents`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    if (response.data.success) {
+      const agents = response.data.agents;
+      setSocialAgents(agents.length);
+    } else {
+      console.log(response.data.message);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export const SocialAgents = () => {
   const [socialAgents, setSocialAgents] = useState(0);
@@ -14,23 +50,7 @@ export const SocialAgents = () => {
 
   useEffect(() => {
     try {
-      const fetchAgentsPurchased = async () => {
-        const response = await api.get(`/api/v1/${companyId}/purchases/active`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        if (response.data.success) {
-          const purchases = response.data.active;
-          const filteredPurchases = purchases.filter(purchase => purchase.agents_qty > 0);
-          const totalAgentsPurchased = filteredPurchases.reduce((acc, purchase) => acc + purchase.agents_qty, 0);
-          setTotalSocialAgents(totalAgentsPurchased);
-        } else {
-          console.log(response.data.message);
-        }
-      };
-
-      fetchAgentsPurchased();
+      fetchAgentsPurchased(companyId, token, setTotalSocialAgents);
     } catch (err) {
       console.log(err);
     }
@@ -38,22 +58,7 @@ export const SocialAgents = () => {
 
   useEffect(() => {
     try {
-      const fetchSocialAgents = async () => {
-        const response = await api.get(`/api/v1/${companyId}/social/agents`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        if (response.data.success) {
-          const agents = response.data.agents;
-          setSocialAgents(agents.length);
-          return;
-        } else {
-          console.log(response.data.message);
-        }
-      };
-
-      fetchSocialAgents();
+      fetchSocialAgents(companyId, token, setSocialAgents);
     } catch (err) {
       console.log(err);
     }

@@ -1,107 +1,64 @@
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import Cookies from 'js-cookie';
+import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import { AccountPopover } from '../../../src/components/general/account-popover';
-
 import { useRouter } from 'next/router';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-const viewports = [
-  { width: 320, height: 480 }, // iPhone 5/SE
-  { width: 360, height: 640 }, // Pixel 2
-  { width: 375, height: 667 }, // iPhone 6/7/8
-  { width: 414, height: 736 }, // iPhone 6/7/8 Plus
-  { width: 768, height: 1024 }, // iPad
-  { width: 1024, height: 768 }, // iPad landscape
-  { width: 1280, height: 800 }, // Laptop
-  { width: 1440, height: 900 }, // Laptop
-  { width: 1920, height: 1080 }, // Desktop
-  { width: 2560, height: 1440 }, // Desktop
-];
+jest.mock('js-cookie');
 
-/*
-Test suite for AccountPopover component
+describe('AccountPopover', () => {
+  const mockRouter = {
+    push: jest.fn(),
+  };
+  useRouter.mockReturnValue(mockRouter);
 
-Test cases:
-- AccountPopover renders "My Profile" when authenticated
-- AccountPopover does not render "My Profile" when not authenticated
-- AccountPopover renders "Sign out" when authenticated
-- AccountPopover does not render "Sign out" when not authenticated
-- AccountPopover calls onClose when "Sign out" is clicked
-- AccountPopover removes token from localStorage when "Sign out" is clicked
-*/
-
-describe.each(viewports)('AccountPopover (%p)', (viewport) => {
-  beforeEach(() => {
-    // set viewport size for the test
-    Object.defineProperty(window, 'innerWidth', {
-      value: viewport.width,
-      writable: true,
-    });
-    Object.defineProperty(window, 'innerHeight', {
-      value: viewport.height,
-      writable: true,
-    });
-    window.dispatchEvent(new Event('resize'));
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should render "My Profile"', () => {
-    // set up props and localStorage token
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlVzZXIgTmFtZSIsImlhdCI6MTYyMDc5OTg1Nn0.X2N8_6N36X0KjMAvM0hPcSkG40wOmKXXzHi1ZbYJPP8';
-    localStorage.setItem('jwt', token);
-  
-    // render component and check for "My Profile" text
-    render(<AccountPopover {...props} />);
-    expect(screen.getByText('My Profile')).toBeInTheDocument();
-  });
-  
-
-  it('should not render the sign out button when not authenticated', () => {
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
-    localStorage.clear(); // clear localStorage
-    render(<AccountPopover {...props} />);
-    expect(screen.queryByText('Sign out')).toBeNull();
+  it('should render without crashing', () => {
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    render(<AccountPopover anchorEl={anchorEl} onClose={onClose} open={true} />);
+    expect(screen.getByText(/My Profile/i)).toBeInTheDocument();
   });
 
-  it('should render the sign out button when authenticated', () => {
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlVzZXIgTmFtZSIsImlhdCI6MTYyMDc5OTg1Nn0.X2N8_6N36X0KjMAvM0hPcSkG40wOmKXXzHi1ZbYJPP8';
-    localStorage.setItem('jwt', token);
-    render(<AccountPopover {...props} />);
-    expect(screen.getByText('Sign out')).toBeInTheDocument();
+  it('should call onClose when profile is clicked', () => {
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />);
+    fireEvent.click(screen.getByText(/My Profile/i));
+    expect(onClose).toHaveBeenCalled();
   });
 
-  it('should call onClose when the popover is closed', async() => {
-    const router = { push: jest.fn() };
-    useRouter.mockReturnValue(router);
-    
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
+  it('redirects to account page when profile is clicked', () => {
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />);
+    fireEvent.click(screen.getByText(/My Profile/i));
+    expect(mockRouter.push).toHaveBeenCalledWith('/account');
+  });
 
-    render(<AccountPopover {...props} />);
-    fireEvent.click(screen.getByText('Sign out'));
-    await waitFor(() => {
-      expect(props.onClose).toHaveBeenCalled();
-    })
+  it('calls onClose and removes jwt cookie when sign out is clicked', () => {
+    Cookies.get.mockReturnValue('fakeToken');
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />);
+    fireEvent.click(screen.getByText(/Sign out/i));
+    expect(onClose).toHaveBeenCalled();
+    expect(Cookies.remove).toHaveBeenCalledWith('jwt', { path: '/', secure: true });
+  });
 
-    expect(localStorage.getItem('jwt')).toBeNull();
+  it('redirects to home page when sign out is clicked', () => {
+    Cookies.get.mockReturnValue('fakeToken');
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose}/>);
+    fireEvent.click(screen.getByText(/Sign out/i));
+    expect(mockRouter.push).toHaveBeenCalledWith('/');
   });
 });
