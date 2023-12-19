@@ -7,8 +7,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MetricsTable } from './metrics-table';
 import { StatsCard } from '../../../general/stats-cards';
 import { ExportButton } from './social-msgs-export';
-import CompanyContext from '../../../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../../../contexts/company';
+import { AuthContext } from '../../../../contexts/auth';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -105,7 +105,7 @@ export const MetricsContent = ({ agents }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = Cookies.get('jwt')
+               const { token } = useContext(AuthContext);
                 const messagesResponse = await api.get(`/api/v1/${companyId}/social/messages`, {
                     headers: {
                         Authorization: `Bearer ${token}`,

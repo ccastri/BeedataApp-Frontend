@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Cookies from 'js-cookie';
+import { AuthContext } from '../../contexts/auth';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -8,6 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import LogoutIcon from '@mui/icons-material/Logout';
+
 import { User as UserIcon } from '../../icons/user';
 
 /** 
@@ -26,8 +28,8 @@ export const AccountPopover = (props) => {
   // retrieve Next.js router object
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
+  const { token, logout } = useContext(AuthContext);
 
-  const token = Cookies.get('jwt');
   const handleProfile = () => {
     onClose?.();
     router.push('/account');
@@ -38,7 +40,7 @@ export const AccountPopover = (props) => {
     onClose?.();
 
     if (token) {
-      Cookies.remove('jwt', { path: '/', secure: true });
+      logout();
     }
     router.push('/');
     };

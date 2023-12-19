@@ -1,6 +1,6 @@
 import React from 'react';
 import Cookies from 'js-cookie';
-import CompanyContext from '../../../src/contexts/company-context';
+import { CompanyContext } from '../../../src/contexts/company';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { SocialAgents } from '../../../src/components/dashboard/social-agents';
 import api from '../../../src/lib/axios';

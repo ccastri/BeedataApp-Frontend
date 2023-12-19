@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
 export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
   const [msgCount, setMsgCount] = useState(0);
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    const token = Cookies.get('jwt')
     const fetchData = async () => {
       try {
         const messagesResponse = await api.get(`/api/v1/${companyId}/social/messages`, {
@@ -28,7 +28,7 @@ export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
     };
 
     fetchData();
-  }, [isConsumption, companyId]);
+  }, [isConsumption, companyId, token]);
 
   return (
     <StatsCard

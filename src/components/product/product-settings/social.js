@@ -3,8 +3,8 @@ import { useFormik } from 'formik';
 import { SettingsDialog } from './settings-dialog';
 import { SocialGeneralContent } from './social-tabs/general';
 import { MetricsContent } from './social-tabs/metrics';
-import CompanyContext from '../../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../../contexts/company';
+import { AuthContext } from '../../../contexts/auth';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
@@ -55,7 +55,7 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
   });
 
   const { users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
-  const token = Cookies.get('jwt');
+ const { token } = useContext(AuthContext);;
   const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {

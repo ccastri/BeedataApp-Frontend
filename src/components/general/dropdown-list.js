@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
@@ -8,7 +9,6 @@ import BusinessIcon from '@mui/icons-material/Business';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Check from '@mui/icons-material/Check'
-import Cookies from 'js-cookie';
 import api from '../../lib/axios';
 
 /**
@@ -24,7 +24,7 @@ export const DropDown = () => {
   const { companyId, setCompanyId } = useContext(CompanyContext);
 
   useEffect(() => {
-    const token = Cookies.get('jwt');
+   const { token } = useContext(AuthContext);;
     const fetchData = async () => {
       try {
         const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });

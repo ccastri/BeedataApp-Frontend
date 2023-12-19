@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useCallback, useContext } from 'react';
-import CompanyContext from '../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../contexts/company';
+import { AuthContext } from '../contexts/auth';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -93,7 +93,7 @@ const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage, loading } = state;
   const { companyId } = useContext(CompanyContext);
-  const token = Cookies.get('jwt')
+ const { token } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {

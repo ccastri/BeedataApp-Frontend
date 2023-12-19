@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
-import CompanyContext from '../../../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../../../contexts/company';
+import { AuthContext } from '../../../../contexts/auth';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import api from '../../../../lib/axios';
@@ -79,7 +79,7 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const code = response.authResponse.code;
-            const token = Cookies.get('jwt')
+           const { token } = useContext(AuthContext);
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {

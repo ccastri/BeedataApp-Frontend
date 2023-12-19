@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import { StatsCard } from '../general/stats-cards';
 import PropTypes from 'prop-types';
 import api from '../../lib/axios';
@@ -9,9 +9,9 @@ import api from '../../lib/axios';
 export const LakeRows = ({ isConsumption, rowLimit }) => {
   const [rowCount, setRowCount] = useState(0);
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    const token = Cookies.get('jwt')
     const fetchRowCount = async () => {
       try {
         const response = await api.get(`/api/v1/${companyId}/lake/row-count`, {
@@ -35,7 +35,7 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
       }
     };
     fetchRowCount();
-  }, [isConsumption, companyId]);
+  }, [isConsumption, companyId, token]);
 
   return (
       <StatsCard

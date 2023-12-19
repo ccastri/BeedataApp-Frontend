@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-import Cookies from 'js-cookie';
+import React, { useRef, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import AppBar from '@mui/material/AppBar';
@@ -14,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Bell as BellIcon } from '../../icons/bell';
 import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
 import { AccountPopover } from './account-popover';
+import { AuthContext } from '../../contexts/auth';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -27,7 +27,7 @@ export const DashboardNavbar = (props) => {
 
   // Retrieve user name from JWT token
   const getUserName = () => {
-    const token = Cookies.get('jwt')
+    const { token } = useContext(AuthContext);
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
       return payload.userName.toUpperCase();

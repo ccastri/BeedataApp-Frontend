@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import { createValidationSchema } from '../register/register-validation-schema';
-import Cookies from 'js-cookie';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -30,7 +30,7 @@ const idTypes = [
 export const RegistrationDialog = ({ companyId, role }) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const token = Cookies.get('jwt');
+   const { token } = useContext(AuthContext);;
 
     const handleClose = () => {
         setOpen(false);

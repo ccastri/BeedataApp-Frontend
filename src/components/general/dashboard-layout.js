@@ -29,7 +29,9 @@ export const DashboardLayout = (props) => {
 
   return (
     <AuthGuard>
-      <DashboardLayoutRoot>
+      <DashboardLayoutRoot
+        data-testid="dashboard-layout-root"
+      >
         <Box
           sx={{
             display: 'flex',

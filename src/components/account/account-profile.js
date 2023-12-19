@@ -1,5 +1,4 @@
-import React from 'react';
-import Cookies from 'js-cookie';
+import React, {useContext} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -10,16 +9,17 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import { getUserId } from '../../utils/get-user-data';
+import { AuthContext } from '../../contexts/auth';
 import api from '../../lib/axios';
 
 export const AccountProfile = (props) => {
   const [user, setUser] = useState({});
   const userId = getUserId();
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const token = Cookies.get('jwt')
         const response = await api.get(`/api/v1/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -31,7 +31,7 @@ export const AccountProfile = (props) => {
       }
     };
     getUser();
-  }, []);
+  }, [token, userId]);
 
   return (
   <Card {...props}>

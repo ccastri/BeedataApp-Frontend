@@ -1,4 +1,5 @@
-import Cookies from 'js-cookie';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/auth';
 
 /**
  * 
@@ -9,7 +10,7 @@ import Cookies from 'js-cookie';
  */
 export const getUserRole = () => {
   try {
-    const token = Cookies.get('jwt');
+   const { token } = useContext(AuthContext);;
 
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
@@ -31,7 +32,7 @@ export const getUserRole = () => {
  */
 export const getUserCompanyId = () => {
   try {
-    const token = Cookies.get('jwt')
+   const { token } = useContext(AuthContext);
 
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
@@ -53,7 +54,7 @@ export const getUserCompanyId = () => {
  */
 export const getUserId = () => {
   try {
-    const token = Cookies.get('jwt')
+   const { token } = useContext(AuthContext);
 
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../../../contexts/company';
+import { AuthContext } from '../../../../contexts/auth';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -29,7 +29,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
   const [open, setOpen] = useState(false);
   const [isMsgAvailable, setIsMsgAvailable] = useState(false);
 
-  const token = Cookies.get('jwt');
+ const { token } = useContext(AuthContext);;
   const { companyId } = useContext(CompanyContext);
 
   const handleClickOpen = () => {

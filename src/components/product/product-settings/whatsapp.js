@@ -1,8 +1,8 @@
 import React, { useMemo, useContext } from 'react';
 import { WpGeneralContent } from './whatsapp-tabs/general';
 import { SettingsDialog } from './settings-dialog';
-import CompanyContext from '../../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../../contexts/company';
+import { AuthContext } from '../../../contexts/auth';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
@@ -20,7 +20,7 @@ export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isC
 
   const purchaseConsumptionProduct = async () => {
     try {
-      const token = Cookies.get('jwt');
+     const { token } = useContext(AuthContext);;
       const productId = 4;  
 
       await api.post(`/api/v1/${companyId}/products/${productId}`, {

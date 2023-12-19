@@ -2,7 +2,7 @@ import React from 'react';
 import Cookies from 'js-cookie';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { LakeRows } from '../../../src/components/dashboard/lake-rows';
-import CompanyContext from '../../../src/contexts/company-context'
+import { CompanyContext } from '../../../src/contexts/company'
 import api from '../../../src/lib/axios';
 
 jest.mock('../../../src/lib/axios');

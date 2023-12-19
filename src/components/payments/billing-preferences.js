@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { getUserId } from '../../utils/get-user-data';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,7 +19,7 @@ export const BillingPreferences = ({ title }) => {
   const userId = getUserId();
 
   useEffect(() => {
-    const token = Cookies.get('jwt')
+   const { token } = useContext(AuthContext);
 
     const fetchBillingInfo = async () => {
       try {

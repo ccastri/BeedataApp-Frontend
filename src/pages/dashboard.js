@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useContext} from 'react';
-import CompanyContext from '../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../contexts/company';
+import { AuthContext } from '../contexts/auth';
 import Head from 'next/head';
 import { Box, Container, Grid } from '@mui/material';
 import { WhatsappMsg } from '../components/dashboard/whatsapp-msg';
@@ -35,7 +35,7 @@ function reducer(state, action) {
 const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { companyId } = useContext(CompanyContext);
-  const token = Cookies.get('jwt');
+ const { token } = useContext(AuthContext);;
 
   useEffect(() => {
     const fetchData = async () => {

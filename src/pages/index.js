@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { BeeCard } from '../components/login/side-card';
 import { useFormik } from 'formik';
+import { AuthContext } from '../contexts/auth';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -27,6 +28,8 @@ const Login = () => {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
+  const { login } = useContext(AuthContext);
+
   const onSubmit = async (values) => {
     try {
 
@@ -34,8 +37,7 @@ const Login = () => {
       
       if (data.success) {
         const token = data.token;
-        Cookies.set('jwt', token, { path: '/', secure: true });
-
+        login(token);
 
         if (typeof Router !== 'undefined') {
           Router.push("/dashboard").catch(console.error);

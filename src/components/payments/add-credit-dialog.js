@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import Box from '@mui/material/Box';
@@ -64,7 +64,7 @@ export const CreditDialog = ({ productId, updateCredit }) => {
 
   const onSubmit = async (values) => {
     try {
-      const token = Cookies.get('jwt');
+     const { token } = useContext(AuthContext);;
       const result = await api.post(`/api/v1/${companyId}/products/${productId}`, {
         productQty: values.amount,
       }, {

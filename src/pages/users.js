@@ -5,8 +5,8 @@ import { UsersTable } from '../components/users/users-table';
 import { CompanyTable } from '../components/users/company-table';
 import { RegistrationDialog } from '../components/users/registration-dialog';
 import { getUserCompanyId, getUserRole } from '../utils/get-user-data';
-import CompanyContext from '../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../contexts/company';
+import { AuthContext } from '../contexts/auth';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -71,7 +71,7 @@ const Page = () => {
     const { companyId } = useContext(CompanyContext);
     const userCompanyId = getUserCompanyId();
     const userRole = getUserRole();
-    const token = Cookies.get('jwt');
+   const { token } = useContext(AuthContext);;
 
     useEffect(() => {
         const getUsers = async () => {

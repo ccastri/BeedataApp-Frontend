@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import { StatsCard } from '../general/stats-cards';
 import api from '../../lib/axios';
 
@@ -45,8 +45,8 @@ const fetchSocialAgents = async (companyId, token, setSocialAgents) => {
 export const SocialAgents = () => {
   const [socialAgents, setSocialAgents] = useState(0);
   const [totalSocialAgents, setTotalSocialAgents] = useState(0);
-  const token = Cookies.get('jwt');
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     try {

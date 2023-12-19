@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -66,7 +66,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const token = Cookies.get('jwt');
+ const { token } = useContext(AuthContext);;
   const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {

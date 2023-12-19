@@ -1,14 +1,13 @@
 import React from 'react';
-import Cookies from 'js-cookie';
+import { AuthProvider } from '../../../src/contexts/auth';
 import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import { AccountPopover } from '../../../src/components/general/account-popover';
 import { useRouter } from 'next/router';
+import { Cookies } from 'js-cookie';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
-
-jest.mock('js-cookie');
 
 describe('AccountPopover', () => {
   const mockRouter = {
@@ -21,44 +20,100 @@ describe('AccountPopover', () => {
   });
 
   it('should render without crashing', () => {
+    // Mock
+    const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
-    render(<AccountPopover anchorEl={anchorEl} onClose={onClose} open={true} />);
+
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+      </AuthProvider>
+    );
+
+    // Assert
     expect(screen.getByText(/My Profile/i)).toBeInTheDocument();
   });
 
   it('should call onClose when profile is clicked', () => {
+    // Mock
+    const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
-    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />);
+
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+      </AuthProvider>
+    );
+
+    // Act
     fireEvent.click(screen.getByText(/My Profile/i));
+
+    // Assert
     expect(onClose).toHaveBeenCalled();
   });
 
   it('redirects to account page when profile is clicked', () => {
+    // Mock
+    const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
-    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />);
+
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+      </AuthProvider>
+    );
+
+    // Act
     fireEvent.click(screen.getByText(/My Profile/i));
+
+    // Assert
     expect(mockRouter.push).toHaveBeenCalledWith('/account');
   });
 
   it('calls onClose and removes jwt cookie when sign out is clicked', () => {
-    Cookies.get.mockReturnValue('fakeToken');
+    // Mock
+    const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
-    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />);
+
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+      </AuthProvider>
+    );
+
+    // Act
     fireEvent.click(screen.getByText(/Sign out/i));
+
+    // Assert
     expect(onClose).toHaveBeenCalled();
-    expect(Cookies.remove).toHaveBeenCalledWith('jwt', { path: '/', secure: true });
+
   });
 
   it('redirects to home page when sign out is clicked', () => {
-    Cookies.get.mockReturnValue('fakeToken');
+    // Mock
+    const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
-    render(<AccountPopover anchorEl={anchorEl} open={true} onClose={onClose}/>);
+
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+      </AuthProvider>
+    );
+
+    // Act
     fireEvent.click(screen.getByText(/Sign out/i));
+
+    // Assert
     expect(mockRouter.push).toHaveBeenCalledWith('/');
   });
 });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -25,7 +25,7 @@ export const CreditHistory = ({ title }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const token = Cookies.get('jwt')
+         const { token } = useContext(AuthContext);
           const response = await api.get(`/api/v1/${companyId}/payments/credit`, {
             headers: {
               Authorization: `Bearer ${token}`,

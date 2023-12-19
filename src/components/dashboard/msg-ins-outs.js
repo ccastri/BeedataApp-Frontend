@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
@@ -37,10 +37,10 @@ export const MsgInsOuts = () => {
     const [endDate, setEndDate] = useState(new Date());
     const theme = useTheme();
 
+    const { token } = useContext(AuthContext);
     const { companyId } = useContext(CompanyContext);
 
     useEffect(() => {
-        const token = Cookies.get('jwt')
         const fetchMsgCount = async () => {
             if (!startDate || !endDate) {
                 return;
@@ -116,7 +116,7 @@ export const MsgInsOuts = () => {
             }
         };
         fetchMsgCount();
-    }, [startDate, endDate, companyId]);
+    }, [startDate, endDate, companyId, token]);
 
     const checkDateValidity = (start, end) => {
         if (end <= start) return "End date must be greater than Start date";

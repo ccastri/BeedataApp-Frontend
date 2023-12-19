@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { getUserId } from '../../utils/get-user-data';
-import CompanyContext from '../../contexts/company-context';
-import Cookies from 'js-cookie';
+import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -29,6 +29,7 @@ export const AccountProfileDetails = (props) => {
     billingAddress: ''
   });
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
   const userId = getUserId();
 
   const idTypes = [
@@ -41,7 +42,6 @@ export const AccountProfileDetails = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get('jwt');
       const userResponse = await api.get(`/api/v1/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -74,7 +74,7 @@ export const AccountProfileDetails = (props) => {
     };
 
     fetchData();
-  }, [companyId, userId]);
+  }, [companyId, userId, token]);
 
   const handleChange = (event) => {
     setFormValues({
@@ -85,7 +85,6 @@ export const AccountProfileDetails = (props) => {
 
   const handleSaveDetails = async () => {
     try {
-      const token = Cookies.get('jwt')
 
       const billingFields = {
         billingEmail: formValues.billingEmail,
