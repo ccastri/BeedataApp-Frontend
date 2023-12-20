@@ -1,6 +1,4 @@
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export const StatsCard = (props) => (
     <Card sx={{ maxWidth: '100%', height: '90%' }}>

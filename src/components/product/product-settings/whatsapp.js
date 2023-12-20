@@ -1,11 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { WpGeneralContent } from './whatsapp-tabs/general';
 import { SettingsDialog } from './settings-dialog';
+import { CompanyContext } from '../../../contexts/company';
+import { AuthContext } from '../../../contexts/auth';
 import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
 
 export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isConsumption, credit, responseMessage, errorMessage, updateCompanyConsumption, clearMessages }) => {
+  const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   const phoneRows = useMemo(() => wabas.map((waba, index) => ({
     id: index,
@@ -17,13 +21,9 @@ export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isC
 
   const purchaseConsumptionProduct = async () => {
     try {
-      const token = localStorage.getItem('jwt');
-      const productInfo = {
-        productId: 4,
-        productQuantity: 1,
-      };
+      const productId = 4;  
 
-      await api.post('/api/v1/products/purchase-product', productInfo, {
+      await api.post(`/api/v1/${companyId}/products/${productId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

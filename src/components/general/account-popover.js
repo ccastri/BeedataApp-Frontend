@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -7,6 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import LogoutIcon from '@mui/icons-material/Logout';
+
 import { User as UserIcon } from '../../icons/user';
 
 /** 
@@ -22,27 +25,32 @@ import { User as UserIcon } from '../../icons/user';
  * 
  */
 export const AccountPopover = (props) => {
-  // retrieve Next.js router object
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
-  // retrieve JWT token from localStorage
-  const token = localStorage.getItem('jwt');
+  const { token, logout } = useContext(AuthContext);
+  const { unset } = useContext(CompanyContext);
 
-  // Handle user's profile redirection
   const handleProfile = () => {
     onClose?.();
     router.push('/account');
   }
 
-  // Sign out
   const handleSignOut = async () => {
     onClose?.();
-
-    if (token) {
-      localStorage.removeItem('jwt');
-    }
-    router.push('/');
+  
+    const handleRouteChange = (url) => {
+      if (url === '/') {
+        if (token) {
+          logout();
+          unset();
+        }
+        router.events.off('routeChangeComplete', handleRouteChange);
+      }
     };
+  
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.push('/');
+  };
 
   return (
     <Popover

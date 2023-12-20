@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
@@ -6,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import CircularProgress from '@mui/material/CircularProgress';
-import ErrorSnackbar from '../settings/settings-error-msg';
+import ErrorSnackbar from '../general/error-msg';
 import dayjs from 'dayjs';
 import api from '../../lib/axios';
 
@@ -28,15 +30,17 @@ export const MsgInsOuts = () => {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [startDate, setStartDate] = useState(() => {
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        return oneMonthAgo;
+        const tenDaysAgo = new Date();
+        tenDaysAgo.setDate(tenDaysAgo.getDate() - 5);
+        return tenDaysAgo;
     });
     const [endDate, setEndDate] = useState(new Date());
     const theme = useTheme();
 
+    const { token } = useContext(AuthContext);
+    const { companyId } = useContext(CompanyContext);
+
     useEffect(() => {
-        const token = localStorage.getItem('jwt');
         const fetchMsgCount = async () => {
             if (!startDate || !endDate) {
                 return;
@@ -51,7 +55,7 @@ export const MsgInsOuts = () => {
                 return;
             }
 
-            const response = await api.get('/api/v1/social/messages', {
+            const response = await api.get(`/api/v1/${companyId}/social/messages`, {
                 headers: { Authorization: `Bearer ${token}` },
                 params: { startFilter: startDate, endFilter: endDate }
             });
@@ -112,7 +116,7 @@ export const MsgInsOuts = () => {
             }
         };
         fetchMsgCount();
-    }, [startDate, endDate]);
+    }, [endDate, companyId, token]);
 
     const checkDateValidity = (start, end) => {
         if (end <= start) return "End date must be greater than Start date";

@@ -1,29 +1,33 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import NextLink from 'next/link';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import GroupsIcon from '@mui/icons-material/Groups';
+import ThreePIcon from '@mui/icons-material/ThreeP';
+import BuildIcon from '@mui/icons-material/Build';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Payment as PaymentIcon } from '../../icons/payment';
-import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 import { Cog as CogIcon } from '../../icons/cog';
-import { Users as UsersIcon } from '../../icons/users';
 import { NavItem } from './nav-item';
-import api from '../../lib/axios';
+import { DropDown } from './dropdown-list';
+import { getUserRole } from '../../utils/get-user-data';
 
+const userRole = getUserRole();
 const items = [
   {
     href: '/dashboard',
-    icon: (<TrendingDownIcon fontSize="small" />),
+    icon: (<QueryStatsIcon fontSize="small" />),
     target: '_self',
     title: 'Consumption'
   },
   {
     href: 'https://social.beet.digital/home',
-    icon: (<UsersIcon fontSize="small" />),
+    icon: (<ThreePIcon fontSize="small" />),
     target: '_blank',
     title: 'Beet Social'
   },
@@ -33,15 +37,15 @@ const items = [
     target: '_blank',
     title: 'Beet Lake'
   },
-  // {
-  //   href: '/bots',
-  //   icon: (<SmartToyIcon fontSize="small" />),
-  //   target: '_self',
-  //   title: 'Beet Bots'
-  // },
+  {
+    href: '/coming-soon',
+    icon: (<SmartToyIcon fontSize="small" />),
+    target: '_self',
+    title: 'Beet Bots'
+  },
   {
     href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<BuildIcon fontSize="small" />),
     target: '_self',
     title: 'Beet Tools'
   },
@@ -57,6 +61,21 @@ const items = [
   //   title: 'Settings'
   // },
 ];
+
+if (userRole === 'superadmin' || userRole === 'partner' || userRole === 'admin') {
+  let pageName = 'Users';
+  if (userRole === 'partner') {
+    pageName = 'Users & Companies';
+  }
+
+  items.push({
+    href: '/users',
+    icon: (<GroupsIcon fontSize="small" />),
+    target: '_self',
+    title: pageName
+  });
+}
+
 
 /** 
  * Sidebar component for the dashboard page that contains navigation items
@@ -81,7 +100,6 @@ export const DashboardSidebar = (props) => {
       if (!router.isReady) {
         return;
       }
-
       if (open) {
         onClose?.();
       }
@@ -123,6 +141,11 @@ export const DashboardSidebar = (props) => {
             my: 3
           }}
         />
+        {(getUserRole() === 'superadmin' || getUserRole() === 'partner' ) && (
+          <Box sx={{ p: 1 }}>
+            <DropDown />
+          </Box>
+        )}
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
             <NavItem

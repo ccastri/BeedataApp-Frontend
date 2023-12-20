@@ -1,5 +1,7 @@
+import React, { useReducer, useEffect, useCallback, useContext } from 'react';
+import { CompanyContext } from '../contexts/company';
+import { AuthContext } from '../contexts/auth';
 import Head from 'next/head';
-import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -9,6 +11,74 @@ import { ProductCard } from '../components/product/product-card';
 import { baseProducts } from '../data/base_products';
 import { DashboardLayout } from '../components/general/dashboard-layout';
 import api from '../lib/axios';
+
+
+const getProductDetails = async (pack, token) => {
+  const updatedPack = await Promise.all(pack.map(async (product) => {
+    const response = await api.get(`/api/v1/products/${product.product_id }`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return Object.assign({}, product, response.data.product);
+  }));
+
+  return updatedPack;
+};
+
+const updateBaseProducts = (pack, baseProducts) => {
+  const updatedBaseProducts = [];
+
+  baseProducts.forEach(baseProduct => {
+    let isActive = false;
+    let activeProductData = {};
+
+    pack.forEach(packProduct => {
+      if (packProduct.app_product.includes(baseProduct.name)) {
+        isActive = true;
+        activeProductData = packProduct;
+      }
+    });
+
+    if (isActive) {
+      const { id, name, ...activeProductDataReduce } = activeProductData;
+      updatedBaseProducts.push({ ...baseProduct, ...activeProductDataReduce, isActive });
+    } else {
+      updatedBaseProducts.push({ ...baseProduct, isActive });
+    }
+  });
+
+  return updatedBaseProducts;
+};
+
+const initialState = {
+  pack: [],
+  wabas: [],
+  isConsumption: false,
+  accessToken: false,
+  credit: 0,
+  responseMessage: '',
+  errorMessage: '',
+  loading: true,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'FETCH_DATA':
+      return { ...state, ...action.payload, loading: false };
+    case 'UPDATE_COMPANY_CONSUMPTION':
+      return { ...state, isConsumption: action.payload.newStatus, credit: action.payload.credit, responseMessage: action.payload.message };
+    case 'SET_ERROR_MESSAGE':
+      return { ...state, errorMessage: action.payload };
+    case 'CLEAR_MESSAGES':
+      return { ...state, responseMessage: '', errorMessage: '' };
+    case 'UPDATE_WABAS':
+      return { ...state, wabas: action.payload };
+    case 'DELETE_ROW':
+      return { ...state, wabas: state.wabas.filter(waba => waba.phone_id !== action.payload) };
+    default:
+      throw new Error();
+}
+}
 
 /**
 
@@ -20,91 +90,87 @@ Usage: Used to display user purchased products base on Beet's base products.
  */
 
 const Page = () => {
-  const [loading, setLoading] = useState(true);
-  const [state, setState] = useState({
-    pack: [],
-    wabas: [],
-    isConsumption: false,
-    accessToken: false,
-    credit: 0,
-    responseMessage: '',
-    errorMessage: '',
-  });
-
-  const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage } = state;
-  const token = localStorage.getItem('jwt');
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { pack, wabas, accessToken, isConsumption, credit, responseMessage, errorMessage, loading } = state;
+  const { companyId } = useContext(CompanyContext);
+ const { token } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [packResponse, wabasResponse, companyResponse] = await Promise.all([
-        api.get('/api/v1/products/company-all-products', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/whatsapp/business-account', { headers: { Authorization: `Bearer ${token}` } }),
-        api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } }),
+      const [purchaseResponse, wabasResponse, companyResponse] = await Promise.all([
+        api.get(`/api/v1/${companyId}/purchases/active`, { headers: { Authorization: `Bearer ${token}` } }),
+        api.get(`/api/v1/${companyId}/whatsapp`, { headers: { Authorization: `Bearer ${token}` } }),
+        api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
-      console.log('pack: ', packResponse.data.company);
+      console.log(purchaseResponse.data.active);
 
-      setState(prevState => ({
-        ...prevState,
-        pack: packResponse.data.products,
-        wabas: wabasResponse.data.wabas,
-        isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
-        accessToken: companyResponse.data.company.facebook_token ? true : false,
-        credit: parseFloat(companyResponse.data.company.credit),
-      }));
+      const updatedPack = await getProductDetails(purchaseResponse.data.active, token);
+      console.log('updatedPack', updatedPack);
 
-      setLoading(false);
+      dispatch({
+        type: 'FETCH_DATA',
+        payload: {
+          pack: updatedPack,
+          wabas: wabasResponse.data.wabas,
+          isConsumption: companyResponse.data.company.credit_msg_consumption ? true : false,
+          accessToken: companyResponse.data.company.facebook_token ? true : false,
+          credit: parseFloat(companyResponse.data.company.credit),
+        },
+      });
     };
 
     fetchData();
-  }, [token]);
-
+  }, [token, companyId]);
 
   const updateCompanyConsumption = useCallback(async (newStatus) => {
     try {
       const updateInfo = newStatus ? Date.now() : null;
-      const updatedCompany = await api.put('/api/v1/companies/company', { creditMsgConsumption: updateInfo }, {
+      const updatedCompany = await api.put(`/api/v1/companies/${companyId}`, { creditMsgConsumption: updateInfo }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (updatedCompany.data.success) {
-        setState(prevState => ({ ...prevState, isConsumption: newStatus, credit: updatedCompany.data.company.credit, 
-                                responseMessage: updatedCompany.data.message }));
+        dispatch({
+          type: 'UPDATE_COMPANY_CONSUMPTION',
+          payload: {
+            newStatus: newStatus,
+            credit: updatedCompany.data.company.credit,
+            message: updatedCompany.data.message
+          }
+        });
       } else {
-        setState(prevState => ({ ...prevState, errorMessage: updatedCompany.data.message }));
+        dispatch({
+          type: 'SET_ERROR_MESSAGE',
+          payload: updatedCompany.data.message
+        });
       }
     } catch (error) {
       console.log(error);
     } finally {
       setTimeout(() => {
-        setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+        dispatch({ type: 'CLEAR_MESSAGES' });
       }, 4000);
     }
-  }, [token]);
-
+  }, [token, companyId]);
+  
   const updateWabas = useCallback((phoneId, departmentId = null) => {
-    setState(prevState => {
-      const updatedWabas = prevState.wabas.map(waba => {
-        if (waba.phone_id === phoneId) {
-          return { ...waba, department_id: departmentId };
-        }
-        return waba;
-      });
-      return { ...prevState, wabas: updatedWabas };
+    const updatedWabas = state.wabas.map(waba => {
+      if (waba.phone_id === phoneId) {
+        return { ...waba, department_id: departmentId };
+      }
+      return waba;
     });
-  }, []);
-
-
+    dispatch({ type: 'UPDATE_WABAS', payload: updatedWabas });
+  }, [state.wabas]);
+  
   const deleteRow = useCallback((phoneId) => {
-    setState(prevState => {
-      const updatedWabas = prevState.wabas.filter(waba => waba.phone_id !== phoneId);
-      return { ...prevState, wabas: updatedWabas };
-    });
+    dispatch({ type: 'DELETE_ROW', payload: phoneId });
   }, []);
-
+  
   const clearMessages = useCallback(() => {
-    setState(prevState => ({ ...prevState, responseMessage: '', errorMessage: '' }));
+    dispatch({ type: 'CLEAR_MESSAGES' });
   }, []);
 
   if (loading) {
@@ -122,52 +188,7 @@ const Page = () => {
     );
   }
 
-  const products = pack.length > 0 ? pack.map(product => {
-    const bulkProducts = baseProducts.map(baseProduct => {
-      if (product.beet_app_product && product.beet_app_product.includes(baseProduct.name)) {
-        return {
-          ...baseProduct,
-          details: {
-            display_name: product.display_name || '',
-            create_date: product.create_date || '',
-            beet_expiration_time: product.beet_expiration_time || '',
-            beet_renewal_time: product.beet_renewal_time || '',
-            beet_renewal_exp_unit: product.beet_renewal_exp_unit || '',
-          },
-          beet_app_product: product.beet_app_product,
-          isActive: true,
-        };
-      } else {
-        return {
-          ...baseProduct,
-          isActive: false,
-        };
-      }
-    });
-
-    return {
-      bulkProducts,
-    };
-  }) : baseProducts.map(baseProduct => ({ bulkProducts: { ...baseProduct, isActive: false } }));
-
-  const allBulkProducts = products.flatMap(product => product.bulkProducts);
-
-  const distinctBulkProducts = allBulkProducts.reduce((acc, bulkProduct) => {
-    const existingIndex = acc.findIndex(p => p.id === bulkProduct.id);
-
-    if (existingIndex !== -1) {
-      const existingProduct = acc[existingIndex];
-
-      if (!existingProduct.isActive && bulkProduct.isActive) {
-        acc.splice(existingIndex, 1);
-        acc.push(bulkProduct);
-      }
-    } else {
-      acc.push(bulkProduct);
-    }
-
-    return acc;
-  }, []);
+  const updatedBaseProducts = updateBaseProducts(pack, baseProducts);
 
   return (
     <>
@@ -186,7 +207,7 @@ const Page = () => {
           <Grid container
             spacing={3}
             mt={3}>
-            {distinctBulkProducts.map((product) => {
+            {updatedBaseProducts.map((product) => {
               return (
                 <Grid item
                   xs={12}
@@ -196,9 +217,6 @@ const Page = () => {
                   key={product.id}>
                   <ProductCard
                     product={product}
-                    purchaseDetails={product.details}
-                    beetDetails={product.beet_app_product}
-                    isActive={product.isActive}
                     wabas={wabas}
                     updateWabas={updateWabas}
                     deleteRow={deleteRow}

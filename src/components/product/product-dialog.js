@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -18,8 +20,8 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
-import SuccessSnackbar from '../settings/settings-success-msg';
-import ErrorSnackbar from '../settings/settings-error-msg';
+import SuccessSnackbar from '../general/success-msg';
+import ErrorSnackbar from '../general/error-msg';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import api from '../../lib/axios';
 
@@ -64,14 +66,15 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const token = localStorage.getItem('jwt');
+ const { token } = useContext(AuthContext);;
+  const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/api/v1/products/beet-products', {
+        const response = await api.get(`/api/v1/products/packs`, {
           headers: { Authorization: `Bearer ${token}` },
-          params: { beetProduct: name },
+          params: { productName: name },
         });
         if (response?.data?.productSelection) {
           setProductOptions(response.data.productSelection);
@@ -81,19 +84,19 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
       }
     };
     fetchData();
-  }, [name, token]);
+  }, [name, token, companyId]);
 
   const getCompanyCredit = async (token) => {
-    const { data: { company: { credit } = {} } = {} } = await api.get('/api/v1/companies/company', { headers: { Authorization: `Bearer ${token}` } });
+    const { data: { company: { credit } = {} } = {} } = await api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
     return Number(credit);
   };
   
   const updateConsumptionExpiry = async (expirationDate, isConsumption, token) => {
-    await api.put('/api/v1/purchases/active', { expirationDate, isConsumption }, { headers: { Authorization: `Bearer ${token}` } });
+    await api.put(`/api/v1/${companyId}/purchases/active`, { expirationDate, isConsumption }, { headers: { Authorization: `Bearer ${token}` } });
   };
   
   const purchaseProduct = async (purchaseDetails, token) => {
-    const { data: { purchase, message } = {} } = await api.post('/api/v1/products/purchase-product', purchaseDetails, { headers: { Authorization: `Bearer ${token}` } });
+    const { data: { purchase, message } = {} } = await api.post(`/api/v1/${companyId}/products/${purchaseDetails.productId}`,{ headers: { Authorization: `Bearer ${token}` } });
     return { purchase, message };
   };
   
@@ -106,7 +109,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           setErrorMessage('Not enough credit to purchase product');
           return;
         }
-        const purchaseDetails = { productId: values.product, productQuantity: 1, productPrice };
+        const purchaseDetails = { productId: values.product };
         if (isConsumption) {
           const expirationDate = new Date();
           expirationDate.setDate(expirationDate.getDate() - 1);
@@ -149,6 +152,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
           setOpen(false);
           formik.resetForm();
           setSelectedProduct(null);
+          setErrorMessage('');
         }}
         fullWidth={true}
         maxWidth={'md'}
@@ -161,6 +165,7 @@ export const ProductDialog = ({ name, image, isConsumption, updateCompanyConsump
               setOpen(false);
               formik.resetForm();
               setSelectedProduct(null);
+              setErrorMessage('');
             }}
             aria-label="close-product-dialog"
           >

@@ -1,5 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -14,22 +15,24 @@ import TableRow from '@mui/material/TableRow';
 import api from '../../lib/axios';
 
 
-export const BillingHistory = ({ title }) => {
+export const CreditHistory = ({ title }) => {
     
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
 
+    const { companyId } = useContext(CompanyContext);
+    const { token } = useContext(AuthContext);
+
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const token = localStorage.getItem('jwt');
-          const response = await api.get('/api/v1/payments/billing-history', {
+          const response = await api.get(`/api/v1/${companyId}/payments/credit`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          if (response && response.data && response.data.billingHistory) {
-            setData(response.data.billingHistory);
+          if (response && response.data && response.data.creditHistory) {
+            setData(response.data.creditHistory);
           } else {
             console.error('Invalid response:', response);
           }
@@ -39,7 +42,7 @@ export const BillingHistory = ({ title }) => {
       };
   
       fetchData();
-    }, []);
+    }, [companyId, token]);
 
     const handleChangePage = (_, newPage) => {
       setCurrentPage(newPage);
@@ -50,16 +53,16 @@ export const BillingHistory = ({ title }) => {
           <Typography variant="h4"
   component="h2"
   gutterBottom
-  data-testid="billing-history-title">
+  data-testid="credit-history-title">
               {title}
           </Typography>
           <Card sx={{ marginTop: 2 }}>
               <CardContent>
                 {data.length === 0 ? (
-                  <Typography>No billing history found</Typography>
+                  <Typography>No credit history found</Typography>
                 ) : (
                   <TableContainer>
-                    <Table data-testid="billing-history-table">
+                    <Table data-testid="credit-history-table">
                       <TableHead>
                       <TableRow>
                           <TableCell>Timestamp</TableCell>

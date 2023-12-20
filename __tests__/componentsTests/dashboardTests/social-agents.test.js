@@ -1,118 +1,106 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { CompanyContext } from '../../../src/contexts/company';
+import { AuthProvider } from '../../../src/contexts/auth';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { SocialAgents } from '../../../src/components/dashboard/social-agents';
 import api from '../../../src/lib/axios';
 
 jest.mock('../../../src/lib/axios');
+
 
 describe('SocialAgents', () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
-    it('should render the component', async () => {
-        const mockResponse = {
+    it('should fetch the number of social agents assigned to the company successfully', async () => {
+        // Mock
+        const mockResponse1 = {
             data: {
                 success: true,
-                active: [
-                    { agents_qty: 2 },
-                    { agents_qty: 3 },
-                    { agents_qty: 1 }
-                ],
-                agents: [
-                    { id: 1 },
-                    { id: 2 },
-                    { id: 3 }
-                ]
+                active: [{ agents_qty: 5 }]
             }
         };
-        api.get.mockResolvedValue(mockResponse);
-        render(<SocialAgents />);
-        await waitFor(() => expect(screen.getByText(/Social Agents/i)).toBeInTheDocument());
-    });
 
-    it('should fetch the active purchases', async () => {
-        const mockResponse = {
+        const mockResponse2 = {
             data: {
                 success: true,
-                active: [
-                    { agents_qty: 2 },
-                    { agents_qty: 5 },
-                    { agents_qty: 1 }
-                ],
-                agents: [
-                    { id: 1 },
-                    { id: 2 },
-                    { id: 3 }
-                ]
+                agents: []
             }
         };
-        api.get.mockResolvedValue(mockResponse);
-        render(<SocialAgents />);
-        await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/purchases/active', expect.any(Object)));
-        await waitFor(() => expect(screen.getByText(/Agents limit: 8/i)).toBeInTheDocument());
+        const mockToken = 'mockToken';
+        const apiMock = jest.spyOn(api, 'get');
+        apiMock.mockImplementation((url) => {
+            switch (url) {
+                case `/api/v1/1/purchases/active`:
+                    return Promise.resolve(mockResponse1);
+                case `/api/v1/1/social/agents`:
+                    return Promise.resolve(mockResponse2);
+                default:
+                    return Promise.reject(new Error('not found'));
+            }
+        });
+
+        // Render
+        await act(async () => {
+            render(
+                <AuthProvider initialState={mockToken}>
+                    <CompanyContext.Provider value={{ companyId: 1 }}>
+                        <SocialAgents />
+                    </CompanyContext.Provider>
+                </AuthProvider>
+            )
+        });
+
+        await waitFor(() => {
+            // Assert
+            expect(screen.getByText(/Assigned/i)).toBeInTheDocument();
+            expect(screen.getAllByText(/Agents/i)[0]).toBeInTheDocument();
+            expect(screen.getByText(/0/i)).toBeInTheDocument();
+            expect(screen.getByText(/Agents limit: 5/i)).toBeInTheDocument();
+        });
     });
 
-    it('should calculate the total social agents purchased', async () => {
-        const mockResponse = {
+    it('should display the number of social agents assigned to the company', async () => {
+        // Mock
+        const mockResponse1 = {
             data: {
                 success: true,
-                active: [
-                    { agents_qty: 2 },
-                    { agents_qty: 3 },
-                    { agents_qty: 1 }
-                ],
-                agents: [
-                    { id: 1 },
-                    { id: 2 },
-                    { id: 3 }
-                ]
+                active: [{ agents_qty: 5 }]
             }
         };
-        api.get.mockResolvedValue(mockResponse);
-        render(<SocialAgents />);
-        await waitFor(() => expect(screen.getByText(/Agents limit: 6/i)).toBeInTheDocument());
-    });
 
-    it('should fetch the social agents', async () => {
-        const mockResponse = {
+        const mockResponse2 = {
             data: {
                 success: true,
-                active: [
-                    { agents_qty: 2 },
-                    { agents_qty: 3 },
-                    { agents_qty: 1 }
-                ],
-                agents: [
-                    { id: 1 },
-                    { id: 2 },
-                    { id: 3 }
-                ]
+                agents: []
             }
         };
-        api.get.mockResolvedValue(mockResponse);
-        render(<SocialAgents />);
-        await waitFor(() => expect(api.get).toHaveBeenCalledWith('/api/v1/social/agents', expect.any(Object)));
-    });
-
-    it('should display the number of social agents assigned', async () => {
-        const mockResponse = {
-            data: {
-                success: true,
-                active: [
-                    { agents_qty: 2 },
-                    { agents_qty: 3 },
-                    { agents_qty: 1 }
-                ],
-                agents: [
-                    { id: 1 },
-                    { id: 2 },
-                    { id: 3 }
-                ]
+        const mockToken = 'mockToken';
+        const apiMock = jest.spyOn(api, 'get');
+        apiMock.mockImplementation((url) => {
+            switch (url) {
+                case `/api/v1/1/purchases/active`:
+                    return Promise.resolve(mockResponse1);
+                case `/api/v1/1/social/agents`:
+                    return Promise.resolve(mockResponse2);
+                default:
+                    return Promise.reject(new Error('not found'));
             }
-        }
-        api.get.mockResolvedValue(mockResponse);
-        render(<SocialAgents />);
-        await waitFor(() => expect(screen.getByText('3')).toBeInTheDocument());
+        });
+
+        // Render
+        await act(async () => render(
+            <AuthProvider initialState={mockToken}>
+                <CompanyContext.Provider value={{ companyId: 1 }}>
+                    <SocialAgents />
+                </CompanyContext.Provider>
+            </AuthProvider>
+        ));
+
+        await waitFor(() => {
+            // Assert
+            expect(screen.getByText(/5/i)).toBeInTheDocument();
+        });
     });
 });

@@ -3,17 +3,15 @@ import Head from 'next/head';
 import { useState } from 'react';
 import NextLink from 'next/link';
 import { useFormik } from 'formik';
-import RegisterSchema from '../components/register/register-validation-schema';
-import ErrorSnackbar from '../components/settings/settings-error-msg';
+import { createValidationSchema } from '../components/register/register-validation-schema';
+import ErrorSnackbar from '../components/general/error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
 import CircularProgress from '@mui/material/CircularProgress';
 import PhoneField from '../components/register/phone-field';
 import { ResponsiveDialog } from '../components/register/confirmation-dialog';
 import { CredentialDialog } from '../components/register/credentials-dialog';
 import api from '../lib/axios';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -37,39 +35,31 @@ const Register = () => {
 
   const roleTypes = [
     { value: 'admin', label: 'Admin' },
-    { value: 'user', label: 'User' },
+    { value: 'partner', label: 'Partner' },
   ]
 
   const onSubmit = async (values) => {
     setLoading(true);
 
     try {
-      const { data } = await api.post('/api/v1/users/register', values);
+      const { data } = await api.post('/api/v1/users/register', {values});
 
-      // If data success, display credentials and purchase free product
       if (data.success) {
-        const registrationProductCheck = {
-          productId: 50,
-          registerCompanyId: data.user.company_id,
-          productQuantity: 10,
-        };
+        const companyId = data.user.company_id;
+        const productId = 50;
 
-        const productCheck = await api.get('/api/v1/products/company-product', {
-          params: registrationProductCheck
+        const productCheck = await api.get(`/api/v1/${companyId}/products/${productId}`, {
+          params: {
+            productQty: 10,
+            isRegistration: true
+          }
         });
 
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
           setOpenCredentials(true);
         } else {
-          const registrationProduct = {
-            productId: 50,
-            companyId: data.user.company_id,
-            userId: data.user.id,
-            productQuantity: 10,
-            registerPurchase: true
-          };
-          await api.post('/api/v1/products/purchase-product', registrationProduct);
+          await api.post(`/api/v1/${companyId}/products/${productId}`, { productQty: 10, isRegistration: true});
           setCredentials(data.user);
           setOpenCredentials(true);
         }
@@ -105,7 +95,7 @@ const Register = () => {
       role: '',
       policy: false
     },
-    validationSchema: RegisterSchema,
+    validationSchema: createValidationSchema(['fullName', 'company', 'identificationType', 'identificationNumber', 'phoneNumber', 'email', 'role', 'policy']),
     onSubmit,
     handleSubmit
   });
@@ -133,17 +123,6 @@ const Register = () => {
         maxWidth="sm"
         sx={{ position: "relative", zIndex: 1 }}
         >
-          <NextLink
-            href="/"
-            passHref
-          >
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
-              Back
-            </Button>
-          </NextLink>
           <Box
             sx={{
               display: 'flex',

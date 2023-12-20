@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { BeeCard } from '../components/login/side-card';
 import { useFormik } from 'formik';
+import { AuthContext } from '../contexts/auth';
+import { CompanyContext } from '../contexts/company';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,11 +13,10 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import * as Yup from 'yup';
-import ErrorSnackbar from '../components/settings/settings-error-msg';
+import ErrorSnackbar from '../components/general/error-msg';
 import TextFieldWrapper from '../components/general/textfield-wrapper';
 import api from '../lib/axios';
 
@@ -24,9 +25,11 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Manage password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
+
+  const { login } = useContext(AuthContext);
+  const { set } = useContext(CompanyContext);
 
   const onSubmit = async (values) => {
     try {
@@ -34,10 +37,9 @@ const Login = () => {
       const { data } = await api.post('/api/v1/users/login', values);
       
       if (data.success) {
+        set(data.company);
         const token = data.token;
-        
-        // Set the JWT in local storage
-        localStorage.setItem('jwt', token);
+        login(token);
 
         if (typeof Router !== 'undefined') {
           Router.push("/dashboard").catch(console.error);

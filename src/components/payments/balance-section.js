@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { CompanyContext } from '../../contexts/company';
+import { AuthContext } from '../../contexts/auth';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -8,18 +9,29 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import api from '../../lib/axios';
 import { CreditDialog } from './add-credit-dialog';
-import { getUserRole } from '../../utils/get-user-role';
+import { getUserRole } from '../../utils/get-user-data';
 
-
+/** 
+ * Balance section component
+ * 
+ * @param {string} props.title - a string that specifies the title of the balance section
+ * 
+ * @returns {JSX.Element} - a JSX.Element representing the balance section component
+ * 
+*/
 export const BalanceSection = ({ title }) => {
   const [balance, setBalance] = useState(0);
+  const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
-  // Retrieve balance from API
+  const updateCredit = (value) => {
+    setBalance((prevBalance) => (parseFloat(prevBalance) + parseFloat(value)).toFixed(2));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('jwt');
-        const response = await api.get('/api/v1/companies/company', {
+        const response = await api.get(`/api/v1/companies/${companyId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,7 +47,7 @@ export const BalanceSection = ({ title }) => {
     };
 
     fetchData();
-  }, []);
+  }, [companyId, token]);
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -57,11 +69,12 @@ sx={{ mb: 2 }}>
             USD$ {balance}
           </Typography>
         </CardContent>
-        {getUserRole() === 'admin' && (
+        {(getUserRole() !== 'user') && (
           <>
             <Divider />
             <CardActions sx={{ mt: 1, mb: 1 }}>
-              <CreditDialog />
+              <CreditDialog productId={50}
+updateCredit={updateCredit}/>
             </CardActions>
           </>
         )}

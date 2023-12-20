@@ -1,15 +1,22 @@
-import { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { CompanyContext } from '../../../../contexts/company';
+import { AuthContext } from '../../../../contexts/auth';
 import Button from '@mui/material/Button';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import api from '../../../lib/axios';
+import api from '../../../../lib/axios';
 
 /**
  * Setup the FB SDK and launch the WhatsApp Signup flow
+ * (This sign up flow is use to connect a phone number
+ * that already exists in Facebook Business Manager and has been registered)
  * 
  * @returns {JSX.Element} - The button to launch the WhatsApp Signup flow
  * 
  */
 export const FbSignupFlow2 = ({title}) => {
+  const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.fbAsyncInit = function () {
@@ -45,14 +52,16 @@ export const FbSignupFlow2 = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const signedRequest = response.authResponse.signedRequest;
-            const token = localStorage.getItem('jwt');
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {
                   Authorization: `Bearer ${token}`,
                   'x-access-token': signedRequest,
                 },
-                mode: 'cors'
+                mode: 'cors',
+                params: {
+                  companyId: companyId,
+                },
               });
               window.location.reload();
             } catch (err) {

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import AppBar from '@mui/material/AppBar';
@@ -14,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Bell as BellIcon } from '../../icons/bell';
 import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
 import { AccountPopover } from './account-popover';
+import { AuthContext } from '../../contexts/auth';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -24,10 +24,9 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+  const { token } = useContext(AuthContext);
 
-  // Retrieve user name from JWT token
   const getUserName = () => {
-    const token = localStorage.getItem('jwt');
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
       return payload.userName.toUpperCase();
@@ -66,7 +65,10 @@ export const DashboardNavbar = (props) => {
           >
             <MenuIcon fontSize="small" />
           </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
+          <Box 
+            sx={{ flexGrow: 1 }}
+            data-testid="dashboard-navbar-title"
+          />
           {/* <Tooltip title="Notifications">
             <IconButton sx={{ ml: 1 }}>
               <Badge
@@ -95,6 +97,7 @@ export const DashboardNavbar = (props) => {
               ml: 1
             }}
             src="/static/images/avatars/beedata.svg"
+            data-testid="dashboard-navbar-avatar"
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>

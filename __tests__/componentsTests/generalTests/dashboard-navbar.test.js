@@ -1,58 +1,97 @@
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../../../src/theme';
-import { DashboardNavbar } from '../../../src/components/general/dashboard-navbar';
+import { AuthProvider } from '../../../src/contexts/auth';
+import { CompanyProvider } from '../../../src/contexts/company';
+import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
+import { DashboardNavbar } from '../../../src/components/general/dashboard-navbar';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
+describe('DashboardNavbar', () => {
+    const mockTheme = createTheme();
 
-/*
-Test Suite for DashboardNavbar component
-
-Test cases:
-- renders the navbar
-- opens the sidebar on click of the menu button
-- opens the account popover on click of the avatar
-*/
-
-describe('DashboardNavbar component', () => {
-    it('should render successfully', () => {
-        const { container } = render(
-          <ThemeProvider theme={theme}>
-            <DashboardNavbar />
-          </ThemeProvider>
-        );
-        expect(container).toBeTruthy();
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
+    it('should render dashboard navbar', () => {
+        // Mock
+        const mockPayload = { userName: 'Test User' };
+        const mockToken = `header.${Buffer.from(JSON.stringify(mockPayload)).toString('base64')}.signature`;
 
-    it('should open the sidebar on click of the menu button', () => {
-      const onSidebarOpenMock = jest.fn();
-      render(
-      <ThemeProvider theme={theme}>
-          <DashboardNavbar onSidebarOpen={onSidebarOpenMock} />
-      </ThemeProvider>
-      );
-      const menuButton = screen.getByTestId('MenuIcon');
-  
-      act(() => {
-          fireEvent.click(menuButton);
-      });
-  
-      expect(onSidebarOpenMock).toHaveBeenCalled();
-  });
-  
-  it('should open the account popover on click of the avatar', () => {
-      render(
-        <ThemeProvider theme={theme}>
-          <DashboardNavbar />
-        </ThemeProvider>
-      );
-      const avatar = screen.getByRole('img');
-      act(() => {
-          fireEvent.click(avatar);
-      });
-  
-      const accountPopover = screen.getByRole('presentation');
-      expect(accountPopover).toBeInTheDocument();
-  });
+        // Render
+        render(
+            <ThemeProvider theme={mockTheme}>
+                <AuthProvider initialState={{ token: mockToken }}>
+                    <CompanyProvider>
+                        <DashboardNavbar onSidebarOpen={() => { }} />
+                    </CompanyProvider>
+                </AuthProvider>
+            </ThemeProvider>
+        );
+
+        // Assert
+        expect(screen.getByTestId('dashboard-navbar-title')).toBeInTheDocument();
+    });
+
+    it(' should show user name when user is logged in', () => {
+        // Mock
+        const mockPayload = { userName: 'Test User' };
+        const mockToken = `header.${Buffer.from(JSON.stringify(mockPayload)).toString('base64')}.signature`;
+
+        // Render
+        render(
+            <ThemeProvider theme={mockTheme}>
+                <AuthProvider initialState={{ token: mockToken }}>
+                    <CompanyProvider>
+                        <DashboardNavbar onSidebarOpen={() => { }} />
+                    </CompanyProvider>
+                </AuthProvider>
+            </ThemeProvider>
+        );
+
+        // Assert
+        expect(screen.getByText(mockPayload.userName.toUpperCase())).toBeInTheDocument();
+    });
+
+    it('should show account popover when user clicks on user name', async () => {
+        // Mock
+        const mockPayload = { userName: 'Test User' };
+        const mockToken = `header.${Buffer.from(JSON.stringify(mockPayload)).toString('base64')}.signature`;
+
+        // Render
+        render(
+            <ThemeProvider theme={mockTheme}>
+                <AuthProvider initialState={{ token: mockToken }}>
+                    <CompanyProvider>
+                        <DashboardNavbar onSidebarOpen={() => { }} />
+                    </CompanyProvider>
+                </AuthProvider>
+            </ThemeProvider>
+        );
+
+        // Act
+        await act(async () => {
+            fireEvent.click(screen.getByTestId('dashboard-navbar-avatar'));
+        });
+
+        // Assert
+        expect(screen.getByText('Sign out')).toBeInTheDocument();
+    });
+
+    it('should not show user name when user is not logged in', () => {
+        // Mock
+        const mockPayload = { userName: 'Test User' };
+
+        // Render
+        render(
+            <ThemeProvider theme={mockTheme}>
+                <AuthProvider initialState={{ token: '' }}>
+                    <CompanyProvider>
+                        <DashboardNavbar onSidebarOpen={() => { }} />
+                    </CompanyProvider>
+                </AuthProvider>
+            </ThemeProvider>
+        );
+
+        // Assert
+        expect(screen.queryByText(mockPayload.userName.toUpperCase())).not.toBeInTheDocument();
+    });
 });

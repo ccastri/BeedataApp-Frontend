@@ -1,66 +1,70 @@
-import React from 'react';
-import { render, fireEvent, act, screen } from '@testing-library/react';
-import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../../../src/theme';
+import { AuthProvider } from '../../../src/contexts/auth';
+import { CompanyProvider } from '../../../src/contexts/company';
+import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import { DashboardSidebar } from '../../../src/components/general/dashboard-sidebar';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useRouter } from 'next/router';
+import { getUserRole } from '../../../src/utils/get-user-data';
 
-// Mock the useRouter hook
 jest.mock('next/router', () => ({
-    useRouter: () => ({
-      pathname: '/',
-    }),
-  }));
+    useRouter: jest.fn(),
+}));
 
-/*
-Test Suite for DashboardSidebar component
-
-Test cases:
-- renders the sidebar
-- renders a permanent sidebar on large screens
-- does not render when the screen size is smaller than lg
-*/
+jest.mock('../../../src/utils/get-user-data', () => ({
+    getUserRole: jest.fn(),
+}));
 
 describe('DashboardSidebar', () => {
-    it('should render successfully', () => {
-        const { container } = render(
-          <ThemeProvider theme={theme}>
-            <DashboardSidebar />
-          </ThemeProvider>
-        );
-        expect(container).toBeTruthy();
+    const mockTheme = createTheme();
+
+    beforeEach(() => {
+        useRouter.mockImplementation(() => ({
+            isReady: true,
+            asPath: '/dashboard',
+        }));
     });
 
-    it('should render a permanent sidebar on large screens', () => {
-        const { container } = render(
-          <ThemeProvider theme={theme}>
-            <DashboardSidebar />
-          </ThemeProvider>
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should render dashboard sidebar', () => {
+        getUserRole.mockReturnValue('user');
+        
+        render(
+            <ThemeProvider theme={mockTheme}>
+                <DashboardSidebar open={true} onClose={jest.fn()} />
+            </ThemeProvider>
         );
 
-        const temporarySidebar = container.querySelector('.MuiDrawer-modal');
-        const permanentSidebar = container.querySelector('.MuiDrawer-docked');
+        expect(screen.getByTestId('dashboard-sidebar')).toBeInTheDocument();
+    });
 
-        expect(temporarySidebar).toBeNull();
-        expect(permanentSidebar).toBeTruthy();
-      });
+    it('should render companies item when user role is superadmin', () => {
+        getUserRole.mockReturnValue('superadmin');
 
-    describe('render when the screen size is smaller than lg', () => {
-        beforeEach(() => {
-          window.matchMedia = jest.fn().mockImplementation(query => ({
-            addListener: jest.fn(),
-            matches: query === '(max-width:1199px)',
-            removeListener: jest.fn(),
-          }));
-        });
-        
-        it('should not render when the screen size is smaller than lg', () => {
-          render(
-            <ThemeProvider theme={theme}>
-              <DashboardSidebar />
+        render(
+            <AuthProvider>
+                <CompanyProvider>
+                    <ThemeProvider theme={mockTheme}>
+                        <DashboardSidebar open={true} onClose={jest.fn()} />
+                    </ThemeProvider>
+                </CompanyProvider>
+            </AuthProvider>
+        );
+
+        expect(screen.getByText('Companies')).toBeInTheDocument();
+    });
+
+    it('should not render user items when user role is not superadmin or partner', () => {
+        getUserRole.mockReturnValue('user');
+
+        render(
+            <ThemeProvider theme={mockTheme}>
+                <DashboardSidebar open={true} onClose={jest.fn()} />
             </ThemeProvider>
-          );
-          const sidebar = screen.queryByTestId('dashboard-sidebar');
-          expect(sidebar).not.toBeInTheDocument();
-        });
-    })
+        );
+
+        expect(screen.queryByText('Users')).not.toBeInTheDocument();
+    });
 });

@@ -1,41 +1,43 @@
-# BeeData SAS Web App Frontend 
-Welcome to the frontend source code for Beedata SAS, built using Next.js framework. This README file provides information about the frontend package.json and the features of the application.
-## Project Information
-* **Project Name**: Beedata SAS Frontend
-* **Version**: 1.0.0
-* **Private**: True
+# app.beet.digital
 
-## Technologies Used
-The Beedata SAS Frontend is built using the following technologies:
-* **Next.js** - A popular React framework for building server-rendered React applications.
-* **Material-UI** - A popular React UI framework for building modern and responsive user interfaces.
-* **Axios** - A popular promise-based HTTP client for making API requests.
-* **Chart.js** - A popular charting library for creating interactive charts and graphs.
-* **Formik** - A popular form management library for React applications.
-* **Next-auth** - A popular authentication library for Next.js applications.
-* **React-Chartjs-2** - A popular wrapper around Chart.js for easy integration of charts in React applications.
-* **Socket.io-client** - A popular JavaScript library for enabling real-time communication between the client and server using WebSockets.
-* **UUID** - A popular library for generating universally unique identifiers (UUIDs).
-* **Yup** - A popular library for form validation in JavaScript.
+## Description
+This is the frontend for the Beet web application. It is built using Node.js and Next.js and depends on the Beet web application API. The application includes several pages such as login and register, dashboard, redirection pages for the RocketChat engine and the NocoDB data management, payments page, tool page, and users page.
 
-## Features
-The Beedata SAS Frontend comes with the following features:
+## Prerequisites
 
-* **Sign In Page**: Allows users to sign in to their accounts.
-* **Register Page**: Allows new users to register for an account.
-* **Consumption Page**: Provides data visualization for consumption data.
-* **Product Page**: Displays product information.
-* **Account Page**: Provides account management functionality.
-* **Integration with Rocket Chat**: Integrates with Rocket Chat for real-time communication.
-* **Integration with N8N**: Integrates with N8N for automation workflows.
-* **Integration with Noco DB**: Integrates with Noco DB for data visualization.
+- Node.js (v18.0.0 or later)
 
-## Getting Started
-To get started with the Beedata SAS Frontend, follow these steps:
+## Installation
 
-1. Clone the repository to your local machine.
-2. Install the dependencies using npm install or yarn install.
-3. Run the application in development mode using npm run dev.
-4. Open your web browser and navigate to http://localhost:3000 to see the application.
+1. Clone the repository
 
-## License
+```git clone https://github.com/Beedatasas/BeedataApp-Frontend.git app```
+
+2. Navigate into the directory
+
+```cd app```
+
+3. Install the dependencies
+
+```npm install```
+
+# Running Locally
+
+To run the API locally, use the following command:
+
+```npm run dev```
+ 
+The App will be available at `http://localhost:3000`.
+
+# Pages
+
+1. Login and Register: User authentication pages.
+2. Dashboard: Provides an overview of 
+3. Redirection pages: Handles redirection for the RocketChat engine and the NocoDB data management.
+4. Payments page: Handles user payments including history.
+5. Tool page: Provides various tools for the user.
+6. Users page: Manages user profiles.
+
+
+## Contributing
+

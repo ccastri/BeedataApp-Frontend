@@ -12,8 +12,8 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Slide from '@mui/material/Slide';
-import SuccessSnackbar from '../../settings/settings-success-msg';
-import ErrorSnackbar from '../../settings/settings-error-msg';
+import SuccessSnackbar from '../../general/success-msg';
+import ErrorSnackbar from '../../general/error-msg';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up"

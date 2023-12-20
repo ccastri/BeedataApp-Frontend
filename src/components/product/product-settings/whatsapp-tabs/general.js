@@ -1,6 +1,6 @@
 import React from 'react';
-import { FbSignupFlow } from '../fb-signup-flow';
-import { FbSignupFlow2 } from '../fb-signup-flow2';
+import { FbSignupFlow } from './fb-signup-flow';
+import { FbSignupFlow2 } from './fb-signup-flow2';
 import { PermissionChange } from './permission-change';
 import { PhonesTable } from './phones-table';
 import { ProductActivation } from './product-activation';

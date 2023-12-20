@@ -1,107 +1,102 @@
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { AuthProvider } from '../../../src/contexts/auth';
+import { CompanyProvider} from '../../../src/contexts/company';
+import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import { AccountPopover } from '../../../src/components/general/account-popover';
-
 import { useRouter } from 'next/router';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-const viewports = [
-  { width: 320, height: 480 }, // iPhone 5/SE
-  { width: 360, height: 640 }, // Pixel 2
-  { width: 375, height: 667 }, // iPhone 6/7/8
-  { width: 414, height: 736 }, // iPhone 6/7/8 Plus
-  { width: 768, height: 1024 }, // iPad
-  { width: 1024, height: 768 }, // iPad landscape
-  { width: 1280, height: 800 }, // Laptop
-  { width: 1440, height: 900 }, // Laptop
-  { width: 1920, height: 1080 }, // Desktop
-  { width: 2560, height: 1440 }, // Desktop
-];
+describe('AccountPopover', () => {
+  const mockRouter = {
+    push: jest.fn(),
+  };
+  useRouter.mockReturnValue(mockRouter);
 
-/*
-Test suite for AccountPopover component
-
-Test cases:
-- AccountPopover renders "My Profile" when authenticated
-- AccountPopover does not render "My Profile" when not authenticated
-- AccountPopover renders "Sign out" when authenticated
-- AccountPopover does not render "Sign out" when not authenticated
-- AccountPopover calls onClose when "Sign out" is clicked
-- AccountPopover removes token from localStorage when "Sign out" is clicked
-*/
-
-describe.each(viewports)('AccountPopover (%p)', (viewport) => {
-  beforeEach(() => {
-    // set viewport size for the test
-    Object.defineProperty(window, 'innerWidth', {
-      value: viewport.width,
-      writable: true,
-    });
-    Object.defineProperty(window, 'innerHeight', {
-      value: viewport.height,
-      writable: true,
-    });
-    window.dispatchEvent(new Event('resize'));
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should render "My Profile"', () => {
-    // set up props and localStorage token
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlVzZXIgTmFtZSIsImlhdCI6MTYyMDc5OTg1Nn0.X2N8_6N36X0KjMAvM0hPcSkG40wOmKXXzHi1ZbYJPP8';
-    localStorage.setItem('jwt', token);
-  
-    // render component and check for "My Profile" text
-    render(<AccountPopover {...props} />);
-    expect(screen.getByText('My Profile')).toBeInTheDocument();
-  });
-  
+  it('should render without crashing', () => {
+    // Mock
+    const mockToken = 'fakeToken';
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
 
-  it('should not render the sign out button when not authenticated', () => {
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
-    localStorage.clear(); // clear localStorage
-    render(<AccountPopover {...props} />);
-    expect(screen.queryByText('Sign out')).toBeNull();
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <CompanyProvider>
+          <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        </CompanyProvider>
+      </AuthProvider>
+    );
+
+    // Assert
+    expect(screen.getByText(/My Profile/i)).toBeInTheDocument();
   });
 
-  it('should render the sign out button when authenticated', () => {
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlVzZXIgTmFtZSIsImlhdCI6MTYyMDc5OTg1Nn0.X2N8_6N36X0KjMAvM0hPcSkG40wOmKXXzHi1ZbYJPP8';
-    localStorage.setItem('jwt', token);
-    render(<AccountPopover {...props} />);
-    expect(screen.getByText('Sign out')).toBeInTheDocument();
+  it('should click on "My Profile" and redirect to "/account"', () => {
+    // Mock
+    const mockToken = 'fakeToken';
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    const pushMock = jest.fn();
+    const useRouterMock = jest.spyOn(require('next/router'), 'useRouter');
+    useRouterMock.mockImplementation(() => ({
+      push: pushMock,
+    }));
+
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <CompanyProvider>
+          <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        </CompanyProvider>
+      </AuthProvider>
+    );
+
+    // Act
+    fireEvent.click(screen.getByText(/My Profile/i));
+
+    // Assert
+    expect(onClose).toHaveBeenCalled();
+    expect(pushMock).toHaveBeenCalledWith('/account');
   });
 
-  it('should call onClose when the popover is closed', async() => {
-    const router = { push: jest.fn() };
-    useRouter.mockReturnValue(router);
-    
-    const props = {
-      anchorEl: document.createElement('div'),
-      onClose: jest.fn(),
-      open: true
-    };
+  it('should click on "Sign out" and redirect to "/"', async () => {
+    // Mock
+    const mockToken = 'fakeToken';
+    const anchorEl = document.createElement('div');
+    const onClose = jest.fn();
+    const pushMock = jest.fn();
+    const useRouterMock = jest.spyOn(require('next/router'), 'useRouter');
+    useRouterMock.mockImplementation(() => ({
+      push: pushMock,
+      events: {
+        on: jest.fn(),
+        off: jest.fn(),
+      },
+    }));
 
-    render(<AccountPopover {...props} />);
-    fireEvent.click(screen.getByText('Sign out'));
-    await waitFor(() => {
-      expect(props.onClose).toHaveBeenCalled();
-    })
+    // Render
+    render(
+      <AuthProvider initialState={{ token: mockToken }}>
+        <CompanyProvider>
+          <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        </CompanyProvider>
+      </AuthProvider>
+    );
 
-    expect(localStorage.getItem('jwt')).toBeNull();
+    // Act
+    fireEvent.click(screen.getByText(/Sign out/i));
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith('/'));
+
+    // Assert
+    expect(onClose).toHaveBeenCalled();
+    expect(pushMock).toHaveBeenCalledWith('/');
   });
+
 });

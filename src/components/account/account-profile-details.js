@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { getUserId } from '../../utils/get-user-data';
+import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -9,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import SuccessSnackbar from '../settings/settings-success-msg';
+import SuccessSnackbar from '../general/success-msg';
 import api from '../../lib/axios';
 
 export const AccountProfileDetails = (props) => {
@@ -25,6 +28,9 @@ export const AccountProfileDetails = (props) => {
     billingEmail: '',
     billingAddress: ''
   });
+  const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
+  const userId = getUserId();
 
   const idTypes = [
     { value: 'CC', label: 'Cédula de ciudadanía' },
@@ -36,14 +42,13 @@ export const AccountProfileDetails = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('jwt');
-      const userResponse = await api.get('/api/v1/users/user', {
+      const userResponse = await api.get(`/api/v1/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const companyResponse = await api.get('/api/v1/companies/company', {
+      const companyResponse = await api.get(`/api/v1/companies/${companyId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -69,7 +74,7 @@ export const AccountProfileDetails = (props) => {
     };
 
     fetchData();
-  }, []);
+  }, [companyId, userId, token]);
 
   const handleChange = (event) => {
     setFormValues({
@@ -80,21 +85,18 @@ export const AccountProfileDetails = (props) => {
 
   const handleSaveDetails = async () => {
     try {
-      const token = localStorage.getItem('jwt');
 
-      // update billing fields via /api/v1/companies/company
       const billingFields = {
         billingEmail: formValues.billingEmail,
         billingAddress: formValues.billingAddress,
       };
 
-      await api.put('/api/v1/companies/company', billingFields, {
+      await api.put(`/api/v1/companies/${companyId}`, billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      // update remaining fields via /api/update-user
       const remainingFields = {
         fullName: formValues.fullName,
         identificationType: formValues.identificationType,
@@ -105,7 +107,7 @@ export const AccountProfileDetails = (props) => {
         city: formValues.city
       };
 
-      const response = await api.post('/api/v1/users/update-user', remainingFields, {
+      const response = await api.put(`/api/v1/users/${userId}`, remainingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
