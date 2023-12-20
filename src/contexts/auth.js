@@ -14,7 +14,7 @@ const authReducer = (state, action) => {
   }
 };
 
-export const AuthProvider = ({ children, initialState = { token: null }  }) => {
+export const AuthProvider = ({ children, initialState = { token: Cookies.get('jwt') || null }  }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const login = (token) => {

@@ -21,7 +21,7 @@ export const DropDown = () => {
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
-  const { companyId, setCompanyId } = useContext(CompanyContext);
+  const { set } = useContext(CompanyContext);
   const { token } = useContext(AuthContext);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const DropDown = () => {
   };
 
   const handleCompanyClick = (company) => {
-    setCompanyId(company.id);
+    set(company.id);
     setSelectedCompany(company.id);
   };
 
@@ -85,8 +85,12 @@ export const DropDown = () => {
         </Box>
         {open ? <ExpandLess /> : <ExpandMore />}
       </Button>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding sx={{ maxHeight: '200px', overflow: 'auto' }}>
+      <Collapse in={open}
+timeout="auto"
+unmountOnExit>
+        <List component="div"
+disablePadding
+sx={{ maxHeight: '200px', overflow: 'auto' }}>
           {companies.map((company) => (
             <Button
               key={company.id}
@@ -102,7 +106,9 @@ export const DropDown = () => {
               }}
             >
               <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }}>
-                {selectedCompany === company.id && <Check color="secondary" sx={{mr: 2}} />}
+                {selectedCompany === company.id && <Check color="secondary"
+sx={{mr: 2}}
+data-testid="selected-company" />}
                 <span>{company.name}</span>
               </Box>
             </Button>

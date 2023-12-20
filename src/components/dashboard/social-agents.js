@@ -62,7 +62,7 @@ export const SocialAgents = () => {
     } catch (err) {
       console.log(err);
     }
-  }, [token]);
+  }, [token, companyId]);
 
   return (
     <StatsCard

@@ -1,5 +1,6 @@
 import React from 'react';
 import { AuthProvider } from '../../../src/contexts/auth';
+import { CompanyProvider} from '../../../src/contexts/company';
 import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import { AccountPopover } from '../../../src/components/general/account-popover';
 import { useRouter } from 'next/router';
@@ -27,7 +28,9 @@ describe('AccountPopover', () => {
     // Render
     render(
       <AuthProvider initialState={{ token: mockToken }}>
-        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        <CompanyProvider>
+          <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        </CompanyProvider>
       </AuthProvider>
     );
 
@@ -35,16 +38,23 @@ describe('AccountPopover', () => {
     expect(screen.getByText(/My Profile/i)).toBeInTheDocument();
   });
 
-  it('should call onClose when profile is clicked', () => {
+  it('should click on "My Profile" and redirect to "/account"', () => {
     // Mock
     const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
+    const pushMock = jest.fn();
+    const useRouterMock = jest.spyOn(require('next/router'), 'useRouter');
+    useRouterMock.mockImplementation(() => ({
+      push: pushMock,
+    }));
 
     // Render
     render(
       <AuthProvider initialState={{ token: mockToken }}>
-        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        <CompanyProvider>
+          <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        </CompanyProvider>
       </AuthProvider>
     );
 
@@ -53,66 +63,40 @@ describe('AccountPopover', () => {
 
     // Assert
     expect(onClose).toHaveBeenCalled();
+    expect(pushMock).toHaveBeenCalledWith('/account');
   });
 
-  it('redirects to account page when profile is clicked', () => {
+  it('should click on "Sign out" and redirect to "/"', async () => {
     // Mock
     const mockToken = 'fakeToken';
     const anchorEl = document.createElement('div');
     const onClose = jest.fn();
+    const pushMock = jest.fn();
+    const useRouterMock = jest.spyOn(require('next/router'), 'useRouter');
+    useRouterMock.mockImplementation(() => ({
+      push: pushMock,
+      events: {
+        on: jest.fn(),
+        off: jest.fn(),
+      },
+    }));
 
     // Render
     render(
       <AuthProvider initialState={{ token: mockToken }}>
-        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
-      </AuthProvider>
-    );
-
-    // Act
-    fireEvent.click(screen.getByText(/My Profile/i));
-
-    // Assert
-    expect(mockRouter.push).toHaveBeenCalledWith('/account');
-  });
-
-  it('calls onClose and removes jwt cookie when sign out is clicked', () => {
-    // Mock
-    const mockToken = 'fakeToken';
-    const anchorEl = document.createElement('div');
-    const onClose = jest.fn();
-
-    // Render
-    render(
-      <AuthProvider initialState={{ token: mockToken }}>
-        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        <CompanyProvider>
+          <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
+        </CompanyProvider>
       </AuthProvider>
     );
 
     // Act
     fireEvent.click(screen.getByText(/Sign out/i));
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith('/'));
 
     // Assert
     expect(onClose).toHaveBeenCalled();
-
+    expect(pushMock).toHaveBeenCalledWith('/');
   });
 
-  it('redirects to home page when sign out is clicked', () => {
-    // Mock
-    const mockToken = 'fakeToken';
-    const anchorEl = document.createElement('div');
-    const onClose = jest.fn();
-
-    // Render
-    render(
-      <AuthProvider initialState={{ token: mockToken }}>
-        <AccountPopover anchorEl={anchorEl} open={true} onClose={onClose} />
-      </AuthProvider>
-    );
-
-    // Act
-    fireEvent.click(screen.getByText(/Sign out/i));
-
-    // Assert
-    expect(mockRouter.push).toHaveBeenCalledWith('/');
-  });
 });

@@ -124,7 +124,8 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <LakeRows companyId={companyId} isConsumption={state.isConsumption}
+              <LakeRows companyId={companyId}
+isConsumption={state.isConsumption}
                 rowLimit={state.rowLimit} />
             </Grid>
             <Grid item

@@ -59,7 +59,8 @@ export const UsersTable = ({ users, deleteUsers }) => {
                         <IconButton
                             onClick={handleDelete}
                         >
-                            <Badge badgeContent={rowSelectionModel.length} color="error">
+                            <Badge badgeContent={rowSelectionModel.length}
+color="error">
                                 <DeleteIcon />
                             </Badge>
                         </IconButton>

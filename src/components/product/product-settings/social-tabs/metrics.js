@@ -81,24 +81,23 @@ const getBusiestHour = (messages) => {
     return formattedBusiestHour;
 }
 
-
 export const MetricsContent = ({ agents }) => {
     const [state, setState] = useState({
         messages: [],
-        rooms: [],
+        servedByRooms: [],
         loading: true,
         applyFilters: false,
+        data: [],
     });
-    const data = [];
 
-    const { messages, rooms, loading, applyFilters } = state;
+    const { messages, servedByRooms, loading, applyFilters, data } = state;
     const { companyId } = useContext(CompanyContext);
     const { token } = useContext(AuthContext);
 
     const [startDate, setStartDate] = useState(() => {
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        return oneMonthAgo;
+        const tenDaysAgo = new Date();
+        tenDaysAgo.setDate(tenDaysAgo.getDate() - 5);
+        return tenDaysAgo;
     });
     const [endDate, setEndDate] = useState(new Date());
     const theme = useTheme();
@@ -128,11 +127,17 @@ export const MetricsContent = ({ agents }) => {
                 });
 
                 if (messagesResponse.data.success && roomsResponse.data.success) {
+                    const messages = messagesResponse.data.messages;
+                    const rooms = roomsResponse.data.rooms;
+                    const servedByRooms = rooms.filter(room => room.servedBy);
+                    const data = generateChartData(servedByRooms, startDate, endDate);
+
                     setState({
-                        messages: messagesResponse.data.messages,
-                        rooms: roomsResponse.data.rooms,
+                        messages,
+                        servedByRooms,
                         loading: false,
                         applyFilters: false,
+                        data,
                     });
                 }
             } catch (err) {
@@ -146,6 +151,7 @@ export const MetricsContent = ({ agents }) => {
         setState({
             ...state,
             applyFilters: true,
+            loading: true,
         });
     };
 
@@ -157,7 +163,50 @@ export const MetricsContent = ({ agents }) => {
         setEndDate(date);
     };
 
-    const servedByRooms = rooms.filter(room => room.servedBy);
+    const generateChartData = (servedByRooms, startDate, endDate) => {
+        const data = [];
+        const oneDay = 24 * 60 * 60 * 1000;
+        const diffDays = startDate && endDate ? Math.round(Math.abs((startDate - endDate) / oneDay)) : 0;
+    
+        if (diffDays > 1) {
+            const roomsByDate = {};
+    
+            servedByRooms.forEach(room => {
+                const date = new Date(room.ts).toLocaleDateString();
+                if (!roomsByDate[date]) {
+                    roomsByDate[date] = [];
+                }
+                roomsByDate[date].push(room);
+            });
+    
+            const dates = Object.keys(roomsByDate);
+            dates.sort((a, b) => new Date(a) - new Date(b));
+    
+            dates.forEach(date => {
+                const roomsOnDate = roomsByDate[date];
+                const totalRoomsOnDate = roomsOnDate.length;
+                const formattedDate = date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$2/$3'); // format date as MM/DD
+                data.push({ name: formattedDate, rooms: totalRoomsOnDate });
+            });
+        } else {
+            const hours = new Array(24).fill(0);
+    
+            servedByRooms.forEach(room => {
+                const date = new Date(room.ts);
+                const hour = date.getHours();
+                hours[hour]++;
+            });
+    
+            for (let i = 0; i < 24; i++) {
+                const hour = i < 12 ? i : i - 12;
+                const amPm = i < 12 ? 'AM' : 'PM';
+                const formattedHour = `${hour === 0 ? 12 : hour}${amPm}-${hour === 11 ? 12 : hour + 1}${amPm}`;
+                data.push({ name: formattedHour, rooms: hours[i] });
+            }
+        }
+    
+        return data;
+    };
 
     const statsCards = [
         {
@@ -185,46 +234,6 @@ export const MetricsContent = ({ agents }) => {
             value: getBusiestHour(messages),
         },
     ];
-
-    const oneDay = 24 * 60 * 60 * 1000;
-    const diffDays = startDate && endDate ? Math.round(Math.abs((startDate - endDate) / oneDay)) : 0;
-
-    if (diffDays > 1) {
-        const roomsByDate = {};
-
-        servedByRooms.forEach(room => {
-            const date = new Date(room.ts).toLocaleDateString();
-            if (!roomsByDate[date]) {
-                roomsByDate[date] = [];
-            }
-            roomsByDate[date].push(room);
-        });
-
-        const dates = Object.keys(roomsByDate);
-        dates.sort((a, b) => new Date(a) - new Date(b));
-
-        dates.forEach(date => {
-            const roomsOnDate = roomsByDate[date];
-            const totalRoomsOnDate = roomsOnDate.length;
-            const formattedDate = date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$2/$3'); // format date as MM/DD
-            data.push({ name: formattedDate, rooms: totalRoomsOnDate });
-        });
-    } else {
-        const hours = new Array(24).fill(0);
-
-        servedByRooms.forEach(room => {
-            const date = new Date(room.ts);
-            const hour = date.getHours();
-            hours[hour]++;
-        });
-
-        for (let i = 0; i < 24; i++) {
-            const hour = i < 12 ? i : i - 12;
-            const amPm = i < 12 ? 'AM' : 'PM';
-            const formattedHour = `${hour === 0 ? 12 : hour}${amPm}-${hour === 11 ? 12 : hour + 1}${amPm}`;
-            data.push({ name: formattedHour, rooms: hours[i] });
-        }
-    }
 
     const agentData = agents.map((agent) => {
         const roomsServedByAgent = servedByRooms.filter((room) => room.servedBy._id === agent.agent_id);

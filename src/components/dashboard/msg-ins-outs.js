@@ -30,9 +30,9 @@ export const MsgInsOuts = () => {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [startDate, setStartDate] = useState(() => {
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        return oneMonthAgo;
+        const tenDaysAgo = new Date();
+        tenDaysAgo.setDate(tenDaysAgo.getDate() - 5);
+        return tenDaysAgo;
     });
     const [endDate, setEndDate] = useState(new Date());
     const theme = useTheme();
@@ -116,7 +116,7 @@ export const MsgInsOuts = () => {
             }
         };
         fetchMsgCount();
-    }, [startDate, endDate, companyId, token]);
+    }, [endDate, companyId, token]);
 
     const checkDateValidity = (start, end) => {
         if (end <= start) return "End date must be greater than Start date";

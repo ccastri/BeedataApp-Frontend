@@ -69,12 +69,12 @@ const Page = () => {
     const [admins, setAdmins] = useState([]);
 
     const { companyId } = useContext(CompanyContext);
-    const userCompanyId = getUserCompanyId();
     const userRole = getUserRole();
-   const { token } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
 
     useEffect(() => {
         const getUsers = async () => {
+            const userCompanyId = getUserCompanyId();
             const users = await fetchUsers(companyId, token);
             const partners = await fetchPartners(token);
             const filteredPartners = partners.filter(partner => partner.id !== userCompanyId);
@@ -145,7 +145,8 @@ const Page = () => {
                             xl={12}
                         >
                             <Card sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <RegistrationDialog companyId={companyId} role={'user'} />
+                                <RegistrationDialog companyId={companyId}
+                                    role={'user'} />
                             </Card>
                         </Grid>
                         <Grid item
@@ -155,7 +156,8 @@ const Page = () => {
                             lg={12}
                             xl={12}
                         >
-                            <UsersTable users={users} deleteUsers={deleteUsers} />
+                            <UsersTable users={users}
+                                deleteUsers={deleteUsers} />
                         </Grid>
                         {userRole === 'partner' && (
                             <>
@@ -167,7 +169,8 @@ const Page = () => {
                                     xl={12}
                                 >
                                     <Card sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                        <RegistrationDialog companyId={companyId} role={'admin'} />
+                                        <RegistrationDialog companyId={companyId}
+                                            role={'admin'} />
                                     </Card>
                                 </Grid>
                                 <Grid item
@@ -177,7 +180,9 @@ const Page = () => {
                                     lg={12}
                                     xl={12}
                                 >
-                                    <CompanyTable partners={partners} admins={admins} deleteCompanies={deleteCompanies} />
+                                    <CompanyTable partners={partners}
+                                        admins={admins}
+                                        deleteCompanies={deleteCompanies} />
                                 </Grid>
                             </>
                         )}

@@ -89,11 +89,16 @@ export const RegistrationDialog = ({ companyId, role }) => {
                 sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}
             >
                 <DialogTitle>
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Box display="flex"
+justifyContent="space-between"
+alignItems="center">
                         <Typography variant="h5">
                             {role === 'admin' ? 'Register a New Company' : 'Register a New User'}
                         </Typography>
-                        <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
+                        <IconButton edge="end"
+color="inherit"
+onClick={handleClose}
+aria-label="close">
                             <CloseIcon />
                         </IconButton>
                     </Box>
@@ -164,11 +169,16 @@ export const RegistrationDialog = ({ companyId, role }) => {
                 onClose={() => setSuccessMessage('')}
             >
                 <DialogTitle>
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Box display="flex"
+justifyContent="space-between"
+alignItems="center">
                         <Typography variant="h5">
                             Email Sent Successfully!
                         </Typography>
-                        <IconButton edge="end" color="inherit" onClick={() => setSuccessMessage('')} aria-label="close">
+                        <IconButton edge="end"
+color="inherit"
+onClick={() => setSuccessMessage('')}
+aria-label="close">
                             <CloseIcon />
                         </IconButton>
                     </Box>

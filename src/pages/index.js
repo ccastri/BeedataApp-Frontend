@@ -29,7 +29,7 @@ const Login = () => {
   const handleMouseDownPassword = (event) => event.preventDefault();
 
   const { login } = useContext(AuthContext);
-  const { setCompanyId } = useContext(CompanyContext);
+  const { set } = useContext(CompanyContext);
 
   const onSubmit = async (values) => {
     try {
@@ -37,7 +37,7 @@ const Login = () => {
       const { data } = await api.post('/api/v1/users/login', values);
       
       if (data.success) {
-        setCompanyId(data.company);
+        set(data.company);
         const token = data.token;
         login(token);
 

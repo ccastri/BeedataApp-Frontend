@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../contexts/auth';
+import { CompanyContext } from '../../contexts/company';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -27,6 +28,7 @@ export const AccountPopover = (props) => {
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
   const { token, logout } = useContext(AuthContext);
+  const { unset } = useContext(CompanyContext);
 
   const handleProfile = () => {
     onClose?.();
@@ -40,6 +42,7 @@ export const AccountPopover = (props) => {
       if (url === '/') {
         if (token) {
           logout();
+          unset();
         }
         router.events.off('routeChangeComplete', handleRouteChange);
       }

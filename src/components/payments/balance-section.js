@@ -73,7 +73,8 @@ sx={{ mb: 2 }}>
           <>
             <Divider />
             <CardActions sx={{ mt: 1, mb: 1 }}>
-              <CreditDialog productId={50} updateCredit={updateCredit}/>
+              <CreditDialog productId={50}
+updateCredit={updateCredit}/>
             </CardActions>
           </>
         )}

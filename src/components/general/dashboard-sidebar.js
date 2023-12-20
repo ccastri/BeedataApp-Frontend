@@ -62,7 +62,7 @@ const items = [
   // },
 ];
 
-if (userRole === 'superadmin' || userRole === 'partner') {
+if (userRole === 'superadmin' || userRole === 'partner' || userRole === 'admin') {
   let pageName = 'Users';
   if (userRole === 'partner') {
     pageName = 'Users & Companies';

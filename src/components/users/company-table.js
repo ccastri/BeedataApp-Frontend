@@ -73,7 +73,8 @@ export const CompanyTable = ({ partners, admins, deleteCompanies }) => {
                         <IconButton
                             onClick={handleDelete}
                         >
-                            <Badge badgeContent={rowSelectionModel.length} color="error">
+                            <Badge badgeContent={rowSelectionModel.length}
+color="error">
                                 <DeleteIcon />
                             </Badge>
                         </IconButton>
@@ -81,7 +82,8 @@ export const CompanyTable = ({ partners, admins, deleteCompanies }) => {
                 />
                 <Box sx={{ mb: 2, mr: 2, ml: 2}}>
                     <Alert severity="info">
-                    This section is only visible for <Typography component="span" style={{ fontWeight: 'bold' }}>Partners</Typography>
+                    This section is only visible for <Typography component="span"
+style={{ fontWeight: 'bold' }}>Partners</Typography>
                     </Alert>
                 </Box>
             <CardContent>

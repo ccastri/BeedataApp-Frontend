@@ -79,7 +79,7 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
     } catch (err) {
       console.log(err);
     }
-  }, [token]);
+  }, [token, companyId]);
 
   const handleDisconnect = useCallback(async (phoneId, phoneNumber, department, departmentId) => {
     try {
