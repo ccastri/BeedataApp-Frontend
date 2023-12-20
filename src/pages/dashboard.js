@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useContext} from 'react';
+import React, { useEffect, useReducer, useContext } from 'react';
 import { CompanyContext } from '../contexts/company';
 import { AuthContext } from '../contexts/auth';
 import Head from 'next/head';
@@ -35,7 +35,8 @@ function reducer(state, action) {
 const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { companyId } = useContext(CompanyContext);
- const { token } = useContext(AuthContext);;
+  const { token } = useContext(AuthContext);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,7 +116,7 @@ const Page = () => {
               lg={4}
               xl={4}>
               <WhatsappMsg isConsumption={state.isConsumption}
-msgLimit={state.msgLimit} />
+                msgLimit={state.msgLimit} />
             </Grid>
             <Grid item
               xs={12}
@@ -124,7 +125,7 @@ msgLimit={state.msgLimit} />
               lg={4}
               xl={4}>
               <LakeRows companyId={companyId} isConsumption={state.isConsumption}
-rowLimit={state.rowLimit} />
+                rowLimit={state.rowLimit} />
             </Grid>
             <Grid item
               xs={12}

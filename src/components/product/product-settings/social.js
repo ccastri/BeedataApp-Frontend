@@ -55,7 +55,7 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
   });
 
   const { users, agents, departments, availableDepartments, availablePhoneNums, departmentsAllowed, agentsAllowed, responseMessage, errorMessage } = state;
- const { token } = useContext(AuthContext);;
+  const { token } = useContext(AuthContext);;
   const { companyId } = useContext(CompanyContext);
 
   useEffect(() => {
@@ -207,11 +207,11 @@ export const SocialSettings = ({ wabas, updatedWabas }) => {
 
     if (formik.values.availableDepartment !== '' && formik.values.departmentPhoneNumber !== '') {
       try {
-        const response = await api.put(`/api/v1/${companyId}/whatsapp`, { departmentId: formik.values.availableDepartment }, 
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { phoneNumberId: formik.values.departmentPhoneNumber }
-        });
+        const response = await api.put(`/api/v1/${companyId}/whatsapp`, { departmentId: formik.values.availableDepartment },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { phoneNumberId: formik.values.departmentPhoneNumber }
+          });
 
         if (response.data.success) {
           updatedWabas(formik.values.departmentPhoneNumber, formik.values.availableDepartment);

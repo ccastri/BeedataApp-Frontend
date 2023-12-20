@@ -15,6 +15,7 @@ import api from '../../../../lib/axios';
 
 export const FbSignupFlow = ({title}) => {
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -79,7 +80,6 @@ export const FbSignupFlow = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const code = response.authResponse.code;
-           const { token } = useContext(AuthContext);
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {

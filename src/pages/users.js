@@ -71,7 +71,7 @@ const Page = () => {
     const { companyId } = useContext(CompanyContext);
     const userCompanyId = getUserCompanyId();
     const userRole = getUserRole();
-   const { token } = useContext(AuthContext);;
+   const { token } = useContext(AuthContext);
 
     useEffect(() => {
         const getUsers = async () => {

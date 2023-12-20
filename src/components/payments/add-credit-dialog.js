@@ -52,6 +52,7 @@ export const CreditDialog = ({ productId, updateCredit }) => {
   const [open, setOpen] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,7 +65,6 @@ export const CreditDialog = ({ productId, updateCredit }) => {
 
   const onSubmit = async (values) => {
     try {
-     const { token } = useContext(AuthContext);;
       const result = await api.post(`/api/v1/${companyId}/products/${productId}`, {
         productQty: values.amount,
       }, {

@@ -3,7 +3,6 @@ import { AuthProvider } from '../../../src/contexts/auth';
 import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import { AccountPopover } from '../../../src/components/general/account-popover';
 import { useRouter } from 'next/router';
-import { Cookies } from 'js-cookie';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),

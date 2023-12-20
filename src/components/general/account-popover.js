@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Cookies from 'js-cookie';
 import { AuthContext } from '../../contexts/auth';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -25,7 +24,6 @@ import { User as UserIcon } from '../../icons/user';
  * 
  */
 export const AccountPopover = (props) => {
-  // retrieve Next.js router object
   const router = useRouter();
   const { anchorEl, onClose, open, ...other } = props;
   const { token, logout } = useContext(AuthContext);
@@ -35,15 +33,21 @@ export const AccountPopover = (props) => {
     router.push('/account');
   }
 
-  // Sign out
   const handleSignOut = async () => {
     onClose?.();
-
-    if (token) {
-      logout();
-    }
-    router.push('/');
+  
+    const handleRouteChange = (url) => {
+      if (url === '/') {
+        if (token) {
+          logout();
+        }
+        router.events.off('routeChangeComplete', handleRouteChange);
+      }
     };
+  
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.push('/');
+  };
 
   return (
     <Popover

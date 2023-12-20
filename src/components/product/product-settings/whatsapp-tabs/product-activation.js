@@ -29,7 +29,7 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
   const [open, setOpen] = useState(false);
   const [isMsgAvailable, setIsMsgAvailable] = useState(false);
 
- const { token } = useContext(AuthContext);;
+  const { token } = useContext(AuthContext);;
   const { companyId } = useContext(CompanyContext);
 
   const handleClickOpen = () => {
@@ -47,13 +47,13 @@ export const ProductActivation = ({ isConsumption, credit, updateCompanyConsumpt
           headers: { Authorization: `Bearer ${token}` },
           params: { isRenewal: true }
         });
-  
+
         if (messagesResponse.data.success) {
           const totalMsgConsumed = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
           const msgAvailability = msgLimit > totalMsgConsumed ? true : false;
           return msgAvailability;
         }
-  
+
       } catch (err) {
         console.log(err);
       }

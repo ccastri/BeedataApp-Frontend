@@ -22,6 +22,7 @@ import { getUserRole } from '../../utils/get-user-data';
 export const BalanceSection = ({ title }) => {
   const [balance, setBalance] = useState(0);
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   const updateCredit = (value) => {
     setBalance((prevBalance) => (parseFloat(prevBalance) + parseFloat(value)).toFixed(2));
@@ -30,7 +31,6 @@ export const BalanceSection = ({ title }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-       const { token } = useContext(AuthContext);
         const response = await api.get(`/api/v1/companies/${companyId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ export const BalanceSection = ({ title }) => {
     };
 
     fetchData();
-  }, [companyId]);
+  }, [companyId, token]);
 
   return (
     <Box sx={{ mb: 3 }}>

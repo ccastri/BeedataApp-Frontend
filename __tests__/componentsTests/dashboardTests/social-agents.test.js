@@ -1,6 +1,6 @@
 import React from 'react';
-import Cookies from 'js-cookie';
 import { CompanyContext } from '../../../src/contexts/company';
+import { AuthProvider } from '../../../src/contexts/auth';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { SocialAgents } from '../../../src/components/dashboard/social-agents';
 import api from '../../../src/lib/axios';
@@ -28,7 +28,7 @@ describe('SocialAgents', () => {
                 agents: []
             }
         };
-
+        const mockToken = 'mockToken';
         const apiMock = jest.spyOn(api, 'get');
         apiMock.mockImplementation((url) => {
             switch (url) {
@@ -42,11 +42,15 @@ describe('SocialAgents', () => {
         });
 
         // Render
-        await act(async () => render(
-            <CompanyContext.Provider value={{ companyId: 1 }}>
-                <SocialAgents />
-            </CompanyContext.Provider>
-        ));
+        await act(async () => {
+            render(
+                <AuthProvider initialState={mockToken}>
+                    <CompanyContext.Provider value={{ companyId: 1 }}>
+                        <SocialAgents />
+                    </CompanyContext.Provider>
+                </AuthProvider>
+            )
+        });
 
         await waitFor(() => {
             // Assert
@@ -57,7 +61,6 @@ describe('SocialAgents', () => {
         });
     });
 
-    // Displays the number of social agents assigned to the company
     it('should display the number of social agents assigned to the company', async () => {
         // Mock
         const mockResponse1 = {
@@ -73,7 +76,7 @@ describe('SocialAgents', () => {
                 agents: []
             }
         };
-
+        const mockToken = 'mockToken';
         const apiMock = jest.spyOn(api, 'get');
         apiMock.mockImplementation((url) => {
             switch (url) {
@@ -88,9 +91,11 @@ describe('SocialAgents', () => {
 
         // Render
         await act(async () => render(
-            <CompanyContext.Provider value={{ companyId: 1 }}>
-                <SocialAgents />
-            </CompanyContext.Provider>
+            <AuthProvider initialState={mockToken}>
+                <CompanyContext.Provider value={{ companyId: 1 }}>
+                    <SocialAgents />
+                </CompanyContext.Provider>
+            </AuthProvider>
         ));
 
         await waitFor(() => {

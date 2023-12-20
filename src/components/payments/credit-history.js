@@ -21,11 +21,11 @@ export const CreditHistory = ({ title }) => {
     const [currentPage, setCurrentPage] = useState(0);
 
     const { companyId } = useContext(CompanyContext);
+    const { token } = useContext(AuthContext);
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-         const { token } = useContext(AuthContext);
           const response = await api.get(`/api/v1/${companyId}/payments/credit`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ export const CreditHistory = ({ title }) => {
       };
   
       fetchData();
-    }, [companyId]);
+    }, [companyId, token]);
 
     const handleChangePage = (_, newPage) => {
       setCurrentPage(newPage);

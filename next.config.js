@@ -15,7 +15,13 @@ module.exports = {
             ...(process.env.NODE_ENV === 'development' ? ["'unsafe-eval'"] : [])
           ],
           imgSrc: ["'self'", "data:", "https://flagcdn.com"],
-          connectSrc: ["'self'", "http://localhost:3001", "https://api.blackwater-85bce617.eastus.azurecontainerapps.io", "https://graph.facebook.com"],
+          connectSrc: [
+            "'self'", 
+            "http://localhost:3001", 
+            "https://api.blackwater-85bce617.eastus.azurecontainerapps.io", 
+            "https://graph.facebook.com",
+            "https://www.facebook.com" 
+          ],
           fontSrc: ["'self'", "https://fonts.gstatic.com"],
         },
       },

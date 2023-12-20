@@ -22,9 +22,10 @@ export const DropDown = () => {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const { companyId, setCompanyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
-   const { token } = useContext(AuthContext);;
+   
     const fetchData = async () => {
       try {
         const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });
@@ -42,7 +43,7 @@ export const DropDown = () => {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   const handleClick = () => {
     setOpen(prevOpen => !prevOpen);
@@ -51,7 +52,6 @@ export const DropDown = () => {
   const handleCompanyClick = (company) => {
     setCompanyId(company.id);
     setSelectedCompany(company.id);
-    localStorage.setItem('companyId', company.id);
   };
 
   const capitalizeFirstLetter = (str) => {

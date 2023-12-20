@@ -16,11 +16,10 @@ export const BillingPreferences = ({ title }) => {
   const [location, setLocation] = useState('');
   const [email, setEmail] = useState('');
   const { companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
   const userId = getUserId();
 
   useEffect(() => {
-   const { token } = useContext(AuthContext);
-
     const fetchBillingInfo = async () => {
       try {
         const userResponse = await api.get(`/api/v1/users/${userId}`, {
@@ -48,7 +47,7 @@ export const BillingPreferences = ({ title }) => {
     };
 
     fetchBillingInfo();
-  }, [companyId, userId]);
+  }, [companyId, userId, token]);
 
   return (
     <Box sx={{ mb: 3 }}>

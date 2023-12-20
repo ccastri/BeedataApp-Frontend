@@ -176,6 +176,8 @@ export const PhoneDeleteTable = ({rows, deleteRow}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const { token } = useContext(AuthContext);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -215,7 +217,6 @@ export const PhoneDeleteTable = ({rows, deleteRow}) => {
     const unassignedRows = selectedRows.filter((row) => row.status !== 'Assigned');
   
     if (unassignedRows.length > 0) {
-     const { token } = useContext(AuthContext);
       for (const row of unassignedRows) {
         const response = await api.delete(`/api/v1/${companyId}/whatsapp`, {
           headers: { Authorization: `Bearer ${token}` },

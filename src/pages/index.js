@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { BeeCard } from '../components/login/side-card';
 import { useFormik } from 'formik';
 import { AuthContext } from '../contexts/auth';
+import { CompanyContext } from '../contexts/company';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -29,6 +29,7 @@ const Login = () => {
   const handleMouseDownPassword = (event) => event.preventDefault();
 
   const { login } = useContext(AuthContext);
+  const { setCompanyId } = useContext(CompanyContext);
 
   const onSubmit = async (values) => {
     try {
@@ -36,6 +37,7 @@ const Login = () => {
       const { data } = await api.post('/api/v1/users/login', values);
       
       if (data.success) {
+        setCompanyId(data.company);
         const token = data.token;
         login(token);
 

@@ -24,10 +24,9 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+  const { token } = useContext(AuthContext);
 
-  // Retrieve user name from JWT token
   const getUserName = () => {
-    const { token } = useContext(AuthContext);
     if (token) {
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
       return payload.userName.toUpperCase();

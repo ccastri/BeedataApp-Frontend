@@ -9,9 +9,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
-import { getUserCompanyId } from '../utils/get-user-data';
 import { AuthProvider } from '../contexts/auth';
-import { CompanyContext } from '../contexts/company';
+import { CompanyProvider } from '../contexts/company';
 
 
 
@@ -22,7 +21,6 @@ const clientSideEmotionCache = createEmotionCache();
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
-  const [companyId, setCompanyId] = useState(getUserCompanyId());
 
   return (
     <CacheProvider value={emotionCache}>
@@ -39,9 +37,9 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <AuthProvider>
-            <CompanyContext.Provider value={{ companyId, setCompanyId }}>
+            <CompanyProvider>
               {getLayout(<Component {...pageProps} />)}
-            </CompanyContext.Provider>
+            </CompanyProvider>
           </AuthProvider>
         </ThemeProvider>
       </LocalizationProvider>

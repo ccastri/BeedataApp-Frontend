@@ -30,7 +30,7 @@ const idTypes = [
 export const RegistrationDialog = ({ companyId, role }) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-   const { token } = useContext(AuthContext);;
+    const { token } = useContext(AuthContext);;
 
     const handleClose = () => {
         setOpen(false);

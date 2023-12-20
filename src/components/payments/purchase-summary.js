@@ -19,11 +19,11 @@ export const PurchaseSummary = ({ title }) => {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const { companyId } = useContext(CompanyContext);
+    const { token } = useContext(AuthContext);
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-         const { token } = useContext(AuthContext);
           const response = await api.get(`/api/v1/${companyId}/payments/tools`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ export const PurchaseSummary = ({ title }) => {
       };
   
       fetchData();
-    }, [companyId]);
+    }, [companyId, token]);
 
     const handleChangePage = (_, newPage) => {
       setCurrentPage(newPage);

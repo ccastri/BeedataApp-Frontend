@@ -93,6 +93,7 @@ export const MetricsContent = ({ agents }) => {
 
     const { messages, rooms, loading, applyFilters } = state;
     const { companyId } = useContext(CompanyContext);
+    const { token } = useContext(AuthContext);
 
     const [startDate, setStartDate] = useState(() => {
         const oneMonthAgo = new Date();
@@ -105,7 +106,6 @@ export const MetricsContent = ({ agents }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-               const { token } = useContext(AuthContext);
                 const messagesResponse = await api.get(`/api/v1/${companyId}/social/messages`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -140,7 +140,7 @@ export const MetricsContent = ({ agents }) => {
             }
         }
         fetchData();
-    }, [applyFilters, companyId]);
+    }, [applyFilters, companyId, token]);
 
     const handleApply = () => {
         setState({
