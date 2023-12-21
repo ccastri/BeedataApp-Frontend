@@ -6,6 +6,7 @@ import api from '../../lib/axios';
 
 export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
   const [msgCount, setMsgCount] = useState(0);
+  const [msgCountDate, setMsgCountDate ] = useState('');
   const { companyId } = useContext(CompanyContext);
   const { token } = useContext(AuthContext);
 
@@ -19,7 +20,10 @@ export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
 
         if (messagesResponse.data.success) {
           const totalMsgCount = messagesResponse.data.messages.reduce((prev, curr) => prev + curr.data.total.length, 0);
+          const date = messagesResponse.data.startDate ? new Date(messagesResponse.data.startDate) : null
+          const friendlyDate = date ? date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : null;
           setMsgCount(totalMsgCount);
+          setMsgCountDate(friendlyDate);
         }
 
       } catch (err) {
@@ -42,6 +46,7 @@ export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
       value={msgCount}
       type="Messages"
       totalAmount={isConsumption ? 'Credit Dependent' : msgLimit > 0 ? msgLimit  : 'Not Available'}
+      startDate={msgCountDate ? msgCountDate : undefined}
     />
   );
 };

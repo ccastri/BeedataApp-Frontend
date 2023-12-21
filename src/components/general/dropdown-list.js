@@ -18,11 +18,11 @@ import api from '../../lib/axios';
  * 
  */
 export const DropDown = () => {
+  const { set, companyId } = useContext(CompanyContext);
+  const { token } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const { set } = useContext(CompanyContext);
-  const { token } = useContext(AuthContext);
+  const [selectedCompany, setSelectedCompany] = useState(parseInt(companyId));
 
   useEffect(() => {
    

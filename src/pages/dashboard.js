@@ -1,15 +1,30 @@
 import React, { useEffect, useReducer, useContext } from 'react';
 import { CompanyContext } from '../contexts/company';
 import { AuthContext } from '../contexts/auth';
+import { styled } from '@mui/material/styles';
 import Head from 'next/head';
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { WhatsappMsg } from '../components/dashboard/whatsapp-msg';
 import { MsgInsOuts } from '../components/dashboard/msg-ins-outs';
 import { SocialAgents } from '../components/dashboard/social-agents';
 import { LakeRows } from '../components/dashboard/lake-rows';
 import { DashboardLayout } from '../components/general/dashboard-layout';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import CircularProgress from '@mui/material/CircularProgress';
 import api from '../lib/axios';
+
+
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 14,
+    padding: 14,
+  },
+}));
 
 const initialState = {
   msgLimit: 0,
@@ -106,6 +121,14 @@ const Page = () => {
         }}
       >
         <Container sx={{ paddingLeft: 36, paddingRight: 36 }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            gutterBottom
+            sx={{ mb: 3 }}
+          >
+            Product Consumption
+          </Typography>
           <Grid container
             spacing={3}
             justifyContent="center">
@@ -115,8 +138,15 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <WhatsappMsg isConsumption={state.isConsumption}
-                msgLimit={state.msgLimit} />
+              <LightTooltip
+                placement="left-start"
+                title="This card shows the consumption of purchased package. If there is no purchased package with a messages product, the value will be zero."
+              >
+                <Box>
+                  <WhatsappMsg isConsumption={state.isConsumption}
+                    msgLimit={state.msgLimit} />
+                </Box>
+              </LightTooltip>
             </Grid>
             <Grid item
               xs={12}
@@ -124,9 +154,16 @@ const Page = () => {
               md={4}
               lg={4}
               xl={4}>
-              <LakeRows companyId={companyId}
-isConsumption={state.isConsumption}
-                rowLimit={state.rowLimit} />
+              <LightTooltip
+                placement="top"
+                title="This card shows the consumption of purchased package. If there is no purchased package with a storage product, the value will be zero."
+              >
+                <Box>
+                  <LakeRows companyId={companyId}
+                    isConsumption={state.isConsumption}
+                    rowLimit={state.rowLimit} />
+                </Box>
+              </LightTooltip>
             </Grid>
             <Grid item
               xs={12}
@@ -134,14 +171,28 @@ isConsumption={state.isConsumption}
               md={4}
               lg={4}
               xl={4}>
-              <SocialAgents />
+              <LightTooltip
+                placement="right-start"
+                title="This card shows the consumption of purchased package. If there is no purchased package with a social product, the value will be zero.">
+                <Box>
+                  <SocialAgents />
+                </Box>
+              </LightTooltip>
             </Grid>
-            <Grid item
-              xs={12}
-              lg={12}
-              xl={12}>
-              <MsgInsOuts />
-            </Grid>
+          </Grid>
+        </Container>
+        <Container sx={{ paddingLeft: 36, paddingRight: 36, mt: 6 }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            gutterBottom
+            sx={{ mb: 3 }}
+          >
+            Messages Incoming/Outgoing
+          </Typography>
+          <Grid item
+            xs={12}>
+            <MsgInsOuts />
           </Grid>
         </Container>
       </Box>

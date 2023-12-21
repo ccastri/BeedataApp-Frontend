@@ -38,7 +38,6 @@ const fetchPartners = async (token) => {
         const response = await api.get('/api/v1/companies', { headers: { Authorization: `Bearer ${token}` } });
 
         if (response.data.success) {
-            console.log(response.data);
             return response.data.companies;
         }
 

@@ -8,6 +8,7 @@ import api from '../../lib/axios';
 
 export const LakeRows = ({ isConsumption, rowLimit }) => {
   const [rowCount, setRowCount] = useState(0);
+  const [rowCountDate, setRowCountDate] = useState(null);
   const { companyId } = useContext(CompanyContext);
   const { token } = useContext(AuthContext);
 
@@ -20,7 +21,10 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
         });
         
         if (response.data.success) {
+          const date = new Date(response.data.startDate);
+          const friendlyDate = date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
           setRowCount(response.data.rowCount);
+          setRowCountDate(friendlyDate);
         } else {
           console.log(response.data.message);
           setErrorMessages(response.data.message);
@@ -29,6 +33,7 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
         if (err.response && err.response.status === 404) {
           console.log(err.response.data.message);
           setRowCount(0);
+          setRowCountDate(undefined);
         } else {
           console.log(err);
         }
@@ -49,6 +54,7 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
         value={rowCount}
         type="Rows"
         totalAmount={rowLimit > 0 ? rowLimit : 'Not Available'}
+        startDate={rowCountDate}
       />
   );
 }

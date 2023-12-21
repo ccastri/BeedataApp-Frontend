@@ -41,7 +41,6 @@ export const RegistrationDialog = ({ companyId, role }) => {
         try {
             const response = await api.post('/api/v1/users/register', { values, isInvite: true }, { headers: { Authorization: `Bearer ${token}` } });
             if (response.data.success) {
-                console.log(response.data);
                 if (role === 'admin') {
                     const productId = 50;
                     const newCompanyId = response.data.user.company_id;

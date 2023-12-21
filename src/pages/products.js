@@ -102,10 +102,8 @@ const Page = () => {
         api.get(`/api/v1/${companyId}/whatsapp`, { headers: { Authorization: `Bearer ${token}` } }),
         api.get(`/api/v1/companies/${companyId}`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
-      console.log(purchaseResponse.data.active);
 
       const updatedPack = await getProductDetails(purchaseResponse.data.active, token);
-      console.log('updatedPack', updatedPack);
 
       dispatch({
         type: 'FETCH_DATA',

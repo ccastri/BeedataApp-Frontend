@@ -41,7 +41,7 @@ export const StatsCard = (props) => (
                     alignItems: 'center',
                     display: 'flex',
                     pt: 2,
-                    mb: 2
+                    mb: 1
                 }}
             >
                 {props.totalAmount && (<Typography
@@ -54,6 +54,19 @@ export const StatsCard = (props) => (
                     {props.type} limit: {props.totalAmount}
                 </Typography>)}
             </Box>
+            {props.startDate && (
+                <Box>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{
+                            mr: 1,
+                        }}
+                    >
+                        Since: {props.startDate}
+                    </Typography>
+                </Box>
+            )}
         </CardContent>
     </Card>
 );

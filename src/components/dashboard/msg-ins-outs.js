@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/auth';
 import { CompanyContext } from '../../contexts/company';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Box, TextField, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, TextField, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -25,10 +25,10 @@ import api from '../../lib/axios';
  * 
  */
 export const MsgInsOuts = () => {
-
     const [errorMsg, setErrorMsg] = useState(null);
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [applyFilter, setApplyFilter] = useState(false);
     const [startDate, setStartDate] = useState(() => {
         const tenDaysAgo = new Date();
         tenDaysAgo.setDate(tenDaysAgo.getDate() - 5);
@@ -39,6 +39,10 @@ export const MsgInsOuts = () => {
 
     const { token } = useContext(AuthContext);
     const { companyId } = useContext(CompanyContext);
+
+    useEffect(() => {
+        setLoading(true);
+    }, [companyId]);
 
     useEffect(() => {
         const fetchMsgCount = async () => {
@@ -64,27 +68,27 @@ export const MsgInsOuts = () => {
                 if (response.data.messages.length > 0) {
                     const data = response.data.messages;
                     let xaxisFormat;
-    
+
                     const calcMonthsDiff = (startDate, endDate) =>
                         startDate && endDate ? ((endDate.getFullYear() - startDate.getFullYear()) * 12)
                             + endDate.getMonth() - startDate.getMonth()
                             - (endDate.getDate() < startDate.getDate() ? 1 : 0) : 0;
-    
-    
+
+
                     const dateRangeDiff = calcMonthsDiff(new Date(startDate), new Date(endDate));
-    
+
                     if (dateRangeDiff > 2) {
                         xaxisFormat = 'MMM';
                     } else {
                         xaxisFormat = 'DD-MMM';
                     }
-    
+
                     const extractTimePeriod = (ts, startDate, endDate) =>
                         (startDate && endDate && dateRangeDiff > 2)
                             ? ts.split('T')[0].substring(0, 7)
                             : ts.split('T')[0];
-    
-    
+
+
                     const groupBy = (arr, key, startDate, endDate) =>
                         arr.reduce((r, v) => {
                             let value = key.split('.').reduce((o, i) => (i === 'ts')
@@ -93,7 +97,7 @@ export const MsgInsOuts = () => {
                             (r[value] = r[value] || []).push(v);
                             return r;
                         }, {});
-    
+
                     let transformedData = data.flatMap(item =>
                         Object.entries(groupBy(item.data.total, 'ts', startDate, endDate))
                             .map(([date, val]) =>
@@ -107,8 +111,11 @@ export const MsgInsOuts = () => {
                     );
                     setData({ data: transformedData, xaxisFormat });
                     setLoading(false);
+                    setApplyFilter(false);
                 } else {
+                    setData({ data: [], xaxisFormat: 'DD-MMM' });
                     setLoading(false);
+                    setApplyFilter(false);
                 };
 
             } else {
@@ -116,7 +123,7 @@ export const MsgInsOuts = () => {
             }
         };
         fetchMsgCount();
-    }, [endDate, companyId, token]);
+    }, [applyFilter, companyId, token]);
 
     const checkDateValidity = (start, end) => {
         if (end <= start) return "End date must be greater than Start date";
@@ -126,6 +133,11 @@ export const MsgInsOuts = () => {
 
         return null;
     }
+
+    const handleApply = () => {
+        setApplyFilter(true);
+        setLoading(true);
+    };
 
     const handleStartDateChange = (date) => {
         setStartDate(date);
@@ -143,15 +155,10 @@ export const MsgInsOuts = () => {
                 sx={{
                     padding: '16px',
                     justifyContent: 'space-between',
-
+                    mt: 2,
+                    mb: 2
                 }}
             >
-                <CardHeader
-                    title="WHATSAPP IN & OUTS"
-                    sx={{
-                        whiteSpace: 'nowrap',
-                    }}
-                />
                 <Grid container
                     justifyContent="flex-end">
                     <ThemeProvider theme={theme}>
@@ -172,6 +179,14 @@ export const MsgInsOuts = () => {
                         </LocalizationProvider>
                     </ThemeProvider>
                 </Grid>
+                <Button
+                    autoFocus
+                    variant="contained"
+                    sx={{ ml: 2, mr: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                    onClick={handleApply}
+                >
+                    Apply
+                </Button>
             </Box>
             <Divider />
             <CardContent
@@ -191,36 +206,36 @@ export const MsgInsOuts = () => {
                 >
                     {loading ? (
                         <CircularProgress data-testid='loading' />
-                    ) : data.data ? (
+                    ) : data.data.length > 0 ? (
                         <ResponsiveContainer width="100%"
-height="100%">
+                            height="100%">
                             <LineChart data={data.data}>
                                 <Line type="monotone"
-dataKey="agent"
-stroke="#8884d8"
-strokeWidth={2} />
+                                    dataKey="agent"
+                                    stroke="#8884d8"
+                                    strokeWidth={2} />
                                 <Line type="monotone"
-dataKey="visitor"
-stroke="#82ca9d"
-strokeWidth={2} />
+                                    dataKey="visitor"
+                                    stroke="#82ca9d"
+                                    strokeWidth={2} />
                                 <Line type="monotone"
-dataKey="chatbot"
-stroke="#ffc658"
-strokeWidth={2} />
+                                    dataKey="chatbot"
+                                    stroke="#ffc658"
+                                    strokeWidth={2} />
                                 <CartesianGrid stroke="#FFFFFF"
-strokeDasharray="5 5" />
+                                    strokeDasharray="5 5" />
                                 <XAxis dataKey="ts"
-stroke="#FFFFFF"
-tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
+                                    stroke="#FFFFFF"
+                                    tickFormatter={(tickItem) => dayjs(tickItem).format(data.xaxisFormat)} />
                                 <YAxis stroke="#FFFFFF"
-allowDecimals={false} />
+                                    allowDecimals={false} />
                                 <Tooltip />
                                 <Legend />
                             </LineChart>
                         </ResponsiveContainer>
                     ) : (
                         <Typography variant="h6"
-align="center"><br />No data to display</Typography>
+                            align="center"><br />No data to display</Typography>
                     )}
                     {errorMsg && (
                         <ErrorSnackbar
