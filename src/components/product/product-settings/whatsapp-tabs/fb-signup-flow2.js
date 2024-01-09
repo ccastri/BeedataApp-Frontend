@@ -52,6 +52,7 @@ export const FbSignupFlow2 = ({title}) => {
         FB.login(async function (response) {
           if (response.authResponse) {
             const signedRequest = response.authResponse.signedRequest;
+            console.log('signedRequest: ', signedRequest);
             try {
               await api.get('/api/v1/facebook/callback', {
                 headers: {
