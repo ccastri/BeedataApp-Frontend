@@ -20,7 +20,8 @@ module.exports = {
             "http://localhost:3001", 
             "https://api.blackwater-85bce617.eastus.azurecontainerapps.io", 
             "https://graph.facebook.com",
-            "https://www.facebook.com" 
+            "https://www.facebook.com",
+            "https://web.facebook.com"
           ],
           fontSrc: ["'self'", "https://fonts.gstatic.com"],
         },
