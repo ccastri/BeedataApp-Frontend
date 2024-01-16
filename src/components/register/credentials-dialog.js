@@ -40,7 +40,7 @@ function BootstrapDialogTitle(props) {
       {onClose ? (
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={() => onClose(null, 'closeButton')}
           sx={{
             position: 'absolute',
             right: 8,

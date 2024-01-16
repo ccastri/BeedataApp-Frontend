@@ -16,7 +16,7 @@ export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isC
     phone: waba.phone_number,
     wabaId: waba.waba_id,
     phoneId: waba.phone_id,
-    status: waba.department_id ? 'Assigned' : 'Unassigned',
+    status: waba.cw_inbox_id ? 'Assigned' : 'Unassigned',
   })), [wabas]);
 
   const purchaseConsumptionProduct = async () => {
