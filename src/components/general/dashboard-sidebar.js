@@ -6,12 +6,10 @@ import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ThreePIcon from '@mui/icons-material/ThreeP';
 import BuildIcon from '@mui/icons-material/Build';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Payment as PaymentIcon } from '../../icons/payment';
 import { Cog as CogIcon } from '../../icons/cog';
 import { NavItem } from './nav-item';
@@ -20,10 +18,9 @@ import { getUserRole } from '../../utils/get-user-data';
 import api from '../../lib/axios';
 
 const icons = {
-  QueryStatsIcon: <QueryStatsIcon fontSize="small" />,
+  SmartToyIcon: <SmartToyIcon fontSize="small" />,
   ThreePIcon: <ThreePIcon fontSize="small" />,
   StorageIcon: <StorageIcon fontSize="small" />,
-  SmartToyIcon: <SmartToyIcon fontSize="small" />,
   BuildIcon: <BuildIcon fontSize="small" />,
   PaymentIcon: <PaymentIcon fontSize="small" />,
   CogIcon: <CogIcon fontSize="small" />,
@@ -31,6 +28,7 @@ const icons = {
 };
 
 const userRole = getUserRole();
+console.log(userRole);
 
 export const DashboardSidebar = ({ open, onClose }) => {
   const router = useRouter();
@@ -60,10 +58,9 @@ export const DashboardSidebar = ({ open, onClose }) => {
 
 
   const itemsData = [
-    ['dashboard', 'QueryStatsIcon', '_self', 'Consumption'],
+    ['/coming-soon', 'SmartToyIcon', '_self', 'Home'],
     [ chatwootUrl, 'ThreePIcon', '_blank', 'Beet Social'],
     ['https://lake.beet.digital/dashboard/#/signin', 'StorageIcon', '_blank', 'Beet Lake'],
-    ['/coming-soon', 'SmartToyIcon', '_self', 'Beet Bots'],
     ['/products', 'BuildIcon', '_self', 'Beet Tools'],
     ['/payments', 'PaymentIcon', '_self', 'Payments'],
   ];

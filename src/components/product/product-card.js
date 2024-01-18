@@ -125,6 +125,7 @@ export const ProductCard = (props) => {
               responseMessage={responseMessage}
               errorMessage={errorMessage}
               updateCompanyConsumption={updateCompanyConsumption}
+              updateWabas={updateWabas}
               clearMessages={clearMessages}
             />)}
           </Box>

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import api from '../../../lib/axios';
 
 
-export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isConsumption, credit, responseMessage, errorMessage, updateCompanyConsumption, clearMessages }) => {
+export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isConsumption, credit, responseMessage, errorMessage, updateCompanyConsumption, updateWabas, clearMessages }) => {
   const { companyId } = useContext(CompanyContext);
   const { token } = useContext(AuthContext);
 
@@ -41,6 +41,7 @@ export const WhatsappSettings = ({ wabas, deleteRow, productId, accessToken, isC
     isConsumption={isConsumption}
     credit={credit}
     updateCompanyConsumption={updateCompanyConsumption}
+    updateWabas={updateWabas}
     purchaseConsumptionProduct={purchaseConsumptionProduct}
     productId={productId}
   />;
@@ -71,5 +72,6 @@ WhatsappSettings.propTypes = {
   responseMessage: PropTypes.string,
   errorMessage: PropTypes.string,
   updateCompanyConsumption: PropTypes.func,
+  updateWabas: PropTypes.func,
   clearMessages: PropTypes.func,
 };
