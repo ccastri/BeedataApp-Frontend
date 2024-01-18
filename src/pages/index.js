@@ -42,7 +42,7 @@ const Login = () => {
         login(token);
 
         if (typeof Router !== 'undefined') {
-          Router.push("/dashboard").catch(console.error);
+          Router.push("/coming-soon").catch(console.error);
         }
       }
     } catch (err) {

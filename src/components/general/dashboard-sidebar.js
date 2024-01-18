@@ -1,112 +1,82 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useContext, useState } from 'react';
+import { AuthContext } from '../../contexts/auth';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ThreePIcon from '@mui/icons-material/ThreeP';
 import BuildIcon from '@mui/icons-material/Build';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Payment as PaymentIcon } from '../../icons/payment';
 import { Cog as CogIcon } from '../../icons/cog';
 import { NavItem } from './nav-item';
 import { DropDown } from './dropdown-list';
 import { getUserRole } from '../../utils/get-user-data';
+import api from '../../lib/axios';
+
+const icons = {
+  SmartToyIcon: <SmartToyIcon fontSize="small" />,
+  ThreePIcon: <ThreePIcon fontSize="small" />,
+  StorageIcon: <StorageIcon fontSize="small" />,
+  BuildIcon: <BuildIcon fontSize="small" />,
+  PaymentIcon: <PaymentIcon fontSize="small" />,
+  CogIcon: <CogIcon fontSize="small" />,
+  GroupsIcon: <GroupsIcon fontSize="small" />
+};
 
 const userRole = getUserRole();
-const items = [
-  {
-    href: '/dashboard',
-    icon: (<QueryStatsIcon fontSize="small" />),
-    target: '_self',
-    title: 'Consumption'
-  },
-  {
-    href: 'https://social.beet.digital/home',
-    icon: (<ThreePIcon fontSize="small" />),
-    target: '_blank',
-    title: 'Beet Social'
-  },
-  {
-    href: 'https://lake.beet.digital/dashboard/#/signin',
-    icon: (<StorageIcon fontSize="small" />),
-    target: '_blank',
-    title: 'Beet Lake'
-  },
-  {
-    href: '/coming-soon',
-    icon: (<SmartToyIcon fontSize="small" />),
-    target: '_self',
-    title: 'Beet Bots'
-  },
-  {
-    href: '/products',
-    icon: (<BuildIcon fontSize="small" />),
-    target: '_self',
-    title: 'Beet Tools'
-  },
-  {
-    href: '/payments',
-    icon: (<PaymentIcon fontSize="small" />),
-    target: '_self',
-    title: 'Payments'
-  },
-  // {
-  //   href: '/settings',
-  //   icon: (<CogIcon fontSize="small" />),
-  //   title: 'Settings'
-  // },
-];
+console.log(userRole);
 
-if (userRole === 'superadmin' || userRole === 'partner' || userRole === 'admin') {
-  let pageName = 'Users';
-  if (userRole === 'partner') {
-    pageName = 'Users & Companies';
-  }
-
-  items.push({
-    href: '/users',
-    icon: (<GroupsIcon fontSize="small" />),
-    target: '_self',
-    title: pageName
-  });
-}
-
-
-/** 
- * Sidebar component for the dashboard page that contains navigation items
- * 
- * @param {Object} props - The properties passed to the component
- * @param {Boolean} props.open - Whether the sidebar is open
- * @param {Function} props.onClose - Function to close the sidebar
- * 
- * @returns {JSX.Element} - The JSX representation of the dashboard sidebar
- * 
- */
-export const DashboardSidebar = (props) => {
-  const { open, onClose } = props;
+export const DashboardSidebar = ({ open, onClose }) => {
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
   });
+  const [chatwootUrl, setChatwootUrl] = useState('');
+  const { token } = useContext(AuthContext);
 
-  useEffect(
-    () => {
-      if (!router.isReady) {
-        return;
+  useEffect(() => {
+    const fetchUrl = async () => {
+      const response = await api.get('/api/v1/chatwoot/sso', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      if (response.data.success) {
+        setChatwootUrl(response.data.chatwoot_url);
       }
-      if (open) {
-        onClose?.();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.asPath]
-  );
+    };
+
+    fetchUrl();
+  }, [token]); 
+
+
+
+  const itemsData = [
+    ['/coming-soon', 'SmartToyIcon', '_self', 'Home'],
+    [ chatwootUrl, 'ThreePIcon', '_blank', 'Beet Social'],
+    ['https://lake.beet.digital/dashboard/#/signin', 'StorageIcon', '_blank', 'Beet Lake'],
+    ['/products', 'BuildIcon', '_self', 'Beet Tools'],
+    ['/payments', 'PaymentIcon', '_self', 'Payments'],
+  ];
+  
+  if (['superadmin', 'partner', 'admin'].includes(userRole)) {
+    const pageName = userRole === 'partner' ? 'Users & Companies' : 'Users';
+    itemsData.push(['/users', 'GroupsIcon', '_self', pageName]);
+  }
+  
+  const items = itemsData.map(([href, icon, target, title]) => ({ href, icon: icons[icon], target, title }));
+
+  useEffect(() => {
+    if (router.isReady && open) {
+      onClose?.();
+    }
+  }, [router.asPath]);
 
   const content = (
     <>

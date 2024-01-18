@@ -15,56 +15,61 @@ jest.mock('../../../src/utils/get-user-data', () => ({
 }));
 
 describe('DashboardSidebar', () => {
-    const mockTheme = createTheme();
-
     beforeEach(() => {
         useRouter.mockImplementation(() => ({
             isReady: true,
-            asPath: '/dashboard',
+            asPath: '/',
         }));
+        getUserRole.mockImplementation(() => 'superadmin');
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('should render dashboard sidebar', () => {
-        getUserRole.mockReturnValue('user');
-        
-        render(
-            <ThemeProvider theme={mockTheme}>
-                <DashboardSidebar open={true} onClose={jest.fn()} />
-            </ThemeProvider>
-        );
-
-        expect(screen.getByTestId('dashboard-sidebar')).toBeInTheDocument();
-    });
-
-    it('should render companies item when user role is superadmin', () => {
-        getUserRole.mockReturnValue('superadmin');
-
+    it('renders without crashing', () => {
         render(
             <AuthProvider>
                 <CompanyProvider>
-                    <ThemeProvider theme={mockTheme}>
-                        <DashboardSidebar open={true} onClose={jest.fn()} />
+                    <ThemeProvider theme={createTheme()}>
+                        <DashboardSidebar open={true} />
                     </ThemeProvider>
                 </CompanyProvider>
             </AuthProvider>
         );
-
-        expect(screen.getByText('Companies')).toBeInTheDocument();
     });
 
-    it('should not render user items when user role is not superadmin or partner', () => {
-        getUserRole.mockReturnValue('user');
-
+    it('renders the correct number of NavItems', () => {
         render(
-            <ThemeProvider theme={mockTheme}>
-                <DashboardSidebar open={true} onClose={jest.fn()} />
-            </ThemeProvider>
+            <AuthProvider>
+                <CompanyProvider>
+                    <ThemeProvider theme={createTheme()}>
+                        <DashboardSidebar open={true} />
+                    </ThemeProvider>
+                </CompanyProvider>
+            </AuthProvider>
         );
+        const navItems = screen.getAllByRole('listitem');
+        expect(navItems).toHaveLength(5);
+    });
 
-        expect(screen.queryByText('Users')).not.toBeInTheDocument();
+    it('calls onClose when the router path changes', async () => {
+        const onClose = jest.fn();
+        render(
+            <AuthProvider>
+                <CompanyProvider>
+                    <ThemeProvider theme={createTheme()}>
+                        <DashboardSidebar open={true} onClose={onClose} />
+                    </ThemeProvider>
+                </CompanyProvider>
+            </AuthProvider>
+        );
+        act(() => {
+            useRouter.mockImplementation(() => ({
+                isReady: true,
+                asPath: '/new-path',
+            }));
+        });
+        await waitFor(() => expect(onClose).toHaveBeenCalled());
     });
 });

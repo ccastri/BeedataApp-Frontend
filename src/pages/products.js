@@ -153,10 +153,10 @@ const Page = () => {
     }
   }, [token, companyId]);
   
-  const updateWabas = useCallback((phoneId, departmentId = null) => {
+  const updateWabas = useCallback((phoneId, inboxId = null) => {
     const updatedWabas = state.wabas.map(waba => {
       if (waba.phone_id === phoneId) {
-        return { ...waba, department_id: departmentId };
+        return { ...waba, cw_inbox_id: inboxId };
       }
       return waba;
     });

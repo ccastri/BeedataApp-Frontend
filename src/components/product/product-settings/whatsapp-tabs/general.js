@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 
-export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption, credit, updateCompanyConsumption, purchaseConsumptionProduct, productId }) => {
+export const WpGeneralContent = ({ accessToken, wabas, deleteRow, isConsumption, credit, updateCompanyConsumption, updateWabas, purchaseConsumptionProduct, productId }) => {
 
     return (
         <>
@@ -158,11 +158,11 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                     <Typography color="textSecondary"
                         variant="body1"
                         sx={{ ml: 1, mb: 3 }}>
-                        The following table displays current granted permissions and phone number lines
-                        currently being used on Beet characters (chatbots). You can disconnect a phone number
-                        from a chatbot by clicking on the disconnect button action.
+                        The following table displays added phone number lines that are
+                        currently being used on Beet characters (chatbots). You can CONNECT a phone number
+                        to a chatbot by clicking on the Connect button action.
                     </Typography>
-                    <PhonesTable rows={wabas} />
+                    <PhonesTable rows={wabas} updateWabas={updateWabas} />
                 </CardContent>
             </Card>
         </>
@@ -176,6 +176,7 @@ WpGeneralContent.propTypes = {
     isConsumption: PropTypes.bool.isRequired,
     credit: PropTypes.number.isRequired,
     updateCompanyConsumption: PropTypes.func.isRequired,
+    updateWabas: PropTypes.func.isRequired,
     purchaseConsumptionProduct: PropTypes.func.isRequired,
     productId: PropTypes.number.isRequired,
 };
