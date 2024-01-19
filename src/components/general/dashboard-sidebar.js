@@ -28,7 +28,6 @@ const icons = {
 };
 
 const userRole = getUserRole();
-console.log(userRole);
 
 export const DashboardSidebar = ({ open, onClose }) => {
   const router = useRouter();
