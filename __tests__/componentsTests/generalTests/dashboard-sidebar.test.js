@@ -50,7 +50,7 @@ describe('DashboardSidebar', () => {
             </AuthProvider>
         );
         const navItems = screen.getAllByRole('listitem');
-        expect(navItems).toHaveLength(5);
+        expect(navItems).toHaveLength(6);
     });
 
     it('calls onClose when the router path changes', async () => {
