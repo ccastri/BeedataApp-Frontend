@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import { BasicSelect } from '../general/basic-select-form';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -19,7 +20,28 @@ const columns = [
     { field: 'idType', headerName: 'ID Type', width: 200 },
     { field: 'idNumber', headerName: 'ID Number', width: 200 },
     { field: 'name', headerName: 'Name', width: 300 },
-    { field: 'role', headerName: 'Role', width: 200 },
+    { 
+        field: 'role', 
+        headerName: 'Role', 
+        width: 200,
+        renderCell: (params) => {
+            const handleChange = (event) => {
+                console.log(event.target.value);
+            };
+
+            const items = ['Admin', 'User', 'Partner'];
+            const defaultItem = params.value;
+
+            return (
+                <BasicSelect 
+                    label={defaultItem} 
+                    defaultItem={defaultItem} 
+                    items={items} 
+                    handleChange={handleChange} 
+                />
+            );
+        }
+    },
 ];
 
 export const UsersTable = ({ users, deleteUsers }) => {
