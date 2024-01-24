@@ -27,7 +27,6 @@ const icons = {
   GroupsIcon: <GroupsIcon fontSize="small" />
 };
 
-const userRole = getUserRole();
 
 export const DashboardSidebar = ({ open, onClose }) => {
   const router = useRouter();
@@ -36,7 +35,12 @@ export const DashboardSidebar = ({ open, onClose }) => {
     noSsr: false
   });
   const [chatwootUrl, setChatwootUrl] = useState('');
+  const [userRole, setUserRole] = useState(null);
   const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    setUserRole(getUserRole());
+  }, []);
 
   useEffect(() => {
     const fetchUrl = async () => {
@@ -110,7 +114,7 @@ export const DashboardSidebar = ({ open, onClose }) => {
             my: 3
           }}
         />
-        {(getUserRole() === 'superadmin' || getUserRole() === 'partner' ) && (
+        {(userRole === 'superadmin' || userRole === 'partner' ) && (
           <Box sx={{ p: 1 }}>
             <DropDown />
           </Box>
