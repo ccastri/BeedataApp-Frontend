@@ -72,7 +72,7 @@ export const CreditHistory = ({ title }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {data.slice(currentPage * 5, (currentPage + 1) * 5).reverse().map((item) => (
+                        {data.slice(currentPage * 5, (currentPage + 1) * 5).map((item) => (
                           <TableRow key={item.id}>
                             <TableCell>{item.create_date.split(' ')[0]}</TableCell>
                             <TableCell>{item.display_name}</TableCell>

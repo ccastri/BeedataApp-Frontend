@@ -26,24 +26,29 @@ const getProductDetails = async (pack, token) => {
 };
 
 const updateBaseProducts = (pack, baseProducts) => {
-  const updatedBaseProducts = [];
+  const packProductDict = {};
 
-  baseProducts.forEach(baseProduct => {
-    let isActive = false;
-    let activeProductData = {};
+  pack.forEach(packProduct => {
+    if (packProduct.msg_qty === 1 && packProduct.msg_qty !== null) {
+      packProductDict[1] = packProduct;
+    }
+    if (packProduct.agents_qty !== 0 && packProduct.agents_qty !== null) {
+      packProductDict[5] = packProduct;
+    }
+    if (packProduct.msg_qty > 1 && packProduct.msg_qty !== null) {
+      packProductDict[2] = packProduct;
+    }
+    if (packProduct.db_rows_qty !== 0 && packProduct.db_rows_qty !== null) {
+      packProductDict[4] = packProduct;
+    }
+  });
 
-    pack.forEach(packProduct => {
-      if (packProduct.app_product.includes(baseProduct.name)) {
-        isActive = true;
-        activeProductData = packProduct;
-      }
-    });
-
-    if (isActive) {
-      const { id, name, ...activeProductDataReduce } = activeProductData;
-      updatedBaseProducts.push({ ...baseProduct, ...activeProductDataReduce, isActive });
+  const updatedBaseProducts = baseProducts.map(baseProduct => {
+    if (packProductDict[baseProduct.id]) {
+      const { id, name, ...activeProductDataReduce } = packProductDict[baseProduct.id];
+      return { ...baseProduct, ...activeProductDataReduce, isActive: true };
     } else {
-      updatedBaseProducts.push({ ...baseProduct, isActive });
+      return { ...baseProduct, isActive: false };
     }
   });
 
