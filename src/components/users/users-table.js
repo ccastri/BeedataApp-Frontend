@@ -31,6 +31,7 @@ const columns = [
 
             const items = ['Admin', 'User', 'Partner'];
             const defaultItem = params.value;
+            console.log(params);
 
             return (
                 <BasicSelect 
