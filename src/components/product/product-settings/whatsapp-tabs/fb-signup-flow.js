@@ -79,6 +79,7 @@ export const FbSignupFlow = ({title}) => {
       if (typeof FB !== 'undefined') {
         FB.login(async function (response) {
           if (response.authResponse) {
+            console.log(response);
             const code = response.authResponse.code;
             try {
               await api.get('/api/v1/facebook/callback', {
