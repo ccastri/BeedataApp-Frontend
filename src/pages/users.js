@@ -102,6 +102,17 @@ const Page = () => {
         setPartners(partners.filter((partner) => !companyIds.includes(partner.id)));
     };
 
+    const updateUserRole = async (userId, newRole) => {
+        await api.put(`/api/v1/users/${userId}`,
+            { role: newRole },
+            { headers: {
+                Authorization: `Bearer ${token}`
+            }},
+        );
+    
+        setUsers(users.map(user => user.id === userId ? { ...user, role: newRole } : user));
+    };
+
     if (loading) {
         return (
             <Box
@@ -158,7 +169,8 @@ const Page = () => {
                             xl={12}
                         >
                             <UsersTable users={users}
-                                deleteUsers={deleteUsers} />
+                                deleteUsers={deleteUsers}
+                                updateUserRole={updateUserRole} />
                         </Grid>
                         {userRole === 'partner' && (
                             <>

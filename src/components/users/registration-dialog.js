@@ -14,6 +14,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import Avatar from '@mui/material/Avatar';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TextFieldWrapper from '../general/textfield-wrapper';
 import PhoneField from '../register/phone-field';
@@ -28,11 +29,15 @@ const idTypes = [
 ];
 
 const CustomDialog = ({ open, handleClose, title, children }) => (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md" sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}>
-        <DialogTitle>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm" sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}>
+        <DialogTitle sx={{ p: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Avatar src={'/static/beet_nb.svg'} sx={{ width: 60, height: 60 }} />
                 <Typography variant="h5">{title}</Typography>
-                <IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
+                <IconButton onClick={handleClose} aria-label="close"
+                    sx={{
+                        color: (theme) => theme.palette.grey[500],
+                    }}>
                     <CloseIcon />
                 </IconButton>
             </Box>
@@ -109,7 +114,7 @@ export const RegistrationDialog = ({ companyId, role }) => {
                 >
                     <CardContent>
                         <form onSubmit={formik.handleSubmit}>
-                            {['fullName', 'company', 'identificationType', 'identificationNumber', 'phoneNumber', 'email'].map((field) => (
+                            {['fullName', 'identificationType', 'identificationNumber', 'phoneNumber', 'email'].map((field) => (
                                 field === 'phoneNumber' ?
                                     <PhoneField
                                         key={field}
@@ -125,6 +130,14 @@ export const RegistrationDialog = ({ companyId, role }) => {
                                         selectOptions={field === 'identificationType' ? idTypes : undefined}
                                     />
                             ))}
+                            {role === 'admin' &&
+                                <TextFieldWrapper
+                                    key='company'
+                                    label='company'
+                                    name='company'
+                                    formik={formik}
+                                />
+                            }
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
                                 <Button
                                     variant="contained"
@@ -141,7 +154,7 @@ export const RegistrationDialog = ({ companyId, role }) => {
                 </Card>
             </CustomDialog>
             <CustomDialog open={!!successMessage} handleClose={() => setSuccessMessage('')} title="Email Sent Successfully!">
-                <DialogContentText>{successMessage}</DialogContentText>
+                <DialogContentText sx={{ margin: 2, fontSize: '1.2rem' }}>{successMessage}</DialogContentText>
             </CustomDialog>
         </>
     );

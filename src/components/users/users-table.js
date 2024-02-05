@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { BasicSelect } from '../general/basic-select-form';
+import { AuthContext } from '../../contexts/auth';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,38 +17,42 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const columns = [
-    { field: 'idType', headerName: 'ID Type', width: 200 },
-    { field: 'idNumber', headerName: 'ID Number', width: 200 },
-    { field: 'name', headerName: 'Name', width: 300 },
-    { 
-        field: 'role', 
-        headerName: 'Role', 
-        width: 200,
-        renderCell: (params) => {
-            const handleChange = (event) => {
-                console.log(event.target.value);
-            };
 
-            const items = ['Admin', 'User', 'Partner'];
-            const defaultItem = params.value;
-            console.log(params);
 
-            return (
-                <BasicSelect 
-                    label={defaultItem} 
-                    defaultItem={defaultItem} 
-                    items={items} 
-                    handleChange={handleChange} 
-                />
-            );
-        }
-    },
-];
-
-export const UsersTable = ({ users, deleteUsers }) => {
+export const UsersTable = ({ users, deleteUsers, updateUserRole }) => {
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
+
+    const columns = [
+        { field: 'idType', headerName: 'ID Type', width: 200 },
+        { field: 'idNumber', headerName: 'ID Number', width: 200 },
+        { field: 'name', headerName: 'Name', width: 300 },
+        {
+            field: 'role',
+            headerName: 'Role',
+            width: 200,
+            renderCell: (params) => {
+                const handleChange = async (event) => {
+                    const newRole = event.target.value;
+                    const userId = params.row.id;
+
+                    updateUserRole(userId, newRole);
+                };
+
+                const items = ['admin', 'user', 'partner'];
+                const defaultItem = params.value;
+
+                return (
+                    <BasicSelect
+                    sx={{ width: '100%', margin: 0, padding: 0 }}
+                        defaultItem={defaultItem}
+                        items={items}
+                        handleChange={handleChange}
+                    />
+                );
+            }
+        },
+    ];
 
     const handleDelete = () => {
         if (rowSelectionModel.length > 0) {
@@ -83,7 +88,7 @@ export const UsersTable = ({ users, deleteUsers }) => {
                             onClick={handleDelete}
                         >
                             <Badge badgeContent={rowSelectionModel.length}
-color="error">
+                                color="error">
                                 <DeleteIcon />
                             </Badge>
                         </IconButton>
@@ -104,6 +109,11 @@ color="error">
                         }}
                         pageSizeOptions={[5, 10]}
                         checkboxSelection={true}
+                        sx={{
+                            '& .MuiDataGrid-cell': {
+                                padding: 0,
+                            },
+                        }}
                     />
                 </CardContent>
                 <Dialog
