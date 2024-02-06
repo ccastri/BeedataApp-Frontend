@@ -26,11 +26,11 @@ import Typography from '@mui/material/Typography';
  */
 export const ProductCard = (props) => {
   const { product, wabas, updateWabas, deleteRow, isConsumption, credit, accessToken, responseMessage, errorMessage, updateCompanyConsumption, clearMessages } = props;
-
+  
   const getAvailableQuantity = (product) => {
     const unitTypeMap = {
       'messages': `${product.msg_qty} messages / ${product.renewal_exp_unit}`,
-      'rows': `${product.db_rows_qty} rows / ${product.renewal_exp_unit}`,
+      'rows': `${product.db_rows_qty} rows ${product.renewal_exp_unit ? '/ ' + product.renewal_exp_unit : ''}`,
       'agents': `${product.agents_qty} agents`,
     };
 
@@ -81,7 +81,8 @@ export const ProductCard = (props) => {
             color="textSecondary"
             variant="subtitle1"
           >
-            {(product.isActive && product.id != 1) ? `Available: ${getAvailableQuantity(product)}` : (!product.isActive && product.id != 1) ? "Not available" : ''}
+            {(product.isActive && product.id !== 1) ? `Available: ${getAvailableQuantity(product)}` : 
+              (!product.isActive && product.id !== 1) ? "Not available" : (product.isActive && product.id === 1) ? "Available" : "Not available"}
           </Typography>
           {product.isActive && (
             <Box
@@ -103,8 +104,8 @@ export const ProductCard = (props) => {
                 color="#333333"
                 variant="subtitle2"
               >
-                Expires on: {new Date(product.expiration_date)
-                  .toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+                {parseInt(product.product_id, 10) === 4 ? 'Depends on Credit' : `Expires on: ${new Date(product.expiration_date)
+                  .toLocaleString('es-CO', { year: 'numeric', month: 'numeric', day: 'numeric' })}`}
               </Typography>
             </Box>
           )}

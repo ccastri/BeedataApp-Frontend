@@ -14,11 +14,11 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import Avatar from '@mui/material/Avatar';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TextFieldWrapper from '../general/textfield-wrapper';
 import PhoneField from '../register/phone-field';
 import api from '../../lib/axios';
-
 
 const idTypes = [
     { value: 'CC', label: 'Cédula de ciudadanía' },
@@ -27,10 +27,32 @@ const idTypes = [
     { value: 'TI', label: 'Tarjeta de identidad' },
     { value: 'NIT', label: 'Número de identificación tributaria (NIT)' },
 ];
+
+const CustomDialog = ({ open, handleClose, title, children }) => (
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm" sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}>
+        <DialogTitle sx={{ p: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Avatar src={'/static/beet_nb.svg'} sx={{ width: 60, height: 60 }} />
+                <Typography variant="h5">{title}</Typography>
+                <IconButton onClick={handleClose} aria-label="close"
+                    sx={{
+                        color: (theme) => theme.palette.grey[500],
+                    }}>
+                    <CloseIcon />
+                </IconButton>
+            </Box>
+        </DialogTitle>
+        <Divider />
+        <DialogContent>{children}</DialogContent>
+    </Dialog>
+);
+
+const createHeaders = (token) => ({ headers: { Authorization: `Bearer ${token}` } });
+
 export const RegistrationDialog = ({ companyId, role }) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const { token } = useContext(AuthContext);;
+    const { token } = useContext(AuthContext);
 
     const handleClose = () => {
         setOpen(false);
@@ -39,12 +61,12 @@ export const RegistrationDialog = ({ companyId, role }) => {
 
     const onSubmit = async (values) => {
         try {
-            const response = await api.post('/api/v1/users/register', { values, isInvite: true }, { headers: { Authorization: `Bearer ${token}` } });
+            const response = await api.post('/api/v1/users/register', { values, isInvite: true }, createHeaders(token));
             if (response.data.success) {
                 if (role === 'admin') {
                     const productId = 50;
                     const newCompanyId = response.data.user.company_id;
-                    await api.post(`/api/v1/${newCompanyId}/products/${productId}`, { productQty: 10 }, { headers: { Authorization: `Bearer ${token}` } });
+                    await api.post(`/api/v1/${newCompanyId}/products/${productId}`, { productQty: 10 }, createHeaders(token));
                 }
                 setSuccessMessage(`The email has been successfully sent to: ${values.email}`);
                 handleClose();
@@ -80,115 +102,60 @@ export const RegistrationDialog = ({ companyId, role }) => {
             >
                 {role === 'admin' ? 'Invite Company' : 'Invite User'}
             </Button>
-            <Dialog
-                open={open}
-                onClose={() => setOpen(false)}
-                fullWidth
-                maxWidth="md"
-                sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}
-            >
-                <DialogTitle>
-                    <Box display="flex"
-justifyContent="space-between"
-alignItems="center">
-                        <Typography variant="h5">
-                            {role === 'admin' ? 'Register a New Company' : 'Register a New User'}
-                        </Typography>
-                        <IconButton edge="end"
-color="inherit"
-onClick={handleClose}
-aria-label="close">
-                            <CloseIcon />
-                        </IconButton>
-                    </Box>
-                </DialogTitle>
-                <Divider />
-                <DialogContent>
-                    <Card
-                        sx={{
-                            margin: 3,
-                            padding: 3,
-                            backgroundColor: '#FFFFFF',
-                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                            border: '1px solid #ccc'
-                        }}
-                    >
-                        <CardContent>
-                            <form onSubmit={formik.handleSubmit}>
+            <CustomDialog open={open} handleClose={() => setOpen(false)} title={role === 'admin' ? 'Register a New Company' : 'Register a New User'}>
+                <Card
+                    sx={{
+                        margin: 3,
+                        padding: 3,
+                        backgroundColor: '#FFFFFF',
+                        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                        border: '1px solid #ccc',
+                    }}
+                >
+                    <CardContent>
+                        <form onSubmit={formik.handleSubmit}>
+                            {['fullName', 'identificationType', 'identificationNumber', 'phoneNumber', 'email'].map((field) => (
+                                field === 'phoneNumber' ?
+                                    <PhoneField
+                                        key={field}
+                                        label={field}
+                                        name={field}
+                                        formik={formik}
+                                    /> :
+                                    <TextFieldWrapper
+                                        key={field}
+                                        label={field}
+                                        name={field}
+                                        formik={formik}
+                                        selectOptions={field === 'identificationType' ? idTypes : undefined}
+                                    />
+                            ))}
+                            {role === 'admin' &&
                                 <TextFieldWrapper
-                                    label={role === 'admin' ? "Admin Name" : "Name"}
-                                    name="fullName"
-                                    formik={formik}
-                                    autoFocus
-                                />
-                                {role === 'admin' && <TextFieldWrapper
-                                    label="Company"
-                                    name="company"
-                                    formik={formik}
-                                />}
-                                <TextFieldWrapper
-                                    label="Identification Type"
-                                    name="identificationType"
-                                    formik={formik}
-                                    selectOptions={idTypes}
-                                />
-                                <TextFieldWrapper
-                                    label="Identification Number"
-                                    name="identificationNumber"
+                                    key='company'
+                                    label='company'
+                                    name='company'
                                     formik={formik}
                                 />
-                                {role === 'admin' && <PhoneField
-                                    label="Phone Number"
-                                    name="phoneNumber"
-                                    formik={formik}
-                                />}
-                                <TextFieldWrapper
-                                    label="Email"
-                                    name="email"
-                                    formik={formik}
-                                />
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        type="submit"
-                                        disabled={!formik.isValid}
-                                        sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
-                                    >
-                                        Invite
-                                    </Button>
-                                </Box>
-                            </form>
-                        </CardContent>
-                    </Card>
-                </DialogContent>
-            </Dialog>
-            <Dialog
-                open={!!successMessage}
-                onClose={() => setSuccessMessage('')}
-            >
-                <DialogTitle>
-                    <Box display="flex"
-justifyContent="space-between"
-alignItems="center">
-                        <Typography variant="h5">
-                            Email Sent Successfully!
-                        </Typography>
-                        <IconButton edge="end"
-color="inherit"
-onClick={() => setSuccessMessage('')}
-aria-label="close">
-                            <CloseIcon />
-                        </IconButton>
-                    </Box>
-                </DialogTitle>
-                <Divider />
-                <DialogContent>
-                    <DialogContentText>
-                        {successMessage}
-                    </DialogContentText>
-                </DialogContent>
-            </Dialog>
+                            }
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    disabled={!formik.isValid}
+                                    sx={{ ml: 2, mr: 2, mb: 2, mt: 2, boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.35)' }}
+                                >
+                                    Invite
+                                </Button>
+                            </Box>
+                        </form>
+                    </CardContent>
+                </Card>
+            </CustomDialog>
+            <CustomDialog open={!!successMessage} handleClose={() => setSuccessMessage('')} title="Email Sent Successfully!">
+                <DialogContentText sx={{ margin: 2, fontSize: '1.2rem' }}>{successMessage}</DialogContentText>
+            </CustomDialog>
         </>
     );
 };
