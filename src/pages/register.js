@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
 import NextLink from 'next/link';
@@ -17,13 +17,15 @@ import Container from '@mui/material/Container';
 import FormHelperText from '@mui/material/FormHelperText';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-
+import { useRouter } from 'next/router';
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openCredentials, setOpenCredentials] = useState(false);
   const [credentials, setCredentials] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [shop, setShop] = useState(null);
 
   const idTypes = [
     { value: 'CC', label: 'Cédula de ciudadanía' },
@@ -37,6 +39,23 @@ const Register = () => {
     { value: 'admin', label: 'Admin' },
     { value: 'partner', label: 'Partner' },
   ]
+  const router = useRouter(); 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('accessToken');
+    const shop = params.get('shop');
+    const appStoreConfig = params.get('app-bridge');
+    if (token) {
+      setAccessToken(token);
+      sessionStorage.setItem('accessToken', token); // Optionally store it in session storage
+      sessionStorage.setItem('shop url', shop); // Optionally store it in session storage
+      sessionStorage.setItem('app-store-bridge', appStoreConfig); // Optionally store it in session storage
+          // Imprimir los parámetros de la URL
+    for (let [key, value] of params.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+    }
+  }, [router.query]); // Depend on location.search to update if the URL changes
 
   const onSubmit = async (values) => {
     setLoading(true);
@@ -54,7 +73,9 @@ const Register = () => {
             isRegistration: true
           }
         });
-
+ const params = new URLSearchParams(location.search);
+    const token = params.get('accessToken');
+    const shop = params.get('shop');
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
           setOpenCredentials(true);

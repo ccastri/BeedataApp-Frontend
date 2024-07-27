@@ -11,7 +11,7 @@ import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
 import { AuthProvider } from '../contexts/auth';
 import { CompanyProvider } from '../contexts/company';
-
+import { parseCookies } from 'nookies';
 
 
 registerChartJs();
@@ -22,6 +22,13 @@ const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  // Retrieve access token from cookies
+  const cookies = parseCookies();
+  const accessToken = cookies.accessToken
+  useEffect(() => {
+    // Optionally, you can handle side effects related to access token here
+    console.log(accessToken)
+  }, [accessToken]);
   return (
     <CacheProvider value={emotionCache}>
       <Head>

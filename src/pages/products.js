@@ -14,16 +14,23 @@ import api from '../lib/axios';
 
 
 const getProductDetails = async (pack, token) => {
-  const updatedPack = await Promise.all(pack.map(async (product) => {
-    const response = await api.get(`/api/v1/products/${product.product_id }`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+  try {
+    const updatedPack = await Promise.all(pack.map(async (product) => {
+      const response = await api.get(`/api/v1/products/${product.product_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('Original product:', product); // Log original product
+      return Object.assign({}, product, response.data.product);
+    }));
 
-    return Object.assign({}, product, response.data.product);
-  }));
-
-  return updatedPack;
+    console.log('Updated product list:', updatedPack); // Log updated product list
+    return updatedPack;
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    throw error; // Optionally re-throw the error to handle it upstream
+  }
 };
+
 
 const updateBaseProducts = (pack, baseProducts) => {
   const packProductDict = {};
