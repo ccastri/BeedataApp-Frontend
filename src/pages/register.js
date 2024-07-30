@@ -41,22 +41,37 @@ const Register = () => {
   ]
   const router = useRouter(); 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const token = params.get('accessToken');
-    const shop = params.get('shop');
-    const appStoreConfig = params.get('app-bridge');
-    if (token) {
-      setAccessToken(token);
-      sessionStorage.setItem('accessToken', token); // Optionally store it in session storage
-      sessionStorage.setItem('shop url', shop); // Optionally store it in session storage
-      sessionStorage.setItem('app-store-bridge', appStoreConfig); // Optionally store it in session storage
-          // Imprimir los parámetros de la URL
-    for (let [key, value] of params.entries()) {
-      console.log(`${key}: ${value}`);
-    }
+    const params = new URLSearchParams(location.search); // Use window.location.search to get the URL parameters
+    const encodedData = params.get('data');
+  
+    if (encodedData) {
+      // Step 1: Decode the Base64 data
+      const decodedData = atob(encodedData);
+  
+      // Step 2: Parse the decoded data as JSON
+      const dataObject = JSON.parse(decodedData);
+  
+      // Step 3: Extract the required fields
+      const { accessToken, appBridge } = dataObject;
+      console.log(accessToken)
+      console.log(appBridge)
+      // Step 4: Store the extracted fields in session storage
+      if (accessToken) {
+        sessionStorage.setItem('accessToken', accessToken);
+        setAccessToken(accessToken); // Assuming setAccessToken is a state setter for accessToken
+      }
+  
+      if (appBridge) {
+        sessionStorage.setItem('app-bridge-config', appBridge);
+      }
+  
+      // Optionally log the parameters for debugging
+      for (let [key, value] of params.entries()) {
+        console.log(`${key}: ${value}`);
+      }
     }
   }, [router.query]); // Depend on location.search to update if the URL changes
-
+  
   const onSubmit = async (values) => {
     setLoading(true);
 
@@ -73,9 +88,24 @@ const Register = () => {
             isRegistration: true
           }
         });
- const params = new URLSearchParams(location.search);
-    const token = params.get('accessToken');
-    const shop = params.get('shop');
+        const params = new URLSearchParams(window.location.search);
+        const encodedData = params.get('data');
+  
+        if (encodedData) {
+          // Decode the Base64 data
+          const decodedData = atob(encodedData);
+          const dataObject = JSON.parse(decodedData);
+  
+          const { accessToken, appBridge } = dataObject;
+          if (accessToken) {
+            sessionStorage.setItem('accessToken', accessToken);
+            setAccessToken(accessToken); // Assuming setAccessToken is a state setter for accessToken
+          }
+  
+          if (appBridge) {
+            sessionStorage.setItem('app-bridge-config', appBridge);
+          }
+        }
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
           setOpenCredentials(true);

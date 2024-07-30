@@ -12,7 +12,7 @@ import AddLinkIcon from '@mui/icons-material/AddLink';
 import { useEffect, useState } from 'react';
 import VerticalLinearStepper from '../components/shopify/data-onboarding';
 import SingleSelectForm from '../components/shopify/multichoice-form';
-
+import jwt from 'jsonwebtoken';
 
 const StyledCard = styled(Card)(({ theme }) => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -49,12 +49,30 @@ const CardSubtitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 const fetchShopifyCredentials = () => {
-    const token =sessionStorage.getItem('accessToken'); // Optionally store it in session storage
-    const shop = sessionStorage.getItem('shop url'); // Optionally store it in session storage
-    const appbridge= sessionStorage.getItem('app-store-bridge'); // Optionally store it in session storage
-    return {shop, token, appbridge}
+    const accessToken =sessionStorage.getItem('accessToken'); // Optionally store it in session storage
+    // const shop = sessionStorage.getItem('shop url'); // Optionally store it in session storage
+    const appbridge= sessionStorage.getItem('app-bridge-config'); // Optionally store it in session storage
+    // console.log(appbridge)
+    
+    console.log(accessToken)
+    if (appbridge) {
+        try {
+            const parsedAppbridge = JSON.parse(appbridge);
+            parsedAppbridge.accessToken = accessToken;
+            return {
+                // token,
+                shop: parsedAppbridge.shop || '',
+                host: decodeBase64(parsedAppbridge.host || ''),
+                apiKey: parsedAppbridge.apiKey || '',
+                accessToken: parsedAppbridge.accessToken
+            };
+        } catch (error) {
+            console.error('Failed to parse appbridge JSON:', error);
+        }
+    }
+    
+    return { accessToken:'', shop: '', host: '', apiKey: '' };
 }
-
 const decodeBase64 = (base64String) => {
     try {
         return atob(base64String);
@@ -64,47 +82,73 @@ const decodeBase64 = (base64String) => {
     }
 };
 
+// const handleSingleSelectChange = (value) => {
+//     setSelectedOption(value);
+// };
 
-//   // Default selected option
-//   const defaultValue = 'ecommerce';
-// const disabledOptions = defaultValue === 'ecommerce' ? ['custom', "service provider and lead attention"] : [];
-
-const handleSingleSelectChange = (value) => {
-    setSelectedOption(value);
-  };
-
-  const handleStepSelectionChange = (stepIndex, value) => {
+const handleStepSelectionChange = (stepIndex, value) => {
     setStepSelections(prev => ({ ...prev, [stepIndex]: value }));
-  };
-const Page = () => {
+};
 
-
-    
-    const [credentials, setCredentials] = useState({ shop: '', token: ''});
-    const [appbridgeDetails, setAppbridgeDetails] = useState({});
-    const [decodedHost, setDecodedHost] = useState('');
-    // const [selectedOption, setSelectedOption] = useState(defaultValue);
-  const [stepSelections, setStepSelections] = useState({}); // Track selected options for steps
-    useEffect(() => {
-      // Fetch credentials from session storage only in the client
-      const { shop, token, appbridge } = fetchShopifyCredentials();
-      setCredentials({ shop, token });
-      console.log(token, appbridge); // Output for debugging
-      if (appbridge) {
-        try {
-            const parsedAppbridge = JSON.parse(appbridge);
-            setAppbridgeDetails(parsedAppbridge);
-            if (parsedAppbridge.host) {
-                const decodedHostValue = decodeBase64(parsedAppbridge.host);
-                setDecodedHost(decodedHostValue);
-            }
-        } catch (error) {
-            console.error('Failed to parse appbridge JSON:', error);
+const decodeJwt = (token) => {
+    try {
+        const decoded = jwt.decode(token);
+        if (decoded && decoded.company_id) {
+            console.log(decoded)
+            return decoded.company_id;
         }
+        return null;
+    } catch (error) {
+        console.error('Failed to decode JWT:', error);
+        return null;
     }
-    }, []);
-    return(
+};
+const Page = () => {
     
+    
+    
+    const [credentials, setCredentials] = useState({ accessToken: '', shop: '', host: '', apiKey: '' });
+    // const [appbridgeDetails, setAppbridgeDetails] = useState({});
+    // const [decodedHost, setDecodedHost] = useState('');
+    // const [stepSelections, setStepSelections] = useState({}); 
+    const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [companyId, setCompanyId] = useState(null);
+    
+    const handleButtonClick = () => {
+        setButtonDisabled(prev => !prev);
+        console.log(buttonDisabled)
+    };
+    useEffect(() => {
+        const fetchTokenAndDecode = () => {
+            const authHeader = document.cookie // o usa `sessionStorage` si almacenas ahí el token
+                .split('; ')
+                .find(row => row.startsWith('Authorization='))
+                ?.split('=')[1];
+
+            if (authHeader) {
+                const company_id = decodeJwt(authHeader);
+                setCompanyId(company_id);
+            }
+        };
+
+        fetchTokenAndDecode();
+    }, []);
+
+    useEffect(() => {
+        const { accessToken, token, shop, host, apiKey } = fetchShopifyCredentials();
+        setCredentials({ accessToken, shop, host, apiKey });
+        console.log(accessToken)
+        console.log(credentials)
+        // console.log(token)
+        console.log(shop)
+        console.log(host)
+        console.log(apiKey)
+        
+
+    }, []);
+    
+    return(
+        
     <>
         <Head>
             <title>Beet | Shopify</title>
@@ -129,11 +173,17 @@ const Page = () => {
 color="text.secondary">
                     Click here and complete the steps bellow to bring enhanced purchase experience to your clients
                 </Typography>
-                <IconButton color="primary">
-        <AddLinkIcon />
-      </IconButton>
+                <Button
+      variant="contained"
+      color="primary"
+      startIcon={<AddLinkIcon/>}
+      onClick={handleButtonClick}
+    >
+      Link my store!
+    </Button>
             </CardContent>
         </StyledCard>
+        {!buttonDisabled && (
             <CenteredContainer >
                 <CardTitle sx={{ mt: 8, textAlign: "center", width: '50%' }}variant="h4" color="primary">
                     Please make sure the following data matches with your shopify store
@@ -142,34 +192,39 @@ color="text.secondary">
         <div style={{ marginTop: '60px', marginBottom:"60px" }}>
                     <TextField
                         label="accessToken"
-                        value={credentials.token}
+                        value={credentials.accessToken || ""}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Shopify Host"
+                        value={credentials.host || ""}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Api Key"
+                        value={credentials.apiKey || ""}
                         variant="outlined"
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Shop URL"
-                        value={credentials.shop}
+                        value={credentials.shop || ""}
                         variant="outlined"
                         fullWidth
                         margin="normal"
                     />
                 </div>
 
-                <Paper elevation={3} sx={{ p: 3, width: '100%', marginBottom:"60px" }}>
-                    <Typography variant="h6">App Bridge Details</Typography>
-                    <ul>
-                        {Object.entries(appbridgeDetails).map(([key, value]) => (
-                            <li key={key}>
-                                <strong>{key}:</strong> {key === 'host' ? decodedHost : value}
-                            </li>
-                        ))}
-                    </ul>
-                </Paper>
         <StyledCard>
             
         <VerticalLinearStepper
          onSelectionChange={handleStepSelectionChange}
+         storeData={credentials}
         />
 
         </StyledCard>
@@ -177,6 +232,7 @@ color="text.secondary">
         
                     </Box>
         </CenteredContainer>
+             )}
     </>
 );
 }

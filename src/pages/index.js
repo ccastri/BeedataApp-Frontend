@@ -40,9 +40,9 @@ const Login = () => {
         set(data.company);
         const token = data.token;
         login(token);
-
+        sessionStorage.setItem('companyId', data.company);
         if (typeof Router !== 'undefined') {
-          Router.push("/coming-soon").catch(console.error);
+          Router.push("/onboarding").catch(console.error);
         }
       }
     } catch (err) {

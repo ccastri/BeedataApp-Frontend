@@ -14,7 +14,7 @@ RUN npm run build
 FROM node:18-slim AS release
 WORKDIR /app
 COPY --from=build /app .
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 USER node
 EXPOSE 3000
 CMD npm start

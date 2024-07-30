@@ -100,7 +100,7 @@ const disabledOptionsProducts = defaultValueProducts === 'beet' || 'shopify' ? [
 const defaultValuePayment = 'wompi';
 // const disabledOptionsPayment = defaultValuePayment === 'wompi'  ? ["mercado pago", "pse", "custom"] : [];
 
-export default function VerticalLinearStepper() {
+export default function VerticalLinearStepper({storeData}) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedValues, setSelectedValues] = React.useState({
     firstStepOption: defaultValue,
@@ -112,7 +112,9 @@ export default function VerticalLinearStepper() {
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep === steps.length - 1) {
-      console.log('Final selected values:', selectedValues);
+      const companyId = Number(sessionStorage.getItem('companyId'));
+      const combinedData = { ...selectedValues, ...storeData, companyId };
+      console.log('Final combined values:', combinedData);
     }
   };
 
