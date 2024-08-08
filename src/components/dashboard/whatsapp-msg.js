@@ -13,7 +13,7 @@ export const WhatsappMsg = ({ isConsumption, msgLimit }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const messagesResponse = await api.get(`/api/v1/${companyId}/social/messages`, {
+        const messagesResponse = await api.get(`/backend/api/v1/${companyId}/social/messages`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { isConsumption: isConsumption, isRenewal: isConsumption ? false : true }
         });

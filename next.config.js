@@ -17,7 +17,8 @@ module.exports = {
           imgSrc: ["'self'", "data:", "https://flagcdn.com"],
           connectSrc: [
             "'self'", 
-            "http://localhost:3001", 
+            "http://localhost:3001",
+            "https://api.beet.digital",
             "https://api.blackwater-85bce617.eastus.azurecontainerapps.io", 
             "https://graph.facebook.com",
             "https://www.facebook.com",

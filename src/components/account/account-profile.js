@@ -20,7 +20,7 @@ export const AccountProfile = (props) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await api.get(`/api/v1/users/${userId}`, {
+        const response = await api.get(`/backend/api/v1/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

@@ -6,7 +6,7 @@ import api from '../../lib/axios';
 
 const fetchAgentsPurchased = async (companyId, token, setTotalSocialAgents) => {
   try {
-    const response = await api.get(`/api/v1/${companyId}/purchases/active`, {
+    const response = await api.get(`/backend/api/v1/${companyId}/purchases/active`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -26,7 +26,7 @@ const fetchAgentsPurchased = async (companyId, token, setTotalSocialAgents) => {
 
 const fetchSocialAgents = async (companyId, token, setSocialAgents) => {
   try {
-    const response = await api.get(`/api/v1/${companyId}/social/agents`, {
+    const response = await api.get(`/backend/api/v1/${companyId}/social/agents`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

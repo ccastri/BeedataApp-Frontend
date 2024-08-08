@@ -42,13 +42,13 @@ export const AccountProfileDetails = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userResponse = await api.get(`/api/v1/users/${userId}`, {
+      const userResponse = await api.get(`/backend/api/v1/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const companyResponse = await api.get(`/api/v1/companies/${companyId}`, {
+      const companyResponse = await api.get(`/backend/api/v1/companies/${companyId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -91,7 +91,7 @@ export const AccountProfileDetails = (props) => {
         billingAddress: formValues.billingAddress,
       };
 
-      await api.put(`/api/v1/companies/${companyId}`, billingFields, {
+      await api.put(`/backend/api/v1/companies/${companyId}`, billingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -107,7 +107,7 @@ export const AccountProfileDetails = (props) => {
         city: formValues.city
       };
 
-      const response = await api.put(`/api/v1/users/${userId}`, remainingFields, {
+      const response = await api.put(`/backend/api/v1/users/${userId}`, remainingFields, {
         headers: {
           Authorization: `Bearer ${token}`
         }

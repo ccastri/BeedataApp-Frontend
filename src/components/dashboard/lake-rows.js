@@ -15,7 +15,7 @@ export const LakeRows = ({ isConsumption, rowLimit }) => {
   useEffect(() => {
     const fetchRowCount = async () => {
       try {
-        const response = await api.get(`/api/v1/${companyId}/lake/row-count`, {
+        const response = await api.get(`/backend/api/v1/${companyId}/lake/row-count`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { isConsumption: isConsumption }
         });

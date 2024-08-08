@@ -59,7 +59,7 @@ export const MsgInsOuts = () => {
                 return;
             }
 
-            const response = await api.get(`/api/v1/${companyId}/social/messages`, {
+            const response = await api.get(`/backend/api/v1/${companyId}/social/messages`, {
                 headers: { Authorization: `Bearer ${token}` },
                 params: { startFilter: startDate, endFilter: endDate }
             });

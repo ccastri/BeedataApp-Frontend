@@ -61,7 +61,7 @@ export const DashboardSidebar = ({ open, onClose }) => {
 
 
   const itemsData = [
-    ['/coming-soon', 'SmartToyIcon', '_self', 'Home'],
+    ['/onboarding', 'SmartToyIcon', '_self', 'Home'],
     [ chatwootUrl, 'ThreePIcon', '_blank', 'Beet Social'],
     ['https://lake.beet.digital/dashboard/#/signin', 'StorageIcon', '_blank', 'Beet Lake'],
     ['/products', 'BuildIcon', '_self', 'Beet Tools'],
