@@ -29,12 +29,20 @@ const idTypes = [
 ];
 
 const CustomDialog = ({ open, handleClose, title, children }) => (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm" sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}>
-        <DialogTitle sx={{ p: 4 }}>
+    <Dialog
+    open={open}
+    onClose={handleClose}
+    fullWidth
+    maxWidth="sm"
+    sx={{ '& .MuiPaper-root': { backgroundColor: '#F9FAFC' } }}>
+        <DialogTitle
+        sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Avatar src={'/static/beet_nb.svg'} sx={{ width: 60, height: 60 }} />
+                <Avatar src={'/static/beet_nb.svg'}
+                sx={{ width: 60, height: 60 }} />
                 <Typography variant="h5">{title}</Typography>
-                <IconButton onClick={handleClose} aria-label="close"
+                <IconButton onClick={handleClose}
+                aria-label="close"
                     sx={{
                         color: (theme) => theme.palette.grey[500],
                     }}>
@@ -102,7 +110,9 @@ export const RegistrationDialog = ({ companyId, role }) => {
             >
                 {role === 'admin' ? 'Invite Company' : 'Invite User'}
             </Button>
-            <CustomDialog open={open} handleClose={() => setOpen(false)} title={role === 'admin' ? 'Register a New Company' : 'Register a New User'}>
+            <CustomDialog open={open}
+            handleClose={() => setOpen(false)}
+            title={role === 'admin' ? 'Register a New Company' : 'Register a New User'}>
                 <Card
                     sx={{
                         margin: 3,
@@ -153,7 +163,9 @@ export const RegistrationDialog = ({ companyId, role }) => {
                     </CardContent>
                 </Card>
             </CustomDialog>
-            <CustomDialog open={!!successMessage} handleClose={() => setSuccessMessage('')} title="Email Sent Successfully!">
+            <CustomDialog open={!!successMessage}
+            handleClose={() => setSuccessMessage('')}
+            title="Email Sent Successfully!">
                 <DialogContentText sx={{ margin: 2, fontSize: '1.2rem' }}>{successMessage}</DialogContentText>
             </CustomDialog>
         </>

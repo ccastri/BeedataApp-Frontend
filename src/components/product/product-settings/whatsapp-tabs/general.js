@@ -86,7 +86,7 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                             <Typography color="textSecondary"
                                 variant="body1"
                                 sx={{ ml: 1, mb: 3 }}>
-                                To use Beet&apos;s characters (chatbot), you need to grant certain permissions from Meta. 
+                                To use Beet&apos;s characters (chatbot), you need to grant certain permissions from Meta.
                                 Ensure you have:
                             </Typography>
                             <List sx={{ ml: 2, mb: 3 }}>
@@ -138,7 +138,7 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                             <Typography color="textSecondary"
                                 variant="body1"
                                 sx={{ ml: 1, mt: 2 }}>
-                                If you already have a Meta account, administrator access, and a credit card configured in Meta but do not have a 
+                                If you already have a Meta account, administrator access, and a credit card configured in Meta but do not have a
                                 registered phone number line or want to add a new one, you can do so by clicking on the button below instead.
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 2 }}>
@@ -162,7 +162,9 @@ purchaseConsumptionProduct={purchaseConsumptionProduct} />
                         currently being used on Beet characters (chatbots). You can CONNECT a phone number
                         to a chatbot by clicking on the Connect button action.
                     </Typography>
-                    <PhonesTable rows={wabas} updateWabas={updateWabas} />
+                    <PhonesTable
+                    rows={wabas}
+                    updateWabas={updateWabas} />
                 </CardContent>
             </Card>
         </>

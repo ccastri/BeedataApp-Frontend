@@ -8,11 +8,11 @@ import api from '../../lib/axios';
 
 /**
  * AuthGuard component
- * 
+ *
  * @param {Object} props - The properties passed to the component
- * 
+ *
  * @returns {JSX.Element} - The JSX representation of the auth guard component
- * 
+ *
  */
 export const AuthGuard = (props) => {
   const { children } = props;
@@ -71,8 +71,9 @@ export const AuthGuard = (props) => {
         }
       };
       verifyToken();
-    } 
-  }, [token]);
+    }
+// Docker requested me to add logout to the dependency array 08-22-2024
+  }, [token, logout]);
 
   useEffect(() => {
     if (router.isReady && state.verificationComplete && state.isAuthorized === false) {

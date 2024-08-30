@@ -18,7 +18,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/router';
-
+import Cookies from 'js-cookie';
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,20 +39,22 @@ const Register = () => {
     { value: 'admin', label: 'Admin' },
     { value: 'partner', label: 'Partner' },
   ]
-  const router = useRouter(); 
+  const router = useRouter();
   useEffect(() => {
     const params = new URLSearchParams(location.search); // Use window.location.search to get the URL parameters
     const encodedData = params.get('data');
-  
+
     if (encodedData) {
       // Step 1: Decode the Base64 data
       const decodedData = atob(encodedData);
-  
+
       // Step 2: Parse the decoded data as JSON
       const dataObject = JSON.parse(decodedData);
-  
+
       // Step 3: Extract the required fields
       const { accessToken, appBridge } = dataObject;
+      const { apiKey, shop } = JSON.parse(appBridge);
+      console.log(shop)
       console.log(accessToken)
       console.log(appBridge)
       // Step 4: Store the extracted fields in session storage
@@ -60,23 +62,25 @@ const Register = () => {
         sessionStorage.setItem('accessToken', accessToken);
         setAccessToken(accessToken); // Assuming setAccessToken is a state setter for accessToken
       }
-  
+
       if (appBridge) {
         sessionStorage.setItem('app-bridge-config', appBridge);
       }
-  
+
       // Optionally log the parameters for debugging
       for (let [key, value] of params.entries()) {
         console.log(`${key}: ${value}`);
       }
     }
   }, [router.query]); // Depend on location.search to update if the URL changes
-  
+
   const onSubmit = async (values) => {
     setLoading(true);
 
     try {
       const { data } = await api.post('/api/v1/users/register', {values});
+      const params = new URLSearchParams(window.location.search);
+      const encodedData = params.get('data');
 
       if (data.success) {
         const companyId = data.user.company_id;
@@ -88,24 +92,7 @@ const Register = () => {
             isRegistration: true
           }
         });
-        const params = new URLSearchParams(window.location.search);
-        const encodedData = params.get('data');
-  
-        if (encodedData) {
-          // Decode the Base64 data
-          const decodedData = atob(encodedData);
-          const dataObject = JSON.parse(decodedData);
-  
-          const { accessToken, appBridge } = dataObject;
-          if (accessToken) {
-            sessionStorage.setItem('accessToken', accessToken);
-            setAccessToken(accessToken); // Assuming setAccessToken is a state setter for accessToken
-          }
-  
-          if (appBridge) {
-            sessionStorage.setItem('app-bridge-config', appBridge);
-          }
-        }
+
         if (productCheck.data.message === 'Product exists') {
           setCredentials(data.user);
           setOpenCredentials(true);
@@ -113,6 +100,41 @@ const Register = () => {
           await api.post(`/api/v1/${companyId}/products/${productId}`, { productQty: 10, isRegistration: true});
           setCredentials(data.user);
           setOpenCredentials(true);
+        }
+      }
+      if (encodedData) {
+        // Decode the Base64 data
+        const decodedData = atob(encodedData);
+        const dataObject = JSON.parse(decodedData);
+        console.log(dataObject)
+        const { accessToken, appBridge } = dataObject;
+        const { apiKey, shop } = JSON.parse(appBridge);
+        console.log('App Bridge:', appBridge);
+        console.log('JWT:', Cookies.get('jwt'));
+        console.log('API Key:', apiKey);
+        console.log('Shop:', shop);
+        console.log('Access Token:', accessToken);
+        const dataToSend = {
+          company_id: data.user.company_id,
+          app: 'shopify',
+          pair2: apiKey, // API key from dataObject
+          subdomain: shop, // Shop from dataObject
+          pair1: accessToken, // Access token from dataObject
+          // phone_id: null // Currently null
+        };
+
+        // Imprimir los datos a enviar
+
+        // Crear un registro en la tabla connect
+        console.log('Sending data to /api/v1/connect:', dataToSend);
+        await api.post('/api/v1/connect', dataToSend);
+        if (accessToken) {
+          sessionStorage.setItem('accessToken', accessToken);
+          setAccessToken(accessToken); // Assuming setAccessToken is a state setter for accessToken
+        }
+
+        if (appBridge) {
+          sessionStorage.setItem('app-bridge-config', appBridge);
         }
       }
 
@@ -170,7 +192,7 @@ const Register = () => {
           pl: { xs: 4, sm: 6 },
         }}
       >
-        <Container 
+        <Container
         maxWidth="sm"
         sx={{ position: "relative", zIndex: 1 }}
         >
@@ -182,7 +204,7 @@ const Register = () => {
               position: 'relative',
               marginBottom: { xs: '32px', sm: '48px' },
             }}
-          >       
+          >
             <form onSubmit={formik.handleSubmit}>
               <Box sx={{ my: 3 }}>
                 <Typography

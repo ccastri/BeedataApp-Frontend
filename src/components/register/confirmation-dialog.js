@@ -26,7 +26,9 @@ const BootstrapDialogTitle = (props) => {
   const { children, avatar, ...other } = props;
 
   return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+    <DialogTitle sx={{ m: 0, p: 2 }}
+     {...other}
+     >
       <Box style={{ display: 'flex', alignItems: 'center' }}>
         {avatar}
         <Typography

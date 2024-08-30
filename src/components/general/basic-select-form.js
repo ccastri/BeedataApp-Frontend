@@ -18,7 +18,10 @@ export const BasicSelect = ({label, defaultItem, items, handleChange }) => {
           onChange={handleChange}
         >
           {items.map((item, index) => (
-            <MenuItem key={index} value={item}>{item}</MenuItem>
+            <MenuItem
+            key={index}
+            value={item}
+            >{item}</MenuItem>
           ))}
         </Select>
       </FormControl>

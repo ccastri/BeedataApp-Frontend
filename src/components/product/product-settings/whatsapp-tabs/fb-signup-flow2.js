@@ -9,11 +9,11 @@ import api from '../../../../lib/axios';
  * Setup the FB SDK and launch the WhatsApp Signup flow
  * (This sign up flow is use to connect a phone number
  * that already exists in Facebook Business Manager and has been registered)
- * 
+ *
  * @returns {JSX.Element} - The button to launch the WhatsApp Signup flow
- * 
+ *
  */
-export const FbSignupFlow2 = ({title}) => {
+export const FbSignupFlow2 = ({title, onNext}) => {
   const { companyId } = useContext(CompanyContext);
   const { token } = useContext(AuthContext);
 
@@ -65,6 +65,8 @@ export const FbSignupFlow2 = ({title}) => {
                 },
               });
               window.location.reload();
+
+              if (onNext) onNext();
             } catch (err) {
               console.log(err);
             }
@@ -74,7 +76,7 @@ export const FbSignupFlow2 = ({title}) => {
           }
         }, {
           scope: 'business_management, whatsapp_business_management, whatsapp_business_messaging',
-          response_type: 'code' 
+          response_type: 'code'
         });
       }
     }

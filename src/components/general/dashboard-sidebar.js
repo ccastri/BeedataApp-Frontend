@@ -16,6 +16,7 @@ import { NavItem } from './nav-item';
 import { DropDown } from './dropdown-list';
 import { getUserRole } from '../../utils/get-user-data';
 import api from '../../lib/axios';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 
 const icons = {
   SmartToyIcon: <SmartToyIcon fontSize="small" />,
@@ -23,6 +24,7 @@ const icons = {
   StorageIcon: <StorageIcon fontSize="small" />,
   BuildIcon: <BuildIcon fontSize="small" />,
   PaymentIcon: <PaymentIcon fontSize="small" />,
+  ShopIcon: <AddBusinessIcon/>,
   CogIcon: <CogIcon fontSize="small" />,
   GroupsIcon: <GroupsIcon fontSize="small" />
 };
@@ -49,36 +51,39 @@ export const DashboardSidebar = ({ open, onClose }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       if (response.data.success) {
         setChatwootUrl(response.data.chatwoot_url);
       }
     };
 
     fetchUrl();
-  }, [token]); 
+  }, [token]);
 
 
 
   const itemsData = [
-    ['/onboarding', 'SmartToyIcon', '_self', 'Home'],
+    ['/home', 'SmartToyIcon', '_self', 'Home'],
+    ['/onboarding', 'ShopIcon', '_self', 'Add your business'],
     [ chatwootUrl, 'ThreePIcon', '_blank', 'Beet Social'],
     ['https://lake.beet.digital/dashboard/#/signin', 'StorageIcon', '_blank', 'Beet Lake'],
     ['/products', 'BuildIcon', '_self', 'Beet Tools'],
     ['/payments', 'PaymentIcon', '_self', 'Payments'],
+    ['/partnership-requests', 'GroupsIcon', '_self', 'Solicitudes de Partnership'],
   ];
-  
+
   if (['superadmin', 'partner', 'admin'].includes(userRole)) {
     const pageName = userRole === 'partner' ? 'Users & Companies' : 'Users';
     itemsData.push(['/users', 'GroupsIcon', '_self', pageName]);
   }
-  
+
   const items = itemsData.map(([href, icon, target, title]) => ({ href, icon: icons[icon], target, title }));
 
   useEffect(() => {
     if (router.isReady && open) {
       onClose?.();
     }
+    // Docker requested the onClose, open, router.isReady
   }, [router.asPath]);
 
   const content = (

@@ -9,6 +9,15 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import SingleSelectForm from './multichoice-form';
+import { FbSignupFlow2 } from '../product/product-settings/whatsapp-tabs/fb-signup-flow2';
+import { FbSignupFlow } from '../product/product-settings/whatsapp-tabs/fb-signup-flow';
+import { useRouter } from 'next/router';
+import { getUserCompanyId } from '../../utils/get-user-data';
+import ShopifyCredentials from '../integrations/FetchCredentials';
+import { fetchShopifyCredentialsFromBackend } from '../../utils/get-shopify-credentials';
+import api from '../../lib/axios';
+
+const companyId = getUserCompanyId();
 
 const steps = [
   {
@@ -16,6 +25,12 @@ const steps = [
     description: ""
     // `You can decide the best platform for you to handle your contacts and interactions. We suggest you
     // to try Beet as you might get the best advantages of the platform and its integrations`,
+  },
+  {
+    label: 'Connect your WhatsApp Business Acount',
+    description: `Connect your WhatsApp Business account to interact directly with your customers from a unified platform.
+              Leverage the integration to send automated messages, respond to queries in real-time, and manage all your
+              conversations from a single place.`,
   },
   {
     label: 'Select contact Mannager',
@@ -26,8 +41,8 @@ const steps = [
   {
     label: 'Pick Leads Mannager',
     description: ""
-    // `Select a leads manager to help you classify and track interested prospects. 
-    //             Our manager will allow you to automate follow-ups, analyze campaign performance, 
+    // `Select a leads manager to help you classify and track interested prospects.
+    //             Our manager will allow you to automate follow-ups, analyze campaign performance,
     //             and maximize your sales opportunities.`,
   },
   {
@@ -39,15 +54,9 @@ const steps = [
     description: ``,
   },
   {
-    label: 'Connect your WhatsApp Business Acount',
-    description: `Connect your WhatsApp Business account to interact directly with your customers from a unified platform.
-              Leverage the integration to send automated messages, respond to queries in real-time, and manage all your 
-              conversations from a single place.`,
-  },
-  {
     label: 'Customize Your Chatbot',
-    description: `Customize your chatbot to provide a unique user experience. Configure automatic responses, 
-              create conversation flows tailored to your needs, and enhance customer interaction. A well-designed chatbot 
+    description: `Customize your chatbot to provide a unique user experience. Configure automatic responses,
+              create conversation flows tailored to your needs, and enhance customer interaction. A well-designed chatbot
               can improve your customer support efficiency and provide quick and accurate responses.`,
   },
 ];
@@ -58,65 +67,105 @@ const firstStepOptions = [
 ];
 
 const contactManagerOptions = [
-  { label: 'Beet', value: 'beet' },
+  { label: 'Beet', value: 'Beet Social' },
   { label: 'Salesforce', value: 'salesforce' },
   { label: 'Hubspot', value: 'hubspot' },
   { label: 'Odoo', value: 'Odoo' },
   { label: 'Custom', value: 'custom' },
 ];
 const leadManagerOptions = [
-  { label: 'Beet', value: 'beet' },
-  { label: 'Salesforce', value: 'salesforce' },
-  { label: 'Hubspot', value: 'hubspot' },
-  { label: 'PipeDrive', value: 'pipedrive' },
+  { label: 'Beet', value: 'Beet' },
+  { label: 'Salesforce', value: 'Salesforce' },
+  { label: 'Hubspot', value: 'Hubspot' },
+  { label: 'PipeDrive', value: 'PipeDrive' },
 ];
 const productManagerOptions = [
   // { label: 'WooCommerce', value: 'WooCommerce' },
-  { label: 'Shopify', value: 'shopify' },
-  { label: 'Beet', value: 'beet' },
-  { label: 'Vtex', value: 'vtex' },
+  { label: 'Shopify', value: 'Shopify' },
+  { label: 'Beet', value: 'Beet' },
+  { label: 'Vtex', value: 'Vtex' },
 ];
 const paymentMethod = [
   // { label: 'WooCommerce', value: 'WooCommerce' },
-  { label: 'Wompi', value: 'wompi' },
-  { label: 'Custom', value: 'custom' },
-  { label: 'PSE', value: 'pse' },
-  { label: 'Mercado Pago', value: 'mercado pago' },
+  { label: 'Wompi', value: 'Wompi' },
+  { label: 'Custom', value: 'Personalizado' },
+  { label: 'Addi', value: 'Addi' },
+  { label: 'Contraentrega', value: 'Contraentrega' },
+  { label: 'Mercado Pago', value: 'Mercado Pago' },
 ];
 
 // Default selected option
 const defaultValue = 'ecommerce';
 const disabledOptions = defaultValue === 'ecommerce' ? ['custom', "service provider and lead attention"] : [];
 // Default selected option
-const defaultValueContacts = 'beet';
+const defaultValueContacts = 'Beet Social';
 const disabledOptionsContacts = defaultValueContacts === 'beet' ? ['salesforce', "Odoo", "custom", "hubspot"] : [];
 // Default selected option
-const defaultValueLeads = 'beet';
+const defaultValueLeads = 'Beet';
 const disabledOptionsLeads = defaultValueLeads === 'beet' ? ['salesforce', "hubspot", "pipedrive", "hubspot"] : [];
 
-const defaultValueProducts = 'shopify';
-const disabledOptionsProducts = defaultValueProducts === 'beet' || 'shopify' ? ["vtex"] : [];
+const defaultValueProducts = 'Shopify';
+const disabledOptionsProducts = defaultValueProducts ===  'shopify' ? ["vtex", 'beet'] : [];
 
-const defaultValuePayment = 'wompi';
+const defaultValuePayment = 'Wompi';
 // const disabledOptionsPayment = defaultValuePayment === 'wompi'  ? ["mercado pago", "pse", "custom"] : [];
 
-export default function VerticalLinearStepper({storeData}) {
+export default function VerticalLinearStepper({storeData, onCredentialsFetched}) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedValues, setSelectedValues] = React.useState({
     firstStepOption: defaultValue,
-    contactManager: defaultValueContacts,
-    leadManager: defaultValueLeads,
-    productManager: defaultValueProducts,
-    paymentMethod: defaultValuePayment
+    contacts: defaultValueContacts,
+    leads: defaultValueLeads,
+    orders: defaultValueProducts,
+    PaymentOptions: defaultValuePayment
   });
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep === steps.length - 1) {
-      const companyId = Number(sessionStorage.getItem('companyId'));
-      const combinedData = { ...selectedValues, ...storeData, companyId };
-      console.log('Final combined values:', combinedData);
+  const router = useRouter();
+
+ /*****************************************
+ *          TRIAL phone_id                *
+ *          293998910459231               *
+ *****************************************/
+
+ const handleNext = async () => {
+  let updatedSelectedValues = selectedValues;
+    // If on the first step, set phone_id
+    if (activeStep === 0) {
+      const phone_id = '102291556123841';
+      updatedSelectedValues = {
+        ...selectedValues,
+        phone_id,
+      };
+      setSelectedValues(updatedSelectedValues);
     }
-  };
+  const newStep = activeStep + 1;
+
+  if (newStep === steps.length) {
+    const company_id = getUserCompanyId();
+    const combinedData = {
+      ...updatedSelectedValues,
+      company_id
+    };
+
+    // Create a copy of combinedData and remove the firstStepOption
+    const { firstStepOption, ...dataToSend } = combinedData;
+
+    console.log('Final combined values excluding firstStepOption:', dataToSend);
+
+    try {
+      // Send data to the backend endpoint
+      await api.post('/api/v1/app', dataToSend);
+      console.log('Data successfully sent to backend');
+      // Handle success (e.g., redirect or show a success message)
+    } catch (error) {
+      console.error('Error sending data to backend:', error);
+      // Handle error (e.g., show an error message)
+    }
+  }
+
+  // Update the active step
+  setActiveStep(newStep);
+};
+
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -131,17 +180,20 @@ export default function VerticalLinearStepper({storeData}) {
       [step]: value,
     }));
     console.log(selectedValues)
-    
-  };
-  const handleConnectWhatsApp = () => {
-    // Handle the WhatsApp connection logic here
-    console.log('Connecting to WhatsApp...');
+
   };
 
-  
+
+  const handleButtonClick = () => {
+    router.push('/home?scrollTo=targetElement');
+  };
+
+
   return (
-    <Box sx={{ maxWidth: 400 }}>
-      <Stepper activeStep={activeStep} orientation="vertical">
+    <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto' }}>
+      <Stepper
+      activeStep={activeStep}
+      orientation="vertical">
         {steps.map((step, index) => (
           <Step key={step.label}>
             <StepLabel
@@ -153,69 +205,61 @@ export default function VerticalLinearStepper({storeData}) {
             >
               {step.label}
             </StepLabel>
+                {index === 0 && (
+                  <SingleSelectForm
+                    options={firstStepOptions}
+                    defaultValue={defaultValue}
+                    disabledOptions={disabledOptions}
+                    value={selectedValues.firstStepOption}
+                    onValueChange={(value) => handleValueChange('firstStepOption', value)}
+                  />
+                  )}
             <StepContent>
               <Typography>{step.description}</Typography>
               <Box sx={{ mb: 2 }}>
                 <div>
-                {index === 0 && (
-                    <SingleSelectForm
-                      options={firstStepOptions}
-                      defaultValue={defaultValue}
-                      disabledOptions={disabledOptions}
-                      value={selectedValues.firstStepOption}
-                      onValueChange={(value) => handleValueChange('firstStepOption', value)}
-                    />
-                  )}
                 {index === 1 && (
+                  <FbSignupFlow title="Add phone number"
+                  onNext={handleNext}
+                  />
+
+                  )}
+                {index === 2 && (
                     <SingleSelectForm
                       options={contactManagerOptions}
                       defaultValue={defaultValueContacts}
                       disabledOptions={disabledOptionsContacts}
                       text='Please Select the preferred platform for you to handle your customers'
-                      value={selectedValues.contactManager}
-                      onValueChange={(value) => handleValueChange('contactManager', value)}
+                      value={selectedValues.contacts}
+                      onValueChange={(value) => handleValueChange('contacts', value)}
                     />
                   )}
-                  {index === 2 && (
+
+                  {index === 3 && (
                     <SingleSelectForm
                       options={leadManagerOptions}
                       defaultValue={defaultValueLeads}
                       disabledOptions={disabledOptionsLeads}
                       text='Leads management can help you classify and track interested prospects. A good manager will allow you to automate follow-ups, analyze campaign performance, and maximize your sales opportunities.'
-                      value={selectedValues.leadManager}
-                      onValueChange={(value) => handleValueChange('leadManager', value)}
-                    />
-                  )}
-                  {index === 3 && (
-                    <SingleSelectForm
-                      options={productManagerOptions}
-                      defaultValue={defaultValueProducts}
-                      disabledOptions={disabledOptionsProducts}
-                      text='Find a product manager that allows you to efficiently handle your inventory and track sales. With the right manager, you can optimize product presentation, analyze customer behavior, and enhance your pricing strategy.'
-                      value={selectedValues.productManager}
-                      onValueChange={(value) => handleValueChange('productManager', value)}
+                      value={selectedValues.leads}
+                      onValueChange={(value) => handleValueChange('leads', value)}
                     />
                   )}
                   {index === 4 && (
+                    <ShopifyCredentials onCredentialsFetched={() => fetchShopifyCredentialsFromBackend(companyId)}/>
+
+                  )}
+                  {index === 5 && (
                     <SingleSelectForm
                       options={paymentMethod}
                       defaultValue={defaultValuePayment}
                       // disabledOptions={disabledOptionsPayment}
                       text="We're working hard to give you flexibility so you can pick the best payment channel and integrate it smoothly"
-                      value={selectedValues.paymentMethod}
-                      onValueChange={(value) => handleValueChange('paymentMethod', value)}
+                      value={selectedValues.PaymentOptions}
+                      onValueChange={(value) => handleValueChange('PaymentOptions', value)}
                     />
                   )}
-                {index === 5 && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleConnectWhatsApp}
-                      sx={{ mt: 1, mr: 1 }}
-                    >
-                      Connect to WhatsApp
-                    </Button>
-                  )}
+ {/* {index !== 0 && ( // Only render the button if index is not 0 */}
                   <Button
                     variant="contained"
                     onClick={handleNext}
@@ -223,13 +267,16 @@ export default function VerticalLinearStepper({storeData}) {
                   >
                     {index === steps.length - 1 ? 'Finish' : 'Continue'}
                   </Button>
+                {/* )} */}
+                {index > 0 && (
                   <Button
-                    disabled={index === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1, backgroundColor: 'info.main'  }}
+                  disabled={index === 0}
+                  onClick={handleBack}
+                  sx={{ mt: 1, mr: 1, backgroundColor: 'info.main'  }}
                   >
                     Back
                   </Button>
+                  )}
                 </div>
               </Box>
             </StepContent>
@@ -237,13 +284,18 @@ export default function VerticalLinearStepper({storeData}) {
         ))}
       </Stepper>
       {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ my:6, p: 3 }}>
-          <Typography>All steps completed - youcan either go back to sopify or try your chatbot in WhatsApp</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1, backgroundColor: 'info.main' }}>
-            Go Back
+        <Paper square
+        elevation={0}
+        sx={{ my:6, p: 3 }}
+        >
+          <Typography>All steps completed - Now you can either go to the Beet Tools section to start gathering the tools your business requires to level it up or go to the home section to start customizing your agents, messages and more</Typography>
+          <Button onClick={handleButtonClick}
+          sx={{ mt: 1, mr: 1, backgroundColor: 'info.main' }}>
+            Customize
           </Button>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1, backgroundColor: 'info.main' }}>
-            Try Now!
+          <Button onClick={()=> router.push("/products")}
+          sx={{ mt: 1, mr: 1, backgroundColor: 'info.main' }}>
+            Check Beet Tools
           </Button>
         </Paper>
       )}

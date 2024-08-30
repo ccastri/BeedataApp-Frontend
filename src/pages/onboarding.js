@@ -12,8 +12,16 @@ import AddLinkIcon from '@mui/icons-material/AddLink';
 import { useEffect, useState } from 'react';
 import VerticalLinearStepper from '../components/shopify/data-onboarding';
 import SingleSelectForm from '../components/shopify/multichoice-form';
-import jwt from 'jsonwebtoken';
+import ShopifyCredentials from '../components/integrations/FetchCredentials';
+// import jwt from 'jsonwebtoken';
+import { getUserCompanyId, getUserRole } from '../utils/get-user-data';
+import Cookies from 'js-cookie';
+import api from '../lib/axios';
+import { fetchShopifyCredentialsFromBackend } from '../utils/get-shopify-credentials';
+const companyId = getUserCompanyId()
 
+
+const jwt = Cookies.get('jwt');
 const StyledCard = styled(Card)(({ theme }) => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return {
@@ -34,121 +42,42 @@ const ResponsiveCardMedia = styled(CardMedia)(({ theme }) => {
     };
 });
 
-const CenteredContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    minHeight: '100vh',
-}));
-const CardTitle = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-}));
 
-const CardSubtitle = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-}));
-const fetchShopifyCredentials = () => {
-    const accessToken =sessionStorage.getItem('accessToken'); // Optionally store it in session storage
-    // const shop = sessionStorage.getItem('shop url'); // Optionally store it in session storage
-    const appbridge= sessionStorage.getItem('app-bridge-config'); // Optionally store it in session storage
-    // console.log(appbridge)
-    
-    console.log(accessToken)
-    if (appbridge) {
-        try {
-            const parsedAppbridge = JSON.parse(appbridge);
-            parsedAppbridge.accessToken = accessToken;
-            return {
-                // token,
-                shop: parsedAppbridge.shop || '',
-                host: decodeBase64(parsedAppbridge.host || ''),
-                apiKey: parsedAppbridge.apiKey || '',
-                accessToken: parsedAppbridge.accessToken
-            };
-        } catch (error) {
-            console.error('Failed to parse appbridge JSON:', error);
-        }
-    }
-    
-    return { accessToken:'', shop: '', host: '', apiKey: '' };
-}
-const decodeBase64 = (base64String) => {
-    try {
-        return atob(base64String);
-    } catch (error) {
-        console.error('Failed to decode Base64:', error);
-        return '';
-    }
-};
-
-// const handleSingleSelectChange = (value) => {
-//     setSelectedOption(value);
-// };
 
 const handleStepSelectionChange = (stepIndex, value) => {
     setStepSelections(prev => ({ ...prev, [stepIndex]: value }));
 };
 
-const decodeJwt = (token) => {
-    try {
-        const decoded = jwt.decode(token);
-        if (decoded && decoded.company_id) {
-            console.log(decoded)
-            return decoded.company_id;
-        }
-        return null;
-    } catch (error) {
-        console.error('Failed to decode JWT:', error);
-        return null;
-    }
-};
+
+
+
 const Page = () => {
-    
-    
-    
-    const [credentials, setCredentials] = useState({ accessToken: '', shop: '', host: '', apiKey: '' });
-    // const [appbridgeDetails, setAppbridgeDetails] = useState({});
-    // const [decodedHost, setDecodedHost] = useState('');
-    // const [stepSelections, setStepSelections] = useState({}); 
+
+    const [credentials, setCredentials] = useState({ accessToken: '', host: '' , pair1: '', pair2: '', });
     const [buttonDisabled, setButtonDisabled] = useState(true);
-    const [companyId, setCompanyId] = useState(null);
-    
+
     const handleButtonClick = () => {
         setButtonDisabled(prev => !prev);
         console.log(buttonDisabled)
     };
-    useEffect(() => {
-        const fetchTokenAndDecode = () => {
-            const authHeader = document.cookie // o usa `sessionStorage` si almacenas ahí el token
-                .split('; ')
-                .find(row => row.startsWith('Authorization='))
-                ?.split('=')[1];
+    console.log(credentials)
 
-            if (authHeader) {
-                const company_id = decodeJwt(authHeader);
-                setCompanyId(company_id);
-            }
-        };
 
-        fetchTokenAndDecode();
-    }, []);
 
-    useEffect(() => {
-        const { accessToken, token, shop, host, apiKey } = fetchShopifyCredentials();
-        setCredentials({ accessToken, shop, host, apiKey });
-        console.log(accessToken)
-        console.log(credentials)
-        // console.log(token)
-        console.log(shop)
-        console.log(host)
-        console.log(apiKey)
-        
+  useEffect(() => {
+      const getCredentials = async () => {
+        const resp = await fetchShopifyCredentialsFromBackend(companyId, jwt);
+        setCredentials(resp); // Set the fetched credentials as the state
+        setButtonDisabled(false); // Enable the button if needed
+      };
 
-    }, []);
-    
-    return(
-        
+      getCredentials();
+    }, [companyId, jwt]);
+
+
+
+  return (
+
     <>
         <Head>
             <title>Beet | Shopify</title>
@@ -167,7 +96,7 @@ const Page = () => {
                     color="primary"
                 >
                     Link your store here!
-                    
+
                 </Typography>
                 <Typography variant="subtitle1"
 color="text.secondary">
@@ -179,60 +108,28 @@ color="text.secondary">
       startIcon={<AddLinkIcon/>}
       onClick={handleButtonClick}
     >
-      Link my store!
+      Start Journey
     </Button>
             </CardContent>
         </StyledCard>
         {!buttonDisabled && (
-            <CenteredContainer >
-                <CardTitle sx={{ mt: 8, textAlign: "center", width: '50%' }}variant="h4" color="primary">
-                    Please make sure the following data matches with your shopify store
-                </CardTitle>
-        <Box sx={{ mt: 4, mb: 4, textAlign: "center", width: '50%' }}>
-        <div style={{ marginTop: '60px', marginBottom:"60px" }}>
-                    <TextField
-                        label="accessToken"
-                        value={credentials.accessToken || ""}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Shopify Host"
-                        value={credentials.host || ""}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Api Key"
-                        value={credentials.apiKey || ""}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Shop URL"
-                        value={credentials.shop || ""}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                    />
-                </div>
+          <>
+     <Box sx={{ my: 4,  textAlign: "center", width: '50%' }}>
 
-        <StyledCard>
-            
-        <VerticalLinearStepper
-         onSelectionChange={handleStepSelectionChange}
-         storeData={credentials}
-        />
+                </Box>
+         <Box sx={{ my: 4 }}>
 
+        <StyledCard
+        sx={{ width: '100%' }}>
+            <VerticalLinearStepper
+                onSelectionChange={handleStepSelectionChange}
+                storeData={credentials}
+                onCredentialsFetched={fetchShopifyCredentialsFromBackend}
+                />
         </StyledCard>
-
-        
-                    </Box>
-        </CenteredContainer>
-             )}
+        </Box>
+        </>
+)}
     </>
 );
 }

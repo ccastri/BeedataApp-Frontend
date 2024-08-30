@@ -35,7 +35,9 @@ const SingleSelectForm = ({ options, defaultValue, onChange, disabledOptions = [
     <Box sx={{ p: 2, maxWidth: 400, margin: 'auto' }}>
       <FormControl component="fieldset">
         <FormLabel component="legend">{text}</FormLabel>
-        <RadioGroup value={selectedOption} onChange={handleChange}>
+        <RadioGroup
+        value={selectedOption}
+        onChange={handleChange}>
           {options.map((option) => (
             <StyledFormControlLabel
               key={option.value}

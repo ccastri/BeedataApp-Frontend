@@ -5,6 +5,7 @@ import { BillingPreferences } from '../components/payments/billing-preferences';
 import { PurchaseSummary } from '../components/payments/purchase-summary';
 import { CreditHistory } from '../components/payments/credit-history';
 import { DashboardLayout } from '../components/general/dashboard-layout';
+import ProductConsumption from '../components/payments/consumption';
 
 
 const Page = () => (
@@ -35,6 +36,10 @@ xs={12}>
           <Grid item
 xs={12}>
             <CreditHistory title="Recharge History" />
+          </Grid>
+          <Grid item
+xs={12}>
+            <ProductConsumption />
           </Grid>
         </Grid>
       </Container>

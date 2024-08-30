@@ -35,14 +35,14 @@ const Login = () => {
     try {
 
       const { data } = await api.post('/api/v1/users/login', values);
-      
+
       if (data.success) {
         set(data.company);
         const token = data.token;
         login(token);
         sessionStorage.setItem('companyId', data.company);
         if (typeof Router !== 'undefined') {
-          Router.push("/onboarding").catch(console.error);
+          Router.push("/home").catch(console.error);
         }
       }
     } catch (err) {
@@ -167,7 +167,7 @@ sx={{ width: '100%' }}>
               {errorMessage && (
                 <ErrorSnackbar
                   errorMessage={errorMessage}
-                  sx={{ 
+                  sx={{
                     mt: 5,
                     fontWeight: 400,
                   }}
@@ -215,7 +215,7 @@ sx={{ width: '100%' }}>
         </Box>
       </Box>
     </>
-  );  
+  );
 };
 
 export default Login;

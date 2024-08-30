@@ -14,15 +14,15 @@ import api from '../../lib/axios';
 
 
 /**
- * 
+ *
  * MsgInsOuts component displays the number of messages sent by agents, visitors and chatbot.
- * 
+ *
  * Dependencies: useState, useEffect, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
  *               ResponsiveContainer, Box, TextField, Card, CardContent, CardHeader, Divider, Grid,
  *               createTheme, ThemeProvider, LocalizationProvider, AdapterDayjs, DatePicker,
  *               ReplayIcon, ErrorSnackbar, dayjs, api
  * Usage: Used to display the number of messages sent by agents, visitors and chatbot in a given time period.
- * 
+ *
  */
 export const MsgInsOuts = () => {
     const [errorMsg, setErrorMsg] = useState(null);
@@ -123,7 +123,8 @@ export const MsgInsOuts = () => {
             }
         };
         fetchMsgCount();
-    }, [applyFilter, companyId, token]);
+// Docker required me to add startDate and endDate 08-22-2024
+    }, [applyFilter, companyId, token, startDate, endDate]);
 
     const checkDateValidity = (start, end) => {
         if (end <= start) return "End date must be greater than Start date";

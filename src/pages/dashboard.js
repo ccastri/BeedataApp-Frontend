@@ -15,7 +15,8 @@ import api from '../lib/axios';
 
 
 const LightTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
+  <Tooltip {...props}
+  classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
@@ -192,7 +193,7 @@ const Page = () => {
           </Typography>
           <Grid item
             xs={12}>
-            <MsgInsOuts />
+            {/* <MsgInsOuts /> */}
           </Grid>
         </Container>
       </Box>
