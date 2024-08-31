@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beet-frontend
+  namespace: default
+  labels:
+    app: beet-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beet-frontend
+  template:
+    metadata:
+      labels:
+        app: beet-frontend
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - gke-beet-digital-vpc-general-beet-dig-4b025e85-qir6 
+      containers:
+      - name: beet-frontend
+        image: beedatasas/beet-frontend:0.3.84  # Reemplaza con el nombre de tu imagen y tag
+        # image: beedatasas/beet-frontend:0.2.10   # (/backend) Reemplaza con el nombre de tu imagen y tag
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: beet-frontend
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: beet-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
